@@ -277,6 +277,8 @@ class MaleXRevision2026:
             self._malware_source,
         ) = self._open_identity_memmaps()
 
+        self._validate_source_sequences()
+
         (
             self._benign_positions,
             self._malware_positions,
@@ -459,6 +461,66 @@ class MaleXRevision2026:
             benign,
             malware,
         )
+
+    def _validate_source_sequences(self) -> None:
+        """Verify original ordered HDF5 identity sequences.
+
+        Production-only: SHA-256 over each S64 identity followed
+        by a newline, in authoritative HDF5 source order.
+        Runs before cross-class identity exclusions.
+        """
+        if not (
+            self.validate_hashes
+            and self.validate_production_contract
+        ):
+            return
+
+        sequences = (
+            (
+                "benign",
+                self._benign_source,
+                MALEX_BENIGN_SOURCE_COUNT,
+                MALEX_EXPECTED_BENIGN_SEQUENCE_SHA256,
+            ),
+            (
+                "malware",
+                self._malware_source,
+                MALEX_MALWARE_SOURCE_COUNT,
+                MALEX_EXPECTED_MALWARE_SEQUENCE_SHA256,
+            ),
+        )
+
+        for name, identities, expected_count, expected_hash in sequences:
+            if identities.shape != (expected_count,):
+                raise ValueError(
+                    f"MaleX {name} source sequence count mismatch"
+                )
+
+            if identities.dtype != np.dtype("S64"):
+                raise TypeError(
+                    f"MaleX {name} source sequence dtype mismatch"
+                )
+
+            digest = sha256()
+
+            for start in range(0, expected_count, 8192):
+                batch = identities[start:start + 8192]
+
+                for identity in batch:
+                    raw = bytes(identity)
+
+                    if len(raw) != 64:
+                        raise ValueError(
+                            f"MaleX {name} source identity length mismatch"
+                        )
+
+                    digest.update(raw)
+                    digest.update(b"\n")
+
+            if digest.hexdigest() != expected_hash:
+                raise ValueError(
+                    f"MaleX {name} source sequence SHA-256 mismatch"
+                )
 
     def _derive_post_exclusion_positions(
         self,

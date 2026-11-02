@@ -1,0 +1,40 @@
+{
+  "dataset_id": "malnet_image",
+  "limitations": [
+    "provider_archive_not_rehashed_in_these_jobs",
+    "original_image_bytes_not_rehashed",
+    "manifest_origin_not_independently_authenticated",
+    "continuous_file_immutability_not_proven"
+  ],
+  "manifest_sha256": "182eabd0c5beb36cda1f27c02a704a12996cb74d7122456d3ebe2a884e084cc8",
+  "preparation": "type-1.0-prepared",
+  "provider_archive_sha256_declared": "74e3615aa848c27dc06bb9ea2ae53e415f4b842fdce8dc45ba50849db8851492",
+  "schema_type": "paper01_malnet_preparation_integrity_baseline",
+  "schema_version": "1.0",
+  "splits": {
+    "test": {
+      "offsets_sha256": "c4f61cd7d03975bfed4f53539cd19564e3516e0a2c9ef617f8bda5f979694709",
+      "prepared_text_sha256": "9f44e0958880f2529e2e7ee2d8ec986e3c84e8b242e3624438e934a9568272ee",
+      "rows": 252406
+    },
+    "train": {
+      "offsets_sha256": "f864111888b734d7c798c10778e4736bd85511211f19a335be3d670378ff5549",
+      "prepared_text_sha256": "4368c31d2e7eda5f5a12558e42f607751d8fd8c7ba9ab6d599e1989030cdf51e",
+      "rows": 883416
+    },
+    "validation": {
+      "offsets_sha256": "773d977a2c9d9b80b3a7157165ade72e9f06af9939ecdbaac46c8ac21abaee48",
+      "prepared_text_sha256": "7f992f91a6499c8577ada80510b1373d03f566c0097cf98b47a9cc620bce3146",
+      "rows": 126202
+    }
+  },
+  "verification_jobs": {
+    "manifest": "309101",
+    "prepared_artifacts": "309102"
+  },
+  "verification_scope": [
+    "manifest_content_and_sha256",
+    "six_prepared_artifact_sha256_checks",
+    "governed_split_counts"
+  ]
+}
