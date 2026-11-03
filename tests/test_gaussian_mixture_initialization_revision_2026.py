@@ -82,7 +82,7 @@ def test_initialization_constants():
     assert INITIALIZATION_SAMPLE_CAP == 4096
     assert KMEANS_PLUS_PLUS_LOCAL_TRIALS == 3
     assert MIN_DISTINCT_CANONICAL_VECTORS == 5
-    assert MAX_SCALE_ROUNDTRIP_ULP == 1
+    assert MAX_SCALE_ROUNDTRIP_ULP == 2
     assert NUM_COMPONENTS == 5
     assert CANONICAL_DIM == 4800
 

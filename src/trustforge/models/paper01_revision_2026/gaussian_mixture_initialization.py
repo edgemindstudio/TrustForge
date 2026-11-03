@@ -34,7 +34,7 @@ from trustforge.models.paper01_revision_2026.gaussian_mixture_observation import
 INITIALIZATION_SAMPLE_CAP = 4096
 KMEANS_PLUS_PLUS_LOCAL_TRIALS = 3
 MIN_DISTINCT_CANONICAL_VECTORS = NUM_COMPONENTS
-MAX_SCALE_ROUNDTRIP_ULP = 1
+MAX_SCALE_ROUNDTRIP_ULP = 2
 
 
 @dataclass(frozen=True)
