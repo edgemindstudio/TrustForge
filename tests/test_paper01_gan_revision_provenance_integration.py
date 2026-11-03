@@ -112,28 +112,25 @@ def test_provenance_failure_blocks_tensorflow_boundary(
 
 
 def test_source_order_preserves_all_execution_boundaries():
-    source_path = Path(
-        gan_governed_runner.__file__
-    )
-    tree = ast.parse(
-        source_path.read_text(encoding="utf-8")
-    )
+    source_path = Path(gan_governed_runner.__file__)
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
 
-    execute = next(
-        node for node in tree.body
+    functions = {
+        node.name: node
+        for node in tree.body
         if isinstance(node, ast.FunctionDef)
-        and node.name == "execute_gan_feasibility_run"
-    )
+    }
+
+    core = functions["_execute_gan_authorized_run"]
 
     calls = []
     tf_imports = []
 
-    for node in ast.walk(execute):
+    for node in ast.walk(core):
         if isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name):
-                calls.append(
-                    (node.func.id, node.lineno)
-                )
+                calls.append((node.func.id, node.lineno))
         elif isinstance(node, ast.Import):
             if any(
                 alias.name == "tensorflow"
@@ -145,43 +142,69 @@ def test_source_order_preserves_all_execution_boundaries():
 
     def only_line(name):
         matches = [
-            line for call_name, line in calls
+            line
+            for call_name, line in calls
             if call_name == name
         ]
         assert len(matches) == 1, (name, matches)
         return matches[0]
 
-    identity_line = only_line(
-        "require_gan_adapter_identity"
+    identity_line = only_line("require_gan_adapter_identity")
+    mapping_line = only_line("resolve_gan_class_mapping")
+    provenance_line = only_line("require_gan_dataset_provenance")
+    build_line = only_line("build_gan_v3_provenance")
+
+    lines = source.splitlines()
+
+    def guarded_line(fragment):
+        matches = [
+            i
+            for i in range(core.lineno, core.end_lineno + 1)
+            if fragment in lines[i - 1]
+        ]
+        assert len(matches) == 1, (fragment, matches)
+        return matches[0]
+
+    feasibility_line = guarded_line(
+        "if not GAN_FEASIBILITY_TRAINING_ENABLED:"
     )
-    provenance_line = only_line(
-        "require_gan_dataset_provenance"
+    production_line = guarded_line(
+        "if not GAN_PRODUCTION_TRAINING_ENABLED:"
     )
-    mapping_line = only_line(
-        "resolve_gan_class_mapping"
+    slurm_line = guarded_line(
+        'if not os.environ.get("SLURM_JOB_ID"):'
     )
 
+    assert feasibility_line < slurm_line
+    assert production_line < slurm_line
+    assert slurm_line < identity_line
+    assert slurm_line < mapping_line
     assert identity_line < provenance_line
     assert mapping_line < provenance_line
-    assert provenance_line < tf_imports[0]
+    assert provenance_line < build_line
+    assert build_line < tf_imports[0]
 
-    # Authorization and allocation guards remain before
-    # all provenance work and TensorFlow initialization.
-    lines = source_path.read_text(
-        encoding="utf-8"
-    ).splitlines()
+    for name, expected_mode in (
+        ("execute_gan_feasibility_run", "feasibility"),
+        ("execute_gan_production_run", "production"),
+    ):
+        wrapper = functions[name]
+        assert len(wrapper.body) == 2
+        statement = wrapper.body[-1]
+        assert isinstance(statement, ast.Return)
+        call = statement.value
+        assert isinstance(call, ast.Call)
+        assert isinstance(call.func, ast.Name)
+        assert call.func.id == "_execute_gan_authorized_run"
 
-    authorization_line = next(
-        i for i, line in enumerate(lines, 1)
-        if "if not GAN_FEASIBILITY_TRAINING_ENABLED:" in line
-    )
-    slurm_line = next(
-        i for i, line in enumerate(lines, 1)
-        if 'if not os.environ.get("SLURM_JOB_ID"):' in line
-    )
-
-    assert authorization_line < slurm_line
-    assert slurm_line < provenance_line
+        modes = [
+            keyword.value
+            for keyword in call.keywords
+            if keyword.arg == "mode"
+        ]
+        assert len(modes) == 1
+        assert isinstance(modes[0], ast.Constant)
+        assert modes[0].value == expected_mode
 
 
 def test_original_authorization_flags_remain_disabled():

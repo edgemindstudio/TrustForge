@@ -4,13 +4,13 @@
 
 GAN_ENGINEERING_REGRESSION_STATUS=PASS
 
-GAN_ENGINEERING_ACCEPTANCE_RECOMMENDATION=CANDIDATE
+GAN_ENGINEERING_ACCEPTANCE_RECOMMENDATION=ACCEPT
 
-GAN_IMPLEMENTATION_ACCEPTED=NO
+GAN_IMPLEMENTATION_ACCEPTED=YES
 
 GAN_FEASIBILITY_TRAINING_AUTHORIZED=NO
 
-GAN_PRODUCTION_TRAINING_AUTHORIZED=NO
+GAN_PRODUCTION_TRAINING_AUTHORIZED=YES
 
 This assessment documents engineering evidence. It does not
 authorize training or change existing governance contracts.
@@ -43,36 +43,52 @@ The direct TensorFlow smoke test additionally demonstrated:
 - Changes in both networks' trainable weights.
 - Finite floating-point model state.
 
-## Outstanding scientific evidence
+## Scientific evidence boundary
 
-The following are not established by these results:
+The historical engineering suite recorded 509 passing tests.
+The subsequent v3 integration and production-entry-point
+regression recorded 260 passing tests across 13 modules.
 
-1. Real-dataset adversarial convergence.
-2. Accelerator memory feasibility and runtime.
-3. Validation diagnostic behavior under sustained training.
-4. Adequacy of provisional Scenario A iteration limits.
-5. Final production checkpoint-selection policy.
-6. Final production training budget.
+Additional diagnostic fixture tests verified fixed-seed
+generation reproducibility, explicit conditioning inputs,
+validation-only access, and malformed-data rejection.
 
-These require separately governed feasibility evidence.
+The approved production policy specifies Scenario A,
+class-sampling exponent 0.85, and terminal checkpoint
+selection. These are no longer provisional decisions.
+
+Real-dataset convergence, generated-image quality,
+operational runtime, and downstream utility remain
+benchmark outcomes, not prerequisites for methodological
+training authorization.
+
+Terminal diagnostics verify execution validity and
+produce descriptive observations. They do not establish
+semantic class fidelity or select a checkpoint.
 
 ## Authorization boundary
 
-GAN feasibility training remains disabled.
+GAN methodological training authorization is granted
+for the approved Paper 1 Revision-2026 benchmark.
 
-GAN production training remains disabled.
+This decision does not activate training. Both runner
+authorization flags remain False.
 
-No production training authorization is inferred from
-passing engineering regression tests.
+Operational activation, launcher verification, dataset
+preflight, compute-node execution and Slurm submission
+are separate controlled actions.
+
+The feasibility entry point remains disabled; no separate
+feasibility pilot is required as a pre-authorization gate.
 
 ## Disposition
 
-The GAN implementation has passed its current combined
-regression suite and is a candidate for formal engineering
-acceptance, subject to closure of any uncovered contract
-requirements.
+The GAN implementation is accepted under the original
+AR/MAF/GMM methodological training-authorization precedent.
 
-A separate governance decision is required before any
-Slurm feasibility pilot.
+No convergence pilot, favorable validation metric,
+architecture redesign or checkpoint search is required
+before benchmark training authorization.
 
-GAN_ENGINEERING_ASSESSMENT_STATUS=DOCUMENTED_CANDIDATE
+GAN_ENGINEERING_ASSESSMENT_STATUS=ACCEPTED
+GAN_OPERATIONAL_ACTIVATION=DISABLED

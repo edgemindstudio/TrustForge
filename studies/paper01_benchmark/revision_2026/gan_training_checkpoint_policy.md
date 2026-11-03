@@ -2,7 +2,7 @@
 
 ## Status
 
-PROVISIONAL FEASIBILITY PROTOCOL — PRODUCTION NOT AUTHORIZED
+SCIENTIFIC TRAINING POLICY APPROVED — OPERATIONAL EXECUTION DISABLED
 
 ## 1. Scope
 
@@ -24,7 +24,7 @@ Report generator iterations and discriminator updates separately.
 The historical update arrangement is preserved for the initial
 implementation, subject to regression validation.
 
-## 3. Provisional feasibility budget
+## 3. Approved production training budget
 
 For training-set size N and batch size B = 256:
 
@@ -34,19 +34,19 @@ For training-set size N and batch size B = 256:
         max(500, 2 * steps_per_pass)
     )
 
-The resulting provisional limits are:
+The resulting predeclared limits are:
 
 - USTC-TFC2016: 570 generator iterations;
 - CICMalDroid2020: 500 generator iterations;
 - MalNet-Image: 6902 generator iterations;
 - MaleX: 5712 generator iterations.
 
-These are planning limits for feasibility assessment,
-not validated convergence budgets.
+These are approved prospective benchmark training limits,
+not validated convergence guarantees.
 
 ## 4. Class exposure
 
-The provisional real-data class sampler uses the separately
+The approved real-data class sampler uses the separately
 documented power-law exponent alpha = 0.85.
 
 Class counts are derived from the governed training split only.
@@ -58,7 +58,7 @@ A minimum-update floor does not establish model convergence.
 
 ## 5. Checkpoint selection
 
-For the initial feasibility protocol, the authoritative generator
+For the approved production protocol, the authoritative generator
 checkpoint is the terminal checkpoint at the predeclared
 completed training limit.
 
@@ -107,24 +107,26 @@ held-out test results or final benchmark outcomes.
 
 ## 8. Production decision boundary
 
-Scenario A is a provisional feasibility envelope only.
+Scenario A is the approved prospective GAN training protocol.
 
 It must not be presented as a proven sufficient GAN
 training budget.
 
-The final production budget and checkpoint policy require
-explicit review of bounded feasibility evidence.
+The existing engineering and compute-node smoke evidence
+supports prospective policy approval. Final execution
+integration and acceptance remain mandatory.
 
 ## 9. Authorization state
 
-GAN_FEASIBILITY_BUDGET=SCENARIO_A_PROVISIONAL
+GAN_TRAINING_BUDGET=SCENARIO_A_APPROVED
 GAN_FEASIBILITY_BATCH_SIZE=256
 GAN_FEASIBILITY_MIN_GENERATOR_ITERATIONS=500
 GAN_FEASIBILITY_MAX_GENERATOR_ITERATIONS=10000
 GAN_FEASIBILITY_NOMINAL_PASSES=2
 GAN_FEASIBILITY_CHECKPOINT=TERMINAL
-GAN_PRODUCTION_BUDGET_GOVERNED=NO
-GAN_PRODUCTION_CHECKPOINT_POLICY_GOVERNED=NO
-GAN_IMPLEMENTATION_ACCEPTED=NO
+GAN_PRODUCTION_BUDGET_GOVERNED=YES
+GAN_PRODUCTION_CHECKPOINT_POLICY_GOVERNED=YES
+GAN_IMPLEMENTATION_ACCEPTED=YES
 GAN_FEASIBILITY_TRAINING_AUTHORIZED=NO
-GAN_PRODUCTION_TRAINING_AUTHORIZED=NO
+GAN_METHODOLOGICAL_TRAINING_AUTHORIZED=YES
+GAN_OPERATIONAL_EXECUTION_ENABLED=NO

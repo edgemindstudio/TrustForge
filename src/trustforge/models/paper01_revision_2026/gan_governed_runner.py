@@ -1,7 +1,7 @@
 """Governed Paper 1 revision-2026 GAN runner.
 
-Feasibility execution remains disabled pending explicit authorization.
-No production execution path is provided.
+Feasibility and production execution are independently guarded.
+Both authorization flags remain disabled pending explicit acceptance.
 """
 
 from __future__ import annotations
@@ -99,19 +99,25 @@ def prepare_gan_run(
     )
 
 
-def execute_gan_feasibility_run(
+def _execute_gan_authorized_run(
     preparation: GANRunPreparation,
     *,
     dataset,
+    mode,
 ):
-    """Execute only after a separate governance authorization.
-
-    The present revision deliberately rejects every execution attempt.
-    """
-    if not GAN_FEASIBILITY_TRAINING_ENABLED:
-        raise PermissionError(
-            "GAN feasibility training is not authorized"
-        )
+    """Shared GAN execution; always enforce mode-specific authorization."""
+    if mode == "feasibility":
+        if not GAN_FEASIBILITY_TRAINING_ENABLED:
+            raise PermissionError(
+                "GAN feasibility training is not authorized"
+            )
+    elif mode == "production":
+        if not GAN_PRODUCTION_TRAINING_ENABLED:
+            raise PermissionError(
+                "GAN production training is not authorized"
+            )
+    else:
+        raise PermissionError("unsupported GAN execution mode")
 
     if not os.environ.get("SLURM_JOB_ID"):
         raise RuntimeError("GAN training requires a Slurm compute node")
@@ -137,9 +143,18 @@ def execute_gan_feasibility_run(
 
     # Mandatory compute-node provenance boundary.
     # This does not authorize training.
-    require_gan_dataset_provenance(
+    verified_preflight = require_gan_dataset_provenance(
         dataset_id=plan.dataset_id,
         adapter=dataset,
+    )
+
+    from trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter import (
+        build_gan_v3_provenance,
+    )
+
+    dataset_provenance = build_gan_v3_provenance(
+        dataset_id=plan.dataset_id,
+        verified_preflight=verified_preflight,
     )
 
     import tensorflow as tf
@@ -157,8 +172,8 @@ def execute_gan_feasibility_run(
     from trustforge.models.paper01_revision_2026.gan_training_step import (
         gan_training_step,
     )
-    from trustforge.models.paper01_revision_2026.gan_checkpoint_persistence import (
-        persist_terminal_gan_checkpoint,
+    from trustforge.models.paper01_revision_2026.gan_checkpoint_v3_persistence import (
+        persist_terminal_gan_checkpoint_v3,
     )
 
     tf.keras.utils.set_random_seed(plan.experimental_seed)
@@ -252,6 +267,29 @@ def execute_gan_feasibility_run(
 
     accounting.require_terminal()
 
+    from trustforge.models.paper01_revision_2026.gan_descriptive_diagnostics import (
+        observe_gan_terminal_diagnostics,
+    )
+    import json
+
+    terminal_diagnostics = observe_gan_terminal_diagnostics(
+        generator=models["generator"],
+        dataset=dataset,
+        experimental_seed=plan.experimental_seed,
+        class_count=len(plan.class_mapping),
+    )
+
+    # Descriptive only: never affects training or checkpoint selection.
+    print(
+        "GAN_TERMINAL_DIAGNOSTICS "
+        + json.dumps(
+            terminal_diagnostics,
+            sort_keys=True,
+            allow_nan=False,
+        ),
+        flush=True,
+    )
+
     exposure_report = exposure.report(
         expected_batches=accounting.generator_iterations,
         expected_draws=plan.nominal_real_exposures,
@@ -264,13 +302,14 @@ def execute_gan_feasibility_run(
         )
     )
 
-    metadata = persist_terminal_gan_checkpoint(
+    metadata = persist_terminal_gan_checkpoint_v3(
         preparation.checkpoint_directory,
         dataset_id=plan.dataset_id,
         experimental_seed=plan.experimental_seed,
         class_mapping=plan.class_mapping,
         planned_generator_iterations=plan.planned_generator_iterations,
         exposure_evidence=exposure_evidence,
+        dataset_provenance=dataset_provenance,
         **models,
     )
 
@@ -284,6 +323,33 @@ def execute_gan_feasibility_run(
         "exposure_evidence": exposure_evidence,
         "exposure_evidence_sha256": exposure_evidence_sha256,
         "last_losses": last_losses,
+        "terminal_diagnostics": terminal_diagnostics,
         "completed_generator_iterations": accounting.generator_iterations,
         "completed_discriminator_updates": accounting.discriminator_updates,
     }
+
+
+def execute_gan_feasibility_run(
+    preparation: GANRunPreparation,
+    *,
+    dataset,
+):
+    """Feasibility-only entry point; authorization remains mandatory."""
+    return _execute_gan_authorized_run(
+        preparation,
+        dataset=dataset,
+        mode="feasibility",
+    )
+
+
+def execute_gan_production_run(
+    preparation: GANRunPreparation,
+    *,
+    dataset,
+):
+    """Production-only entry point; authorization remains mandatory."""
+    return _execute_gan_authorized_run(
+        preparation,
+        dataset=dataset,
+        mode="production",
+    )

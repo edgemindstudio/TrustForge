@@ -50,7 +50,7 @@ def _bounded_seed(value):
     return value
 
 
-def run_synthetic_vae_training(
+def _run_vae_training_core(
     *,
     adapter,
     num_classes,
@@ -58,17 +58,13 @@ def run_synthetic_vae_training(
     epochs,
     batch_size,
     learning_rate,
-    development_mode,
 ):
-    """Train and validate fully in memory using a synthetic adapter.
+    """Internal training mechanics shared only by governed callers.
 
-    A development_mode string does not authenticate the adapter's data.
-    The caller remains responsible for synthetic-only provenance.
+    This function does not authenticate dataset provenance, authorize
+    execution, prepare checkpoints, or publish artifacts.
+    Callers must enforce the appropriate authorization boundary first.
     """
-    if development_mode != "synthetic_only":
-        raise PermissionError(
-            "VAE runner restricted to synthetic development"
-        )
 
     num_classes = _positive_int(num_classes, "num_classes")
     if num_classes < 2:
@@ -265,6 +261,36 @@ def run_synthetic_vae_training(
         "checkpoint_status": "NOT_PREPARED",
         "publication_status": "NOT_PUBLISHED",
     }
+
+
+def run_synthetic_vae_training(
+    *,
+    adapter,
+    num_classes,
+    experimental_seed,
+    epochs,
+    batch_size,
+    learning_rate,
+    development_mode,
+):
+    """Run the established synthetic-only VAE development workflow.
+
+    The development-mode value is not dataset authentication.
+    This public entry point remains restricted to synthetic development.
+    """
+    if development_mode != "synthetic_only":
+        raise PermissionError(
+            "VAE runner restricted to synthetic development"
+        )
+
+    return _run_vae_training_core(
+        adapter=adapter,
+        num_classes=num_classes,
+        experimental_seed=experimental_seed,
+        epochs=epochs,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+    )
 
 
 __all__ = ["run_synthetic_vae_training"]

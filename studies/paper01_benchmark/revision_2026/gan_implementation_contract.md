@@ -1,6 +1,6 @@
 # Paper 1 Revision 2026 — Conditional GAN Implementation Contract
 
-Status: DRAFT — IMPLEMENTATION NOT AUTHORIZED
+Status: ACCEPTED — TRAINING AUTHORIZED; EXECUTION DISABLED
 Scope: Revised Paper 1 benchmark only
 
 ## 1. Scientific identity
@@ -151,8 +151,30 @@ must be recorded and closed before production authorization.
 ## 10. Authorization state
 
 GAN_ARCHITECTURE_REDESIGN_REQUIRED=NO
-GAN_IMPLEMENTATION_CONTRACT_STATUS=DRAFT
-GAN_TRAINING_BUDGET_GOVERNED=NO
-GAN_CHECKPOINT_SELECTION_GOVERNED=NO
-GAN_IMPLEMENTATION_AUTHORIZED=NO
-GAN_PRODUCTION_TRAINING_AUTHORIZED=NO
+GAN_IMPLEMENTATION_CONTRACT_STATUS=ACCEPTED
+GAN_TRAINING_BUDGET_GOVERNED=YES
+GAN_CHECKPOINT_SELECTION_GOVERNED=YES
+GAN_IMPLEMENTATION_AUTHORIZED=YES
+GAN_PRODUCTION_TRAINING_AUTHORIZED=YES
+
+## 11. Final authorization clarification
+
+The scientific choices described above were finalized by
+`gan_final_scientific_policy_decision.md`.
+
+The prescribed Scenario A training budget and terminal
+checkpoint-selection rule are approved. A sustained
+real-data convergence pilot is not required before
+methodological training authorization.
+
+The implementation has passed governed engineering,
+checkpoint, authorization-isolation and descriptive
+diagnostic checks.
+
+The explicit authorization is documented in
+`gan_formal_training_authorization.md`.
+
+Training remains operationally disabled until its
+execution flags and launcher are separately reviewed
+and activated. This authorization does not submit jobs
+or establish successful model convergence.
