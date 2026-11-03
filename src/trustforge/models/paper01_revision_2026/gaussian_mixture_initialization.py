@@ -27,6 +27,7 @@ from trustforge.models.paper01_revision_2026.gaussian_mixture_observation import
     MIN_VARIANCE,
     NUM_COMPONENTS,
     inverse_softplus_positive,
+    transformed_scale,
 )
 
 
@@ -406,6 +407,82 @@ def _production_initial_scales(
             dtype=tf.float64,
         )
     ).numpy()
+
+    # Correct only dimensions that exceed the governed one-ULP
+    # initialization tolerance. Already acceptable raw values remain
+    # bit-for-bit unchanged.
+    actual_scale = transformed_scale(
+        tf.constant(raw_vector, dtype=tf.float64)
+    ).numpy()
+
+    best_distance = _positive_float64_ulp_distance(
+        actual_scale,
+        production_scale,
+    )
+
+    needs_repair = (
+        best_distance > MAX_SCALE_ROUNDTRIP_ULP
+    )
+
+    if np.any(needs_repair):
+        baseline = raw_vector.copy()
+        best_raw = raw_vector.copy()
+        lower = baseline.copy()
+        upper = baseline.copy()
+
+        # Fixed search radius, with deterministic negative-first
+        # tie-breaking. Evaluate through the production forward
+        # transformation rather than a separate approximation.
+        for _ in range(8):
+            lower = np.nextafter(
+                lower,
+                np.float64(-np.inf),
+            )
+            upper = np.nextafter(
+                upper,
+                np.float64(np.inf),
+            )
+
+            for neighbor in (lower, upper):
+                proposal = baseline.copy()
+                proposal[needs_repair] = neighbor[needs_repair]
+
+                if not np.isfinite(proposal).all():
+                    continue
+
+                try:
+                    proposal_scale = transformed_scale(
+                        tf.constant(proposal, dtype=tf.float64)
+                    ).numpy()
+                except tf.errors.InvalidArgumentError:
+                    # An invalid neighboring candidate is rejected;
+                    # the original strict scale contract remains.
+                    continue
+
+                proposal_distance = (
+                    _positive_float64_ulp_distance(
+                        proposal_scale,
+                        production_scale,
+                    )
+                )
+
+                improved = (
+                    needs_repair
+                    & (proposal_distance < best_distance)
+                )
+
+                best_raw[improved] = proposal[improved]
+                best_distance[improved] = proposal_distance[improved]
+
+        if np.any(
+            best_distance > MAX_SCALE_ROUNDTRIP_ULP
+        ):
+            raise RuntimeError(
+                "bounded GMM raw-scale correction could not "
+                "satisfy governed one-ULP tolerance"
+            )
+
+        raw_vector = best_raw
 
     if raw_vector.dtype != np.float64:
         raise RuntimeError(
