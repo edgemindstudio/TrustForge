@@ -13,7 +13,9 @@ import time
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--family", choices=("ar", "maf"), required=True)
+    parser.add_argument("--sample-batch-size", type=int, choices=(1, 8), default=1)
     args = parser.parse_args()
+    sample_count = args.sample_batch_size
 
     if not os.environ.get("SLURM_JOB_ID"):
         raise RuntimeError("Slurm allocation required")
@@ -57,6 +59,8 @@ def main():
         "host": socket.gethostname(),
         "job_id": os.environ["SLURM_JOB_ID"],
         "threads": threads,
+        "sample_batch_size": sample_count,
+        "sampling_time_limit_seconds": 300,
     }
     print("FEASIBILITY_BEGIN", json.dumps(record), flush=True)
 
@@ -108,7 +112,7 @@ def main():
             model, images, onehot, config=config
         )
         sample = lambda: sample_revision_pixelcnn(
-            model, class_ids=np.array([0], dtype=np.int32),
+            model, class_ids=np.zeros(sample_count, dtype=np.int32),
             img_shape=(40, 40, 3), num_classes=classes,
             temperature=ar["sampling_temperature"],
             min_log_scale=ar["min_log_scale"],
@@ -131,7 +135,7 @@ def main():
             model, images, labels, training=False
         )
         sample = lambda: model.sample(
-            tf.constant([0], dtype=tf.int32), seed=42
+            tf.zeros([sample_count], dtype=tf.int32), seed=42
         ).numpy()
 
     record["parameter_count"] = int(sum(
@@ -170,17 +174,19 @@ def main():
 
     previous = signal.signal(signal.SIGALRM, timeout_handler)
     start = time.perf_counter()
-    signal.alarm(120)
+    signal.alarm(300)
     try:
         generated = sample()
         if (
-            generated.shape != (1, 40, 40, 3)
+            generated.shape != (sample_count, 40, 40, 3)
             or generated.dtype != np.float32
             or not np.isfinite(generated).all()
             or np.any(generated < 0) or np.any(generated > 1)
         ):
             raise RuntimeError("Invalid generated sample")
-        record["sampling_status"] = "COMPLETE_ONE_SAMPLE"
+        record["sampling_status"] = (
+            "COMPLETE_ONE_SAMPLE" if sample_count == 1 else "COMPLETE_BATCH"
+        )
     except TimeoutError:
         record["sampling_status"] = "TIME_LIMIT_INCOMPLETE"
     finally:
@@ -193,7 +199,7 @@ def main():
     ).ru_maxrss
     record["production_ready"] = False
     print("FEASIBILITY_RESULT", json.dumps(record, allow_nan=False), flush=True)
-    if record["sampling_status"] != "COMPLETE_ONE_SAMPLE":
+    if record["sampling_status"] not in ("COMPLETE_ONE_SAMPLE", "COMPLETE_BATCH"):
         raise SystemExit(2)
 
 if __name__ == "__main__":

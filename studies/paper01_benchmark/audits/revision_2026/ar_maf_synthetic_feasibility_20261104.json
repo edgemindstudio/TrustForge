@@ -1,0 +1,125 @@
+{
+  "limitations": [
+    "Synthetic fixture only; no governed real-data integration verified.",
+    "Training and validation use the same diagnostic fixture.",
+    "Three updates do not establish convergence or sustained stability.",
+    "One sampled image does not establish production batch throughput.",
+    "Peak RSS is process-reported, distinct from scheduler MaxRSS.",
+    "Scheduler outcomes were reviewed separately; not parsed here.",
+    "Production readiness remains unestablished."
+  ],
+  "records": [
+    {
+      "family": "ar",
+      "job_id": "310948",
+      "logs": {
+        "err": {
+          "bytes": 15417,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-feasibility-7415437-S1B9sBkM/ar.310948.err",
+          "sha256": "db22cdbaf004fac5b931302867c4c629e8eab645a1a352476751985b3bfcbec3"
+        },
+        "out": {
+          "bytes": 921,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-feasibility-7415437-S1B9sBkM/ar.310948.out",
+          "sha256": "9f8aa8aa62c0e34a26b2bda7ca15cf23a11c92fd2ec119d63acb368c40c112b8"
+        }
+      },
+      "outcome": "HARNESS_MIXED_INPUT_FAILURE_BEFORE_UPDATES"
+    },
+    {
+      "family": "maf",
+      "job_id": "310949",
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-feasibility-7415437-S1B9sBkM/maf.310949.err",
+          "sha256": "4c5877d1cf6b2a39ab8d5571280adb7573e4ac076a28687b2b58a4c7403bfe4f"
+        },
+        "out": {
+          "bytes": 1905,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-feasibility-7415437-S1B9sBkM/maf.310949.out",
+          "sha256": "86d17aa4f405446c6dc1107d6171a248379dd68804a124420765c6504bd0a538"
+        }
+      },
+      "outcome": "BOUNDED_SYNTHETIC_CHECK_PASSED",
+      "result": {
+        "candidate_sha256": "d082853e377913c30ccb951ea31994e56720559ee59e4b0120932ef4d42c35a6",
+        "family": "maf",
+        "head": "7415437fed7ae28bbde669fddb1a4d5270752e50",
+        "host": "talon06.cm.cluster",
+        "job_id": "310949",
+        "numpy": "2.2.6",
+        "optimizer_updates": 3,
+        "parameter_count": 2115840,
+        "parameters_changed": true,
+        "peak_process_rss_kib": 2114416,
+        "production_ready": false,
+        "purpose": "SYNTHETIC_FEASIBILITY_ONLY",
+        "sampling_seconds": 2.2602658132091165,
+        "sampling_status": "COMPLETE_ONE_SAMPLE",
+        "script_sha256": "e02433ac982d3c14d773db4c8e28d459a4fbfbfd27771f2fc0a796a14961d719",
+        "tensorflow": "2.20.0",
+        "threads": 8,
+        "training_losses": [
+          885.6915283203125,
+          389.3841857910156,
+          135.64207458496094
+        ],
+        "training_step_seconds": [
+          1.619603447150439,
+          1.3795067355968058,
+          1.389868054073304
+        ],
+        "validation_loss": 32.28092956542969
+      }
+    },
+    {
+      "family": "ar",
+      "job_id": "310951",
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-feasibility-48413d1-msXl7xUH/ar.310951.err",
+          "sha256": "fc3859972e98adc8619633ed18c9768a3fdfd2fdd86fb814406cc1d4128b22e6"
+        },
+        "out": {
+          "bytes": 1899,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-feasibility-48413d1-msXl7xUH/ar.310951.out",
+          "sha256": "0870490940643ea49ca5ac1980fcdb9140da021b0cce8a0f15ee8c339147b31b"
+        }
+      },
+      "outcome": "BOUNDED_SYNTHETIC_CHECK_PASSED",
+      "result": {
+        "candidate_sha256": "d082853e377913c30ccb951ea31994e56720559ee59e4b0120932ef4d42c35a6",
+        "family": "ar",
+        "head": "48413d1a3d72f28b8b3ebe2c56dd3f442848a5bd",
+        "host": "talon06.cm.cluster",
+        "job_id": "310951",
+        "numpy": "2.2.6",
+        "optimizer_updates": 3,
+        "parameter_count": 257289,
+        "parameters_changed": true,
+        "peak_process_rss_kib": 2222232,
+        "production_ready": false,
+        "purpose": "SYNTHETIC_FEASIBILITY_ONLY",
+        "sampling_seconds": 53.6549072181806,
+        "sampling_status": "COMPLETE_ONE_SAMPLE",
+        "script_sha256": "38ebf44cd919838e618919601fd9e17cecb648931f2df840fca313b4f5d27a82",
+        "tensorflow": "2.20.0",
+        "threads": 8,
+        "training_losses": [
+          4.373713493347168,
+          4.191096305847168,
+          4.02372932434082
+        ],
+        "training_step_seconds": [
+          0.8433527122251689,
+          0.6844308180734515,
+          0.6820272137410939
+        ],
+        "validation_loss": 3.836005210876465
+      }
+    }
+  ],
+  "schema": "trustforge.paper01.synthetic-feasibility-evidence.v1"
+}

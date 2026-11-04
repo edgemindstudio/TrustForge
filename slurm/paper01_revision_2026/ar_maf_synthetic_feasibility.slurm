@@ -66,4 +66,5 @@ echo "SLURM_JOB_ID=$SLURM_JOB_ID"
 hostname
 
 "$PYTHON" -B -u scripts/check_paper01_ar_maf_feasibility.py \
-    --family "$TF_FEAS_FAMILY"
+    --family "$TF_FEAS_FAMILY" \
+    --sample-batch-size "${TF_FEAS_SAMPLE_BATCH_SIZE:-1}"
