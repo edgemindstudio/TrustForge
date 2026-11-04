@@ -465,3 +465,48 @@ Status: PROPOSED — acceptance and implementation verification pending.
 Remaining decisions: AR/MAF complete recipes, retry resource limits,
 final acceptance of the proposed shared policies and executable linkage.
 Stage 2 remains IN_PROGRESS. FULL_BENCHMARK_GO remains NO.
+
+## 14. Shared-policy acceptance and AR/MAF recovery
+
+Decision date: 2026-11-04.
+
+Bruno explicitly accepted the shared methodological choices presented in
+Sections 11-13: seeds 42-48, paired unweighted classifier comparison,
+specified diagnostic metrics, estimation-focused paired reporting,
+claim limitations, and explicit incomplete-run/retry identity rules.
+
+SHARED_POLICY_METHODOLOGICAL_ACCEPTANCE=YES
+SHARED_POLICY_IMPLEMENTATION_VERIFIED=NO
+FULL_BENCHMARK_GO=NO
+
+This acceptance supersedes pending/proposed wording only for those selected
+shared choices. It does not close explicitly unresolved retry/resource
+limits, feature-weight identification, numerical implementation checks,
+AR/MAF recipes or production activation. Earlier proposal wording is
+retained as the decision-development record.
+
+### Recovered AR/MAF scope
+
+The supplied historical recovery confirms accepted model mathematics and
+training primitives, not complete dataset-level execution recipes.
+Missing optimizer, budget, traversal, checkpoint and sampling controls
+must be selected prospectively rather than inferred from tests.
+
+The recovery is reported historical evidence. Exact original acceptance-test
+commits remain unestablished; current implementation checks are separate.
+
+AR's inspected observation contract supplies initial scale bounds [-7,3].
+The recovery's broader statement that scale values were never selected
+does not override this explicit contractual evidence.
+
+Current AR constructor defaults are filters=64 and masked_layers=6,
+following an initial mask-A layer. Their use in the benchmark requires
+an explicit recipe decision.
+
+MAF structural permutation seeds are (42,43,44,45,46), distinct from
+experimental seeds. Its sampler resets a stateless stream per call;
+production orchestration must prevent accidental latent-stream reuse
+across generated batches.
+
+No AR/MAF recipe is selected by this recovery record.
+Stage 2 remains IN_PROGRESS.

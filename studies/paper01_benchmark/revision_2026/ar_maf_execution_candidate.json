@@ -1,0 +1,120 @@
+{
+  "autoregressive": {
+    "constructor": "build_revision_pixelcnn",
+    "filters": 64,
+    "masked_layers": 6,
+    "max_log_scale": 3.0,
+    "min_log_scale": -7.0,
+    "observation": "channel_coupled_boundary_censored_logistic",
+    "required_integration_changes": [
+      "sample-weighted epoch losses",
+      "strict minimum-loss selection without 1e-6 tolerance",
+      "exact canonical shape and semantic label validation",
+      "collision-safe checkpoint publication and fresh-process restoration"
+    ],
+    "sampling_temperature": 1.0
+  },
+  "canonical_shape": [
+    40,
+    40,
+    3
+  ],
+  "experimental_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "feasibility": {
+    "assess": [
+      "construction and parameter count",
+      "finite loss and gradients",
+      "actual optimizer updates",
+      "memory and per-step wall time",
+      "bounded sampling cost"
+    ],
+    "class_count": 47,
+    "compute": "Slurm_CPU_allocation",
+    "does_not_establish": [
+      "dataset integration",
+      "full-run runtime guarantee",
+      "convergence or sample quality",
+      "production readiness"
+    ],
+    "experimental_seed": 42,
+    "families_run_in_separate_processes": true,
+    "training_input": "deterministic_synthetic_canonical_fixture"
+  },
+  "masked_autoflow": {
+    "architecture": "existing_accepted_revision_2026",
+    "constructor": "ConditionalBlockMAF",
+    "log_slope_limit": 0.75,
+    "permutation_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "required_integration_changes": [
+      "complete training and validation runner",
+      "identity-bound checkpoint publication and fresh-process restoration",
+      "explicit nonrepeating synthesis random-stream identities"
+    ]
+  },
+  "optimizer": {
+    "amsgrad": false,
+    "beta_1": 0.9,
+    "beta_2": 0.999,
+    "epsilon": 1e-07,
+    "gradient_clipping": null,
+    "learning_rate": 0.001,
+    "learning_rate_schedule": "constant",
+    "name": "Adam",
+    "weight_decay": null
+  },
+  "origin": "Prospective choices; not recovered historical settings",
+  "production_execution_authorized": false,
+  "sampling": {
+    "batch_size": "PENDING_FEASIBILITY",
+    "requirements": [
+      "class and experimental identity retained",
+      "no accidental stream restart across batches",
+      "sample identities recorded",
+      "batch-partition reproducibility scope explicitly declared"
+    ],
+    "samples_per_class": 2000,
+    "stream_derivation": "PENDING_EXPLICIT_CONTRACT"
+  },
+  "schema": "trustforge.paper01.ar-maf.execution-candidate.v1",
+  "status": "CANDIDATE_PENDING_FEASIBILITY",
+  "training": {
+    "candidate_batch_size": 64,
+    "class_distribution": "natural_training_distribution",
+    "class_weighting": null,
+    "drop_remainder": false,
+    "early_stopping": false,
+    "epoch_index_base": 0,
+    "epochs": 2,
+    "shuffle": "numpy_default_rng_permutation",
+    "shuffle_seed": "experimental_seed + epoch_index",
+    "traversal": "each_training_position_once_per_epoch"
+  },
+  "validation": {
+    "aggregation": "sample_weighted_mean_nll",
+    "cadence": "after_each_complete_epoch",
+    "coverage": "entire_governed_validation_split",
+    "minimum_improvement": 0.0,
+    "order": "governed_split_order",
+    "retain_roles": [
+      "best",
+      "last"
+    ],
+    "selection": "minimum_validation_nll",
+    "test_access": false,
+    "tie_break": "earliest_epoch"
+  }
+}
