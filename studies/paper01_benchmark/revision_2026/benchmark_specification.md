@@ -282,3 +282,186 @@ every historical execution.
 Exact KID/FID sampling, MS-SSIM definition, estimator validation,
 statistical analysis and failure aggregation remain to be finalized.
 Historical evaluator behavior remains preserved.
+
+## 12. Shared execution and analysis proposal
+
+Status: PROPOSED — NOT YET FROZEN OR IMPLEMENTATION-VERIFIED.
+This section proposes new decisions, not recovered historical decisions.
+
+### Randomization and primary comparison
+
+- Experimental seeds: [42,43,44,45,46,47,48].
+- Dataset partitions remain fixed under their existing contracts.
+- Evaluator seed equals the associated experimental seed.
+- Real-only and augmented classifiers use the same evaluator seed and
+  initial architecture/weights; verify initial-weight identity explicitly.
+- Reset supported random generators before each classifier construction.
+  Record environment and determinism settings; identical seeds alone do
+  not guarantee bitwise replay across environments.
+- Use no class weighting in either primary condition.
+- Retain the proposed EvalCNN controls in Section 11.
+- An epoch traverses the entire respective training condition.
+  Equal epoch limits do not equalize updates or real-sample exposure.
+- Reuse a real-only baseline across families only when dataset, split,
+  evaluator configuration, seed, source and environment identities match.
+
+### Three-scale intra-class MS-SSIM proposal
+
+- Metric identifier: ms_ssim_3scale_40x40_v1.
+- Input: finite float32 canonical 40x40x3 images in [0,1].
+- No resizing, grayscale conversion or range guessing inside this metric.
+- TensorFlow ssim_multiscale with max_val=1.0, filter_size=7,
+  filter_sigma=1.5, k1=0.01 and k2=0.03.
+- Three scales, with equal power_factors=(1/3,1/3,1/3).
+  This is an explicitly adapted variant, not standard five-scale MS-SSIM.
+- Preserve the implementation's channel reduction semantics and record
+  the exact TensorFlow version.
+- Select 200 unique unordered pairs of distinct samples per class,
+  uniformly without replacement from the class's possible pairs.
+- Require the complete 2000/class pool for primary evaluation.
+- Pair selection uses default_rng(42 + class_id), separately per class,
+  on sample indices in the verified synthetic-manifest order.
+- Persist pair indices and manifest identity; reuse index pairs across
+  comparable pools with the same count.
+- Report every class mean, pair count and an equal-weight class macro mean.
+- Any missing class, failed pair or nonfinite result prevents complete
+  metric status; no single-scale SSIM fallback or successful-pair omission.
+- Higher similarity suggests lower within-class variation. A low value
+  alone does not establish realism, label fidelity or useful diversity.
+- Historical fallback values are not directly comparable to this variant.
+- Acceptance requires geometry, reference agreement, reproducibility,
+  class coverage and failure-path checks before production use.
+
+### Utility estimand and uncertainty proposal
+
+- Primary endpoint: augmented minus real-only macro-F1.
+- Analyze seven paired repetition-level differences separately for each
+  dataset/family, with macro-F1 expressed on the [0,1] scale.
+- Publish all seven differences, their mean and sample standard deviation.
+- Supporting endpoints include balanced accuracy, macro-AUPRC,
+  calibration and classwise outcomes.
+- Proposed primary uncertainty summary: two-sided 95% Student-t interval
+  for the mean paired difference, using six degrees of freedom.
+- This interval assumes independent repetition-level differences and an
+  adequate normal approximation; seven repetitions cannot establish that
+  assumption. Disclose its small-sample and fixed-dataset limitations.
+- The interval is pointwise, not simultaneous across the benchmark.
+- Do not treat synthetic samples, classes, metric subsets or reused
+  baselines as additional independent repetitions.
+- The proposed inference policy is estimation-only, as specified in
+  Section 13; no confirmatory significance or benchmark-wide superiority claims.
+- Do not use confidence-interval overlap with zero as evidence of equivalence.
+- No inference policy may be selected because it produces favorable results.
+
+### Missing-run and retry proposal
+
+- Enumerate every expected dataset/family/seed and required stage.
+- Track training, checkpoint, synthesis and evaluation statuses separately.
+- Preserve every failed, interrupted and superseded attempt with its cause.
+- A retry retains scientific identity but receives a fresh execution ID
+  and destination; never overwrite an authoritative completed artifact.
+- Select the first attempt satisfying predeclared execution and integrity
+  requirements, never the attempt with the best scientific metric.
+- Infrastructure retries must not alter the scientific configuration.
+  Scientific changes create a new protocol identity and require an
+  explicit compatibility/re-execution decision.
+- Resume only when provenance and supported restoration semantics match;
+  otherwise restart under a fresh attempt identity.
+- Retry limits/resource escalation must be fixed before scale-out.
+- Never replace missing values with zero or silently shrink the seed set.
+- A cell with fewer than seven valid paired runs is INCOMPLETE.
+  Available-case summaries may be shown as descriptive, explicitly
+  conditional on successful runs; primary seven-run inference is withheld.
+- Report completion/failure rates alongside scientific results.
+- No result-driven replacement seeds.
+
+### Remaining shared decisions
+
+- KID/FID reference sampling, feature-weight identity and metric scope.
+- Final acceptance of estimation-only reporting and its claim boundaries.
+- Exact retry limits and resource policy.
+- MS-SSIM implementation acceptance.
+- AR/MAF complete training and sampling recipes.
+- Final scientific acceptance and executable configuration linkage.
+
+FULL_BENCHMARK_GO remains NO.
+
+## 13. Fidelity and inference proposal
+
+Status: PROPOSED — acceptance and implementation verification pending.
+
+### Feature extraction
+
+- Use one fixed Keras InceptionV3 feature extractor: include_top=False,
+  pooling=avg, input_shape=(299,299,3), explicitly selected ImageNet weights.
+- Record framework versions and SHA-256 of the actual weight artifact.
+  Resolve and verify that artifact before evaluation; do not silently
+  substitute random weights or a different feature extractor.
+- Inputs are canonical RGB float32 [0,1]. Preserve all three channels.
+- Resize to 299x299 with explicitly configured bilinear interpolation,
+  antialias=False; multiply by 255 and use InceptionV3 preprocess_input.
+- Extract features in inference mode with bounded batches.
+- Inception features are generic-image diagnostics, not demonstrated
+  malware-semantic representations.
+- Pixel/feature preprocessing must be identical across all families.
+
+### Class-balanced reference design
+
+- Reference real images come from the governed validation split.
+- For each dataset, set m to min(200, minimum validation class count).
+  Require m >= 2 and all authoritative classes to be present.
+- Select m distinct real validation samples per class using a separate
+  default_rng(42 + class_id) on fixed governed split order.
+- Save selected identities before family comparison and reuse them across
+  all families and repetitions on that dataset.
+- Select m distinct synthetic samples per class using a separate
+  default_rng(42 + class_id) on verified manifest order.
+- Never filter these selections using metric scores.
+- The pooled reference and synthetic sets each contain K*m images,
+  with equal representation of every authoritative class.
+- Report m, K, per-class counts, selected identities and effective sizes.
+- Missing classes prevent complete primary fidelity status.
+
+### KID definition
+
+- Primary supporting fidelity diagnostic: pooled class-balanced KID.
+- Use unbiased degree-3 polynomial-kernel MMD-squared on the fixed features,
+  gamma=1/feature_dimension and coef0=1.
+- Use ten subset draws, each of size min(200,K*m), sampling without
+  replacement within each draw, with default_rng(42).
+- Retain every subset estimate and report their arithmetic mean.
+- Draws may overlap and are not independent experimental repetitions.
+  Their spread is descriptive, not a seven-seed confidence interval.
+- Do not clamp negative unbiased estimates to zero.
+- Explicitly call the result pooled class-balanced KID, not macro cKID.
+- Record estimator, feature and subset identities; compute once.
+- Validate estimator mathematics and RGB integration before execution.
+
+### FID and cFID scope
+
+- Secondary diagnostics use the same fixed feature sets.
+- Report pooled balanced FID separately from per-class FID.
+- Macro cFID is the equal-weight mean over all authoritative classes.
+  Incomplete class coverage prevents complete macro-cFID status.
+- Explicitly disclose limited samples relative to 2048 feature dimensions,
+  singular empirical covariances and finite-sample estimator limitations.
+- Validate numerical handling; do not silently alter features, add
+  unreported regularization, discard failed classes or substitute metrics.
+- Do not infer generator rankings solely from FID/cFID/KID.
+
+### Inference and claim boundaries
+
+- Proposed Paper 1 reporting is estimation-focused: all seed results,
+  mean paired macro-F1 differences, sample SD and pointwise t intervals.
+- No confirmatory hypothesis tests, adjusted p-values or significance stars.
+- No family-wide or benchmark-wide superiority claim from pointwise intervals.
+- Supporting endpoints and cross-metric correlations are descriptive.
+- No pooling datasets as if they were independent seed repetitions.
+- A later confirmatory testing plan requires a prospective amendment
+  before the relevant outcome comparisons are examined.
+- Reviewer concerns are addressed through paired effect/uncertainty
+  reporting and restrained claims, not an automatic significance claim.
+
+Remaining decisions: AR/MAF complete recipes, retry resource limits,
+final acceptance of the proposed shared policies and executable linkage.
+Stage 2 remains IN_PROGRESS. FULL_BENCHMARK_GO remains NO.

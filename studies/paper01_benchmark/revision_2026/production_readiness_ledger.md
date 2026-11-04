@@ -37,7 +37,7 @@ It does not establish production acceptance.
 | Stage | Purpose and exit evidence | Status |
 | --- | --- | --- |
 | 1. Establish and preserve state | Reconcile Git/Talon, preserve relevant source, inventory external scripts and artifact identities | COMPLETE |
-| 2. Freeze experimental specification | Version datasets, splits, preprocessing, seeds, budgets, evaluation and analysis rules | PENDING |
+| 2. Freeze experimental specification | Version datasets, splits, preprocessing, seeds, budgets, evaluation and analysis rules | IN_PROGRESS |
 | 3. Trace production execution | Verify requested-to-executed identities, imports, configuration precedence, fallback/resume and failure behavior | PENDING |
 | 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | PENDING |
 | 5. Validate evaluation and reporting | Resolve weighting, classifier specification, memory, metrics, pairing, aggregation and statistics | PENDING |
