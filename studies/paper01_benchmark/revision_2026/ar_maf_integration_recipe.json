@@ -180,8 +180,10 @@
     "epoch_index_base": 0,
     "epochs": 2,
     "shuffle": "numpy_default_rng_permutation",
-    "shuffle_seed": "experimental_seed + epoch_index",
-    "traversal": "each_training_position_once_per_epoch"
+    "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+    "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+    "traversal": "each_training_position_once_per_epoch",
+    "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
   },
   "validation": {
     "aggregation": "sample_weighted_mean_nll",
