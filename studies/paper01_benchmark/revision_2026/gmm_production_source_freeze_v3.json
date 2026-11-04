@@ -1,0 +1,43 @@
+{
+  "evidence": {
+    "adapter_imports_passed": 4,
+    "launcher_v1_dataset_dryruns_passed": 4,
+    "launcher_v2_bash_syntax": "PASS",
+    "launcher_v2_runtime_staging": "NOT_TESTED",
+    "launcher_v2_source_attestation": "NOT_YET_TESTED",
+    "namespace_regression_passed": 11,
+    "runner_cli_and_login_node_guard": "PASS"
+  },
+  "files": {
+    "scripts/train_paper01_gmm_revision_production.py": {
+      "bytes": 10488,
+      "sha256": "2b11c9ade76ff9cb0437c556585205f227ab29e82ef592df08dd05211d3a9d3d"
+    },
+    "slurm/paper01_revision_2026/gmm_revision_production.slurm": {
+      "bytes": 8641,
+      "sha256": "6d58a394c7573c6585b47ef29b5d208ba1d60519ed1d9bf29362cbc2efc7d8bd"
+    },
+    "studies/paper01_benchmark/revision_2026/operational_integration_contract.md": {
+      "bytes": 4242,
+      "sha256": "042d7774f211312e5836d13f481a33ecd1a736479a23aca674820b539f401ee6"
+    }
+  },
+  "git_baseline": "42ac1fa794b6a2aeb7894881cc0cdb61ff77fa38",
+  "limitations": [
+    "This manifest is not execution authorization",
+    "Operational files remain uncommitted",
+    "Source hashes are bound to the current working-tree files",
+    "No real-data production run has been performed",
+    "MaleX staging and launcher attestation require separate tests"
+  ],
+  "schema": "trustforge.paper01.gmm.source-freeze.v3",
+  "scope": {
+    "candidate_class_id": 1,
+    "candidate_dataset_id": "malex",
+    "candidate_experimental_seed": 42,
+    "family": "gmm",
+    "full_scaleout": "NO_GO"
+  },
+  "status": "PREFLIGHT_ACCEPTED_EXECUTION_NOT_AUTHORIZED",
+  "supersedes_for_launcher_identity": "studies/paper01_benchmark/revision_2026/gmm_production_source_freeze.json"
+}

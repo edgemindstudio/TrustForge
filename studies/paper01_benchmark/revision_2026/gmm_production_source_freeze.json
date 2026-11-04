@@ -1,0 +1,36 @@
+{
+  "evidence": {
+    "adapter_imports_passed": 4,
+    "cli_and_login_node_guard": "PASS",
+    "launcher_dataset_dryruns_passed": 4,
+    "namespace_regression_passed": 11
+  },
+  "files": {
+    "scripts/train_paper01_gmm_revision_production.py": {
+      "bytes": 9004,
+      "sha256": "2e83144767da5aa11362c8317ae0d94ed594aec9baaafc0fcfd37e6065670602"
+    },
+    "slurm/paper01_revision_2026/gmm_revision_production.slurm": {
+      "bytes": 3609,
+      "sha256": "888af7e08d2d8991515fa3425dab4bd8be0512891ff1624ab23560a7e027e539"
+    },
+    "studies/paper01_benchmark/revision_2026/operational_integration_contract.md": {
+      "bytes": 4242,
+      "sha256": "042d7774f211312e5836d13f481a33ecd1a736479a23aca674820b539f401ee6"
+    }
+  },
+  "git_baseline": "42ac1fa794b6a2aeb7894881cc0cdb61ff77fa38",
+  "limitations": [
+    "New operational files are not yet committed",
+    "This manifest does not authorize training",
+    "This manifest does not prove real production execution",
+    "Future source changes invalidate these recorded hashes"
+  ],
+  "schema": "trustforge.paper01.gmm.source-freeze.v1",
+  "scope": {
+    "family": "gmm",
+    "full_scaleout": "NO_GO",
+    "pilot_experiment": "PENDING_EXPLICIT_SELECTION"
+  },
+  "status": "PREFLIGHT_ACCEPTED_EXECUTION_NOT_AUTHORIZED"
+}
