@@ -79,6 +79,7 @@ def main():
     prefix = "trustforge.models.paper01_revision_2026"
 
     if args.family == "ar":
+        images = tf.convert_to_tensor(images, dtype=tf.float32)
         from trustforge.models.paper01_revision_2026.autoregressive import (
             build_revision_pixelcnn,
         )
