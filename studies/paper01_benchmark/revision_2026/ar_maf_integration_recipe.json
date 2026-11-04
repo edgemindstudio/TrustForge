@@ -1,0 +1,200 @@
+{
+  "autoregressive": {
+    "constructor": "build_revision_pixelcnn",
+    "filters": 64,
+    "masked_layers": 6,
+    "max_log_scale": 3.0,
+    "min_log_scale": -7.0,
+    "observation": "channel_coupled_boundary_censored_logistic",
+    "required_integration_changes": [
+      "sample-weighted epoch losses",
+      "strict minimum-loss selection without 1e-6 tolerance",
+      "exact canonical shape and semantic label validation",
+      "collision-safe checkpoint publication and fresh-process restoration"
+    ],
+    "sampling_temperature": 1.0
+  },
+  "candidate_sha256": "d082853e377913c30ccb951ea31994e56720559ee59e4b0120932ef4d42c35a6",
+  "canonical_shape": [
+    40,
+    40,
+    3
+  ],
+  "evidence": {
+    "jobs": [
+      "310954",
+      "310955"
+    ],
+    "path": "studies/paper01_benchmark/audits/revision_2026/ar_maf_batch8_feasibility_20261104.json",
+    "sha256": "e56ebea00e7cbb3671e13522482ef0a74fb7aa28f9024e60421f86d58fd02c0c"
+  },
+  "experimental_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "feasibility": {
+    "assess": [
+      "construction and parameter count",
+      "finite loss and gradients",
+      "actual optimizer updates",
+      "memory and per-step wall time",
+      "bounded sampling cost"
+    ],
+    "class_count": 47,
+    "compute": "Slurm_CPU_allocation",
+    "does_not_establish": [
+      "dataset integration",
+      "full-run runtime guarantee",
+      "convergence or sample quality",
+      "production readiness"
+    ],
+    "experimental_seed": 42,
+    "families_run_in_separate_processes": true,
+    "training_input": "deterministic_synthetic_canonical_fixture"
+  },
+  "masked_autoflow": {
+    "architecture": "existing_accepted_revision_2026",
+    "constructor": "ConditionalBlockMAF",
+    "log_slope_limit": 0.75,
+    "permutation_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "required_integration_changes": [
+      "complete training and validation runner",
+      "identity-bound checkpoint publication and fresh-process restoration",
+      "explicit nonrepeating synthesis random-stream identities"
+    ]
+  },
+  "optimizer": {
+    "amsgrad": false,
+    "beta_1": 0.9,
+    "beta_2": 0.999,
+    "epsilon": 1e-07,
+    "gradient_clipping": null,
+    "learning_rate": 0.001,
+    "learning_rate_schedule": "constant",
+    "name": "Adam",
+    "weight_decay": null
+  },
+  "origin": "Prospective fixed-budget selection following bounded synthetic feasibility; not an optimality or convergence claim",
+  "production_execution_authorized": false,
+  "remaining_requirements": [
+    "Complete identity-bound training and validation orchestration",
+    "Sample-weighted losses and strict minimum-loss selection",
+    "Durable checkpoint publication and fresh-process restoration",
+    "Governed real-data production-path verification",
+    "Resource, retry and scale-out acceptance",
+    "Implement and verify fixed-batch seed contract, including sampler arithmetic"
+  ],
+  "retry_policy": {
+    "accepted_attempt": "first_satisfying_predeclared_execution_integrity_checks",
+    "automatic_resource_escalation": false,
+    "automatic_retries": false,
+    "destinations": "fresh_execution_identity_without_overwrite",
+    "eligible_failures": [
+      "scheduler preemption",
+      "node failure",
+      "documented transient infrastructure or filesystem failure"
+    ],
+    "maximum_attempts_per_stage": 3,
+    "maximum_infrastructure_retries": 2,
+    "metric_based_attempt_selection": false,
+    "numerical_or_model_failure": "stop_and_investigate",
+    "otherwise": "restart_with_same_scientific_identity_and_fresh_attempt",
+    "resume": "only_under_an_explicitly_verified_resume_contract",
+    "scientific_configuration_changes": "new_protocol_identity",
+    "timeout_or_out_of_memory": "stop_for_resource_review"
+  },
+  "sampling": {
+    "batch_size": 8,
+    "checkpoint_role": "best",
+    "final_partial_batch": "retain_without_padding",
+    "requirements": [
+      "class and experimental identity retained",
+      "no accidental stream restart across batches",
+      "sample identities recorded",
+      "batch-partition reproducibility scope explicitly declared"
+    ],
+    "samples_per_class": 2000,
+    "stream_derivation": {
+      "batch_count": 250,
+      "batch_index": "sample_start_index // 8",
+      "batch_size_invariance_promised": false,
+      "batch_slots_per_class": 250,
+      "class_slots": 47,
+      "dataset_order": [
+        "ustc_tfc2016",
+        "cicmaldroid2020",
+        "malnet_image",
+        "malex"
+      ],
+      "experimental_seed_order": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "family_order": [
+        "ar",
+        "maf"
+      ],
+      "formula": "1 + ((((seed_index*4 + dataset_index)*2 + family_index)*47 + class_id)*250 + batch_index)",
+      "indices": "zero_based",
+      "limitations": [
+        "Distinct seed integers do not prove statistical independence",
+        "Record TensorFlow RNG implementation and version",
+        "Verify interaction with internal sampler seed arithmetic"
+      ],
+      "reproducibility_scope": "same batch partition, model state and environment",
+      "retry_rule": "reuse the same scientific stream identities",
+      "sample_order": "class-local sample indices 0..1999",
+      "validation": [
+        "Reject unknown dataset, family, experimental seed or class",
+        "Reject batch indices outside 0..249",
+        "Require sample_start_index == batch_index*8",
+        "Record seed and sample interval for every batch"
+      ],
+      "version": "ar-maf-fixed-batch-seed-v1"
+    }
+  },
+  "schema": "trustforge.paper01.ar-maf.integration-recipe.v1",
+  "status": "SELECTED_FOR_IMPLEMENTATION_EXECUTION_RESTRICTED",
+  "training": {
+    "batch_size": 64,
+    "class_distribution": "natural_training_distribution",
+    "class_weighting": null,
+    "drop_remainder": false,
+    "early_stopping": false,
+    "epoch_index_base": 0,
+    "epochs": 2,
+    "shuffle": "numpy_default_rng_permutation",
+    "shuffle_seed": "experimental_seed + epoch_index",
+    "traversal": "each_training_position_once_per_epoch"
+  },
+  "validation": {
+    "aggregation": "sample_weighted_mean_nll",
+    "cadence": "after_each_complete_epoch",
+    "coverage": "entire_governed_validation_split",
+    "minimum_improvement": 0.0,
+    "order": "governed_split_order",
+    "retain_roles": [
+      "best",
+      "last"
+    ],
+    "selection": "minimum_validation_nll",
+    "test_access": false,
+    "tie_break": "earliest_epoch"
+  }
+}

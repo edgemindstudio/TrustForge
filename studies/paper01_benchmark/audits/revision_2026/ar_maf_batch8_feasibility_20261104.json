@@ -1,0 +1,106 @@
+{
+  "limitations": [
+    "Synthetic fixture only, three optimizer updates.",
+    "Validation reuses the training fixture.",
+    "Sampling checks one class and one batch.",
+    "No convergence, semantic fidelity or full-runtime guarantee.",
+    "Single-image and batch-eight runs used different nodes.",
+    "Scheduler MaxRSS appeared inconsistent; retain process RSS separately.",
+    "Production readiness remains unestablished."
+  ],
+  "records": [
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-batch8-b95838f-2SqM6gTo/ar.310954.err",
+          "sha256": "c1826d5bbe946c649f509d7511036c9493f8f10fee0eb5fa10386f813d82882b"
+        },
+        "out": {
+          "bytes": 1983,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-batch8-b95838f-2SqM6gTo/ar.310954.out",
+          "sha256": "e41387e0c07062f6ebb309c48499e1c625d8ecc63b19f0767099caa42b14d2db"
+        }
+      },
+      "result": {
+        "candidate_sha256": "d082853e377913c30ccb951ea31994e56720559ee59e4b0120932ef4d42c35a6",
+        "family": "ar",
+        "head": "b95838fb22531889bb0c58f9d2253997f6968999",
+        "host": "talon16",
+        "job_id": "310954",
+        "numpy": "2.2.6",
+        "optimizer_updates": 3,
+        "parameter_count": 257289,
+        "parameters_changed": true,
+        "peak_process_rss_kib": 2248612,
+        "production_ready": false,
+        "purpose": "SYNTHETIC_FEASIBILITY_ONLY",
+        "sample_batch_size": 8,
+        "sampling_seconds": 118.16386804403737,
+        "sampling_status": "COMPLETE_BATCH",
+        "sampling_time_limit_seconds": 300,
+        "script_sha256": "aeff033fe9b8140cddb472f640141e3e0b479df80f7b9116439ad38536f95f72",
+        "tensorflow": "2.20.0",
+        "threads": 8,
+        "training_losses": [
+          4.373713493347168,
+          4.191096305847168,
+          4.02372932434082
+        ],
+        "training_step_seconds": [
+          1.4925002017989755,
+          0.9672351977787912,
+          0.9704122301191092
+        ],
+        "validation_loss": 3.836005210876465
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-batch8-b95838f-2SqM6gTo/maf.310955.err",
+          "sha256": "19f222424356beed9eecc9482a960133f31a0d6ff32ae6b0da46d3ef4f3a5a56"
+        },
+        "out": {
+          "bytes": 1991,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-batch8-b95838f-2SqM6gTo/maf.310955.out",
+          "sha256": "f2cfe302d3a1a652acf7dfeeecdc93cb0b9696ae407e0955cc4c9c75240a9c4d"
+        }
+      },
+      "result": {
+        "candidate_sha256": "d082853e377913c30ccb951ea31994e56720559ee59e4b0120932ef4d42c35a6",
+        "family": "maf",
+        "head": "b95838fb22531889bb0c58f9d2253997f6968999",
+        "host": "talon16",
+        "job_id": "310955",
+        "numpy": "2.2.6",
+        "optimizer_updates": 3,
+        "parameter_count": 2115840,
+        "parameters_changed": true,
+        "peak_process_rss_kib": 2012612,
+        "production_ready": false,
+        "purpose": "SYNTHETIC_FEASIBILITY_ONLY",
+        "sample_batch_size": 8,
+        "sampling_seconds": 5.3254203028045595,
+        "sampling_status": "COMPLETE_BATCH",
+        "sampling_time_limit_seconds": 300,
+        "script_sha256": "aeff033fe9b8140cddb472f640141e3e0b479df80f7b9116439ad38536f95f72",
+        "tensorflow": "2.20.0",
+        "threads": 8,
+        "training_losses": [
+          885.6915283203125,
+          389.3841857910156,
+          135.64207458496094
+        ],
+        "training_step_seconds": [
+          2.9371252031996846,
+          2.4646573467180133,
+          2.4982561632059515
+        ],
+        "validation_loss": 32.28092956542969
+      }
+    }
+  ],
+  "schema": "trustforge.paper01.batch-feasibility-evidence.v1"
+}

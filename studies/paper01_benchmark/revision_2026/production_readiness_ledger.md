@@ -156,3 +156,31 @@ claiming that checkpoint restoration or historical execution was verified.
 
 Next stage: freeze the Paper 1 experimental specification.
 FULL_BENCHMARK_GO remains NO.
+
+## AR/MAF bounded feasibility and integration selection
+
+Date: 2026-11-04.
+
+- Original AR job 310948 failed in the diagnostic warm-up due to mixed
+  NumPy/TensorFlow inputs; correction was confined to the harness.
+- MAF job 310949 and AR retry 310951 passed three-update/one-image checks.
+- Batch-eight jobs 310954 (AR) and 310955 (MAF) completed successfully.
+- AR eight-image sampling: 118.163868 seconds; process peak RSS 2248612 KiB.
+- MAF eight-image sampling: 5.325420 seconds; process peak RSS 2012612 KiB.
+- Scheduler MaxRSS was inconsistent with process RSS; do not use it for sizing.
+- Node differences prevent a controlled cross-run batching-speedup claim.
+
+Select the prospective recipe for implementation: training batch 64,
+two complete epochs, natural class distribution, Adam controls from the
+candidate, sample-weighted full validation after each epoch, earliest
+minimum-NLL checkpoint, no early stopping, synthesis batch 8.
+This selection preserves accepted model mathematics.
+
+The original candidate remains unchanged. ar_maf_integration_recipe.json
+records the selected settings, evidence identity and outstanding requirements.
+
+These short synthetic checks do not establish sustained stability,
+real-data integration, generalization, convergence or full-scale runtime.
+Synthesis stream identity, checkpoint restoration, resource/retry rules
+and production acceptance remain open. Stage 2 remains IN_PROGRESS.
+FULL_BENCHMARK_GO remains NO.
