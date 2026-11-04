@@ -1,0 +1,109 @@
+{
+  "capture_date": "2026-11-04",
+  "capture_repository_head": "dadf16c8945f7f628189cce8736c86cbef6e0dcf",
+  "files": {
+    "diagnose_gmm_malex_scale.py": {
+      "bytes": 4099,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/diagnose_gmm_malex_scale.py",
+      "sha256": "51af82fe203fc02f8cdb304bce7001f87b084a233a62ce8ceb869e32e632d51b"
+    },
+    "diagnose_gmm_malex_scale.slurm": {
+      "bytes": 669,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/diagnose_gmm_malex_scale.slurm",
+      "sha256": "8988cfb154281a462cc3a2c71beaf8d5fd14ac3a6871d21f4ab9a1ff38b60917"
+    },
+    "diagnose_gmm_malex_scale_attempt2.slurm": {
+      "bytes": 1464,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/diagnose_gmm_malex_scale_attempt2.slurm",
+      "sha256": "419b9e36d6d7cba140e20693b7d3b2e378531b55acd8cbf86aa5c813cc596cf6"
+    },
+    "diagnose_gmm_scale_residuals.py": {
+      "bytes": 5666,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/diagnose_gmm_scale_residuals.py",
+      "sha256": "fd7ba1a61ae1c9b9752f4ccd77eff64e455705ad4da40d3079365f0a0ac178cc"
+    },
+    "diagnose_gmm_scale_residuals.slurm": {
+      "bytes": 648,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/diagnose_gmm_scale_residuals.slurm",
+      "sha256": "50b667a7421b2aec13c31a500a8e82dd9df63d4d8400d9eeec8bbb270f0f9f46"
+    },
+    "train_gmm_pilot.py": {
+      "bytes": 8985,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/train_gmm_pilot.py",
+      "sha256": "fbd38ec2d97d9cc5ffa178d96a777f494f380244a4089e0a31f476431125a0ed"
+    },
+    "train_gmm_pilot.slurm": {
+      "bytes": 2080,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/train_gmm_pilot.slurm",
+      "sha256": "73068455be241649038cd5c8045d3aea8c8d68a69becdbf1603fd1c9fbe46ff6"
+    },
+    "train_gmm_pilot_42ac1fa_attempt01.py": {
+      "bytes": 9178,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/train_gmm_pilot_42ac1fa_attempt01.py",
+      "sha256": "f8eac15b9ff0297fd4b81c6fbe31f61664874237772977427559bb64dfbc0caf"
+    },
+    "train_gmm_pilot_42ac1fa_attempt01.slurm": {
+      "bytes": 2186,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/train_gmm_pilot_42ac1fa_attempt01.slurm",
+      "sha256": "8a833fbb6cb6a948b94ef7cee84b77e53d35966b5cd32b27a360c51f4236fbcf"
+    },
+    "validate_datasets.py": {
+      "bytes": 4396,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_datasets.py",
+      "sha256": "b9acce3b1ea4f44c9799487100e4fff0e35c8e59287970142cb64d9852c9bc63"
+    },
+    "validate_datasets.slurm": {
+      "bytes": 900,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_datasets.slurm",
+      "sha256": "8fba2441ac2f032cde7e45d382b21eabc81fdaff55f2cbbf71c0a0cabe844fdc"
+    },
+    "validate_gmm_malex_initialization.py": {
+      "bytes": 2955,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization.py",
+      "sha256": "6cf1d1473b4ac45fa34a316a6bfe8691f3149b8288aa02d7870139f65e854959"
+    },
+    "validate_gmm_malex_initialization.slurm": {
+      "bytes": 657,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization.slurm",
+      "sha256": "85a67f5977f6b2c41fffe9614191c0ae038ce76699d20e28d1b40cfa3769fa88"
+    },
+    "validate_gmm_malex_initialization_2ulp.py": {
+      "bytes": 3426,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization_2ulp.py",
+      "sha256": "51a38272f663852149d3ae431daa9e9a812cc3041fee7b3bec346048a9f9b4d9"
+    },
+    "validate_gmm_malex_initialization_2ulp.slurm": {
+      "bytes": 662,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization_2ulp.slurm",
+      "sha256": "5f8336969059c7f7aaf2f2f84b3d4882cd184e43d624aaff47b8e6af89961d0e"
+    },
+    "validate_gmm_malex_initialization_revised.py": {
+      "bytes": 2955,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization_revised.py",
+      "sha256": "2416086579a6c213aafb2a2fb69652d94ea9069b42473deec9a4c4ef08a7872b"
+    },
+    "validate_gmm_malex_initialization_revised.slurm": {
+      "bytes": 674,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_gmm_malex_initialization_revised.slurm",
+      "sha256": "23e781ca41fff9b51f5a304b7295de67b92bc32a66f70b8c846f790ed4cb7340"
+    },
+    "validate_provenance.py": {
+      "bytes": 3582,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_provenance.py",
+      "sha256": "9a97350c49dfc51a577a88b8c34f4e20fb13705a6fb73bce67c2dd75ac4cca6c"
+    },
+    "validate_provenance.slurm": {
+      "bytes": 842,
+      "original_path": "/home/bruno.fonkeng/trustforge_pretraining_validation/validate_provenance.slurm",
+      "sha256": "57b74dfd486849cbf5a69abbb318363bc330607d63da0b3819fb138fca402f0b"
+    }
+  },
+  "limitations": [
+    "Capture HEAD does not establish historical execution revision.",
+    "Original scripts remain unchanged outside the repository.",
+    "Scripts may require historical paths and environments.",
+    "No diagnostic or training execution performed during capture."
+  ],
+  "schema": "trustforge.historical-source-snapshot.v1",
+  "status": "HISTORICAL_SNAPSHOT_NOT_EXECUTION_ACCEPTANCE"
+}

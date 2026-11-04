@@ -36,7 +36,7 @@ It does not establish production acceptance.
 
 | Stage | Purpose and exit evidence | Status |
 | --- | --- | --- |
-| 1. Establish and preserve state | Reconcile Git/Talon, preserve relevant source, inventory external scripts and artifact identities | IN_PROGRESS |
+| 1. Establish and preserve state | Reconcile Git/Talon, preserve relevant source, inventory external scripts and artifact identities | COMPLETE |
 | 2. Freeze experimental specification | Version datasets, splits, preprocessing, seeds, budgets, evaluation and analysis rules | PENDING |
 | 3. Trace production execution | Verify requested-to-executed identities, imports, configuration precedence, fallback/resume and failure behavior | PENDING |
 | 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | PENDING |
@@ -113,3 +113,46 @@ FULL_BENCHMARK_GO=NO
 
 Mandatory execution, synthesis and evaluation gates remain unresolved.
 A bounded pilot is assessed separately from full scale-out.
+
+## Stage 1 closure evidence — 2026-11-04
+
+Scope: source preservation and initial external-artifact inventory.
+Completion does not establish production readiness.
+
+- Ledger commit dadf16c8945f7f628189cce8736c86cbef6e0dcf was
+  explicitly verified against the remote branch.
+- gcs-core internal working tree was observed clean at the pinned revision.
+- Nineteen external validation scripts were copied byte-for-byte into
+  audits/revision_2026/external_validation_snapshot_20261104.
+  The snapshot manifest records original paths, sizes and SHA-256 hashes.
+- External originals and model artifacts remain in place.
+- All four observed checkpoint state hashes matched their metadata.
+
+| Checkpoint | State SHA-256 | Observed bytes | Recorded selected step |
+| --- | --- | --- | --- |
+| GMM MaleX class0 seed42 pilot attempt01 | ebf212de13358a6bc68990ebb4de43b42755177b5134b0b107d3465aad306109 | 384800 | 4915 |
+| GMM MaleX class1 seed42 production attempt02 | e1abc951d55d427017dd4ea9be9c9aa415a68b963f86c10c23a927a734c432b2 | 384800 | 23645 |
+| RBM CICMalDroid2020 seed42 | 10f64703515290ea1493b731bb8e941f7b200c6ad18a61acfc8a1be8bd17cd72 | 4960702 | 64 |
+| RBM MaleX seed42 | 18f8ddf4f1d13bd8a9c660c968019a22421f097a40068c7a7be31f29052231b8 | 4957630 | 5712 |
+
+The observed sizes are inventory measurements, not metadata size claims.
+Recorded GMM selection agrees with minimum recorded validation NLL.
+Recorded RBM selection agrees with the final-update policy.
+
+### Carried-forward requirements
+
+- Stage 3: establish execution-source and dataset-preparation provenance
+  for reusable checkpoints; metadata alone does not supply these links.
+- Stage 4: verify fresh-process restoration and synthesis compatibility.
+- Stage 6: inspect snapshot dependencies and establish a reproducible
+  environment; archived scripts are not accepted production entry points.
+- Stage 3: replace future GMM execution binding deliberately; existing
+  launchers still require the historical 42ac1fa HEAD.
+- Stages 2–8: unresolved scientific and production gates remain unchanged.
+
+Earlier register rows record the evidence available when first written.
+This dated closure supplements S4, S6 and S7 without retroactively
+claiming that checkpoint restoration or historical execution was verified.
+
+Next stage: freeze the Paper 1 experimental specification.
+FULL_BENCHMARK_GO remains NO.
