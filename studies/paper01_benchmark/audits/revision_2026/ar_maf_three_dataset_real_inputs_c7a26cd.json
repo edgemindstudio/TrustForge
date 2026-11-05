@@ -1,0 +1,2578 @@
+{
+  "configurations": {
+    "malex": {
+      "artifact": {
+        "bytes": 432,
+        "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malex.json",
+        "sha256": "0492cffcc68685af2f9554e215db7c608e0cbb82d4bc612fa4830fffe9984044"
+      },
+      "configuration": {
+        "dataset_id": "malex",
+        "paths": {
+          "benign_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/ben_bigram_imgs_zipped/byteplot_imgs_RxR/256",
+          "label_archive": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/labels_zipped/MaleXv1-m864669-b179725_10062017.hdf5",
+          "malware_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/mal_byteplot_imgs_zipped/byteplot_imgs_RxR/256"
+        }
+      }
+    },
+    "malnet_image": {
+      "artifact": {
+        "bytes": 371,
+        "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malnet_image.json",
+        "sha256": "22ae83fbdd949cd2a6ccaa6bc226e63d45f374186fc73b33a7a587e32076859a"
+      },
+      "configuration": {
+        "dataset_id": "malnet_image",
+        "paths": {
+          "image_root": "/home/bruno.fonkeng/gencys/data/MalNet-Image_raw/malnet-images",
+          "mapping_path": "/home/bruno.fonkeng/TrustForge/studies/paper01_benchmark/audits/revision_2026/malnet_image_type_mapping.json",
+          "preparation_dir": "/home/bruno.fonkeng/gencys/data/MalNet-Image_revision_2026/type-1.0-prepared"
+        }
+      }
+    },
+    "ustc_tfc2016": {
+      "artifact": {
+        "bytes": 126,
+        "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/ustc_tfc2016.json",
+        "sha256": "9eed54b7ad6e416ca551e45029e7ac336077703f589ab195530d6f8e5ce1ac44"
+      },
+      "configuration": {
+        "dataset_id": "ustc_tfc2016",
+        "paths": {
+          "source_dir": "/home/bruno.fonkeng/gencys/data/USTC-TFC2016_malware"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Seed 42; 65 selected training examples and 3 validation examples per job.",
+    "No complete epochs, convergence or generalization claim.",
+    "Bounded samples do not establish corpus-wide decode or class coverage.",
+    "Existing dataset-provenance limitations remain applicable.",
+    "No checkpoint publication, synthesis or full-runner execution.",
+    "Scheduler completion and zero exits reviewed separately.",
+    "Inconsistent scheduler MaxRSS is not accepted for resource sizing."
+  ],
+  "records": [
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/ustc_tfc2016.ar.310991.err",
+          "sha256": "5862a936ec033a8285183220acab17200a7c3493857c8acbf39487fa15718aea"
+        },
+        "out": {
+          "bytes": 13276,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/ustc_tfc2016.ar.310991.out",
+          "sha256": "8a201cdb5ef60a758ccc6b13f3ddb81856beb342e09e9fa0fe80993d7d73f0ce"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "9eed54b7ad6e416ca551e45029e7ac336077703f589ab195530d6f8e5ce1ac44",
+        "dataset_id": "ustc_tfc2016",
+        "experimental_seed": 42,
+        "family": "ar",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon06.cm.cluster",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 9,
+          "class_mapping": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ],
+          "dataset_id": "ustc_tfc2016",
+          "dataset_provenance": {
+            "dataset_id": "ustc_tfc2016",
+            "partition_policy": {
+              "partition_seed": 42,
+              "policy_id": "ustc_case2_revision_2026",
+              "test_size": 9000,
+              "train_size": 72900,
+              "validation_fraction": 0.1,
+              "validation_size": 8100
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "ustc_nchw_revision_2026",
+            "source_fingerprints": {
+              "test_data.npy": "dcc1b09ef5e8c82c7d93b5da712e69abb3f74f1b092a9afccba243b141c0e95f",
+              "test_labels.npy": "9842101d83e8209ddf8d1c0b4e7bfcc6a1be3ff4b5b394fae974b6552a9d7dee",
+              "train_data.npy": "4dc2fd447fc9bc7751fb480a1372b38293b09463d6751b1af1af521d05e880b0",
+              "train_labels.npy": "1781f9681217dba24967f56a4c17b84e2b95d06e89a683976277a80de46c5416"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes"
+            ],
+            "verification_method": "sha256_full_file_stream_on_compute_node",
+            "verification_scope": "four_original_nchw_numpy_files"
+          },
+          "dataset_provenance_sha256": "f5ff784e6f2a5dbb9889d647ea8425027d6e3cc1d2b98843ecc383b8f137d304",
+          "experimental_seed": 42,
+          "family": "ar",
+          "family_controls": {
+            "constructor": "build_revision_pixelcnn",
+            "filters": 64,
+            "masked_layers": 6,
+            "max_log_scale": 3.0,
+            "min_log_scale": -7.0,
+            "observation": "channel_coupled_boundary_censored_logistic",
+            "sampling_temperature": 1.0
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310991",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "source_dir": "/home/bruno.fonkeng/gencys/data/USTC-TFC2016_malware"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            72899
+          ]
+        ],
+        "training_losses": [
+          2.610856294631958,
+          2.0235304832458496
+        ],
+        "validation_loss": 2.5109264850616455,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive.py",
+            "sha256": "e8e4cbf75527ac7ea339e158c04d5ff7a9811131499b4582f56fb4c454f7a38f"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_observation": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_observation.py",
+            "sha256": "4ae60def2aafdd473575f77989f9fb84b67b5125b54879f4363916965e547611"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_training.py",
+            "sha256": "7740e5a44d2d65c1986ab28bb7a7d77ca37bede5c5e0d26312d9c0a74853c46d"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/ustc_tfc2016.maf.310992.err",
+          "sha256": "f42eede611f11ed7964fd47afd86c5c38961a9717e84e09d11cf42174a84be76"
+        },
+        "out": {
+          "bytes": 13919,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/ustc_tfc2016.maf.310992.out",
+          "sha256": "0fed58dca44db254a83d6ca80c1440b8e1d82498bf9e461ebdac2818a0e7081e"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "9eed54b7ad6e416ca551e45029e7ac336077703f589ab195530d6f8e5ce1ac44",
+        "dataset_id": "ustc_tfc2016",
+        "experimental_seed": 42,
+        "family": "maf",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon06.cm.cluster",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 9,
+          "class_mapping": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ],
+          "dataset_id": "ustc_tfc2016",
+          "dataset_provenance": {
+            "dataset_id": "ustc_tfc2016",
+            "partition_policy": {
+              "partition_seed": 42,
+              "policy_id": "ustc_case2_revision_2026",
+              "test_size": 9000,
+              "train_size": 72900,
+              "validation_fraction": 0.1,
+              "validation_size": 8100
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "ustc_nchw_revision_2026",
+            "source_fingerprints": {
+              "test_data.npy": "dcc1b09ef5e8c82c7d93b5da712e69abb3f74f1b092a9afccba243b141c0e95f",
+              "test_labels.npy": "9842101d83e8209ddf8d1c0b4e7bfcc6a1be3ff4b5b394fae974b6552a9d7dee",
+              "train_data.npy": "4dc2fd447fc9bc7751fb480a1372b38293b09463d6751b1af1af521d05e880b0",
+              "train_labels.npy": "1781f9681217dba24967f56a4c17b84e2b95d06e89a683976277a80de46c5416"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes"
+            ],
+            "verification_method": "sha256_full_file_stream_on_compute_node",
+            "verification_scope": "four_original_nchw_numpy_files"
+          },
+          "dataset_provenance_sha256": "f5ff784e6f2a5dbb9889d647ea8425027d6e3cc1d2b98843ecc383b8f137d304",
+          "experimental_seed": 42,
+          "family": "maf",
+          "family_controls": {
+            "architecture": "existing_accepted_revision_2026",
+            "constructor": "ConditionalBlockMAF",
+            "log_slope_limit": 0.75,
+            "permutation_seeds": [
+              42,
+              43,
+              44,
+              45,
+              46
+            ]
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310992",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "source_dir": "/home/bruno.fonkeng/gencys/data/USTC-TFC2016_malware"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            72899
+          ]
+        ],
+        "training_losses": [
+          117.6768798828125,
+          -205.33087158203125
+        ],
+        "validation_loss": -515.603759765625,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_blocks": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_blocks.py",
+            "sha256": "48007744d2eeced50e431a7fb3c5b072b90d08ec8841d77074d1499ebfa84d06"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_conditioner": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_conditioner.py",
+            "sha256": "062734a9d422187540d2f425a5ff648138844f79cbca99fd3810b4dc6c85fbc0"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_flow": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_flow.py",
+            "sha256": "19ef73e987440557c6a6f98cc669c30fcb9b77bb08a55f3e030d96597307c8dc"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_model": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_model.py",
+            "sha256": "f87dbb9d4ec7c956b265e50af3840a2b38b0bf0218e9241b644ccdfb242f626a"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_spline": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_spline.py",
+            "sha256": "ae6ba0577a87c53dd6f019f9487ec13bfa6fd774ac802b97baead5930d1931a5"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_training.py",
+            "sha256": "6552069eef4a7968dd3edebab125408346757cc4c5ac4315e9f8951f193359cc"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malnet_image.ar.310993.err",
+          "sha256": "28d0b3a9096f5edc82a802e33504e03a7595fe5c875be4cfb12a64f3c8875e1d"
+        },
+        "out": {
+          "bytes": 14886,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malnet_image.ar.310993.out",
+          "sha256": "c87e696bbfe8f4449b8fed53a67f77c7ef010c0d53e2af4b4d5a5f6c054bd424"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "22ae83fbdd949cd2a6ccaa6bc226e63d45f374186fc73b33a7a587e32076859a",
+        "dataset_id": "malnet_image",
+        "experimental_seed": 42,
+        "family": "ar",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon06.cm.cluster",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 47,
+          "class_mapping": [
+            "addisplay",
+            "addisplay++adware",
+            "adload",
+            "adsware",
+            "adware",
+            "adware++adware",
+            "adware++grayware++virus",
+            "adware++virus",
+            "adwareare",
+            "backdoor",
+            "banker++trojan",
+            "benign",
+            "click",
+            "clicker",
+            "clicker++trojan",
+            "clickfraud++riskware",
+            "downloader",
+            "dropper++trojan",
+            "exploit",
+            "fakeangry",
+            "fakeapp",
+            "fakeapp++trojan",
+            "fakeinst++trojan",
+            "gray",
+            "hacktool",
+            "malware",
+            "malware++trj",
+            "monitor",
+            "ransom++trojan",
+            "risktool++riskware++virus",
+            "riskware",
+            "riskware++smssend",
+            "rog",
+            "rootnik++trojan",
+            "smssend",
+            "smssend++trojan",
+            "spr",
+            "spy",
+            "spy++trojan",
+            "spyware",
+            "trj",
+            "troj",
+            "trojan",
+            "trojandownloader",
+            "trojandropper",
+            "virus",
+            "worm"
+          ],
+          "dataset_id": "malnet_image",
+          "dataset_provenance": {
+            "dataset_id": "malnet_image",
+            "partition_policy": {
+              "policy_id": "malnet_provider_split_revision_2026",
+              "preparation": "type-1.0-prepared",
+              "test_size": 252406,
+              "train_size": 883416,
+              "validation_size": 126202
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "malnet_preparation_integrity_baseline",
+            "source_fingerprints": {
+              "baseline.json": "a66be1309058de641f120fa96909cf151a565db2912f465a84797db683655e7f",
+              "manifest.json": "182eabd0c5beb36cda1f27c02a704a12996cb74d7122456d3ebe2a884e084cc8",
+              "test.txt": "9f44e0958880f2529e2e7ee2d8ec986e3c84e8b242e3624438e934a9568272ee",
+              "test_offsets.npy": "c4f61cd7d03975bfed4f53539cd19564e3516e0a2c9ef617f8bda5f979694709",
+              "train.txt": "4368c31d2e7eda5f5a12558e42f607751d8fd8c7ba9ab6d599e1989030cdf51e",
+              "train_offsets.npy": "f864111888b734d7c798c10778e4736bd85511211f19a335be3d670378ff5549",
+              "validation.txt": "7f992f91a6499c8577ada80510b1373d03f566c0097cf98b47a9cc620bce3146",
+              "validation_offsets.npy": "773d977a2c9d9b80b3a7157165ade72e9f06af9939ecdbaac46c8ac21abaee48"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes",
+              "original_image_bytes_not_rehashed",
+              "provider_archive_not_rehashed",
+              "manifest_origin_not_independently_authenticated"
+            ],
+            "verification_method": "sha256_full_prepared_artifact_stream_on_compute_node",
+            "verification_scope": "baseline_manifest_and_six_prepared_artifacts"
+          },
+          "dataset_provenance_sha256": "ff4c2004bd1ed933c070c29554151f8ca2440324e138aa27314473a5bbc1c80e",
+          "experimental_seed": 42,
+          "family": "ar",
+          "family_controls": {
+            "constructor": "build_revision_pixelcnn",
+            "filters": 64,
+            "masked_layers": 6,
+            "max_log_scale": 3.0,
+            "min_log_scale": -7.0,
+            "observation": "channel_coupled_boundary_censored_logistic",
+            "sampling_temperature": 1.0
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310993",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "image_root": "/home/bruno.fonkeng/gencys/data/MalNet-Image_raw/malnet-images",
+          "mapping_path": "/home/bruno.fonkeng/TrustForge/studies/paper01_benchmark/audits/revision_2026/malnet_image_type_mapping.json",
+          "preparation_dir": "/home/bruno.fonkeng/gencys/data/MalNet-Image_revision_2026/type-1.0-prepared"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            883415
+          ]
+        ],
+        "training_losses": [
+          2.912832021713257,
+          2.8191444873809814
+        ],
+        "validation_loss": 2.7001662254333496,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive.py",
+            "sha256": "e8e4cbf75527ac7ea339e158c04d5ff7a9811131499b4582f56fb4c454f7a38f"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_observation": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_observation.py",
+            "sha256": "4ae60def2aafdd473575f77989f9fb84b67b5125b54879f4363916965e547611"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_training.py",
+            "sha256": "7740e5a44d2d65c1986ab28bb7a7d77ca37bede5c5e0d26312d9c0a74853c46d"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_malnet_preparation_integrity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_malnet_preparation_integrity.py",
+            "sha256": "e0104a012255380f4d843d45130b33c4ad195a1834f21c52e95364d5580c5be8"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malnet_image.maf.310994.err",
+          "sha256": "a59b22c3c58b47d32f2ae92ec45bcdbf84c1bd542e901fd48b5159d26cbb73cb"
+        },
+        "out": {
+          "bytes": 15507,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malnet_image.maf.310994.out",
+          "sha256": "1ad8a6501c34771fa28a5edeaba2aeef6357a3e6b0e341f929aff46f912773f5"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "22ae83fbdd949cd2a6ccaa6bc226e63d45f374186fc73b33a7a587e32076859a",
+        "dataset_id": "malnet_image",
+        "experimental_seed": 42,
+        "family": "maf",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon11",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 47,
+          "class_mapping": [
+            "addisplay",
+            "addisplay++adware",
+            "adload",
+            "adsware",
+            "adware",
+            "adware++adware",
+            "adware++grayware++virus",
+            "adware++virus",
+            "adwareare",
+            "backdoor",
+            "banker++trojan",
+            "benign",
+            "click",
+            "clicker",
+            "clicker++trojan",
+            "clickfraud++riskware",
+            "downloader",
+            "dropper++trojan",
+            "exploit",
+            "fakeangry",
+            "fakeapp",
+            "fakeapp++trojan",
+            "fakeinst++trojan",
+            "gray",
+            "hacktool",
+            "malware",
+            "malware++trj",
+            "monitor",
+            "ransom++trojan",
+            "risktool++riskware++virus",
+            "riskware",
+            "riskware++smssend",
+            "rog",
+            "rootnik++trojan",
+            "smssend",
+            "smssend++trojan",
+            "spr",
+            "spy",
+            "spy++trojan",
+            "spyware",
+            "trj",
+            "troj",
+            "trojan",
+            "trojandownloader",
+            "trojandropper",
+            "virus",
+            "worm"
+          ],
+          "dataset_id": "malnet_image",
+          "dataset_provenance": {
+            "dataset_id": "malnet_image",
+            "partition_policy": {
+              "policy_id": "malnet_provider_split_revision_2026",
+              "preparation": "type-1.0-prepared",
+              "test_size": 252406,
+              "train_size": 883416,
+              "validation_size": 126202
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "malnet_preparation_integrity_baseline",
+            "source_fingerprints": {
+              "baseline.json": "a66be1309058de641f120fa96909cf151a565db2912f465a84797db683655e7f",
+              "manifest.json": "182eabd0c5beb36cda1f27c02a704a12996cb74d7122456d3ebe2a884e084cc8",
+              "test.txt": "9f44e0958880f2529e2e7ee2d8ec986e3c84e8b242e3624438e934a9568272ee",
+              "test_offsets.npy": "c4f61cd7d03975bfed4f53539cd19564e3516e0a2c9ef617f8bda5f979694709",
+              "train.txt": "4368c31d2e7eda5f5a12558e42f607751d8fd8c7ba9ab6d599e1989030cdf51e",
+              "train_offsets.npy": "f864111888b734d7c798c10778e4736bd85511211f19a335be3d670378ff5549",
+              "validation.txt": "7f992f91a6499c8577ada80510b1373d03f566c0097cf98b47a9cc620bce3146",
+              "validation_offsets.npy": "773d977a2c9d9b80b3a7157165ade72e9f06af9939ecdbaac46c8ac21abaee48"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes",
+              "original_image_bytes_not_rehashed",
+              "provider_archive_not_rehashed",
+              "manifest_origin_not_independently_authenticated"
+            ],
+            "verification_method": "sha256_full_prepared_artifact_stream_on_compute_node",
+            "verification_scope": "baseline_manifest_and_six_prepared_artifacts"
+          },
+          "dataset_provenance_sha256": "ff4c2004bd1ed933c070c29554151f8ca2440324e138aa27314473a5bbc1c80e",
+          "experimental_seed": 42,
+          "family": "maf",
+          "family_controls": {
+            "architecture": "existing_accepted_revision_2026",
+            "constructor": "ConditionalBlockMAF",
+            "log_slope_limit": 0.75,
+            "permutation_seeds": [
+              42,
+              43,
+              44,
+              45,
+              46
+            ]
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310994",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "image_root": "/home/bruno.fonkeng/gencys/data/MalNet-Image_raw/malnet-images",
+          "mapping_path": "/home/bruno.fonkeng/TrustForge/studies/paper01_benchmark/audits/revision_2026/malnet_image_type_mapping.json",
+          "preparation_dir": "/home/bruno.fonkeng/gencys/data/MalNet-Image_revision_2026/type-1.0-prepared"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            883415
+          ]
+        ],
+        "training_losses": [
+          90.89328002929688,
+          -757.105224609375
+        ],
+        "validation_loss": -2043.0467529296875,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_malnet_preparation_integrity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_malnet_preparation_integrity.py",
+            "sha256": "e0104a012255380f4d843d45130b33c4ad195a1834f21c52e95364d5580c5be8"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_blocks": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_blocks.py",
+            "sha256": "48007744d2eeced50e431a7fb3c5b072b90d08ec8841d77074d1499ebfa84d06"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_conditioner": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_conditioner.py",
+            "sha256": "062734a9d422187540d2f425a5ff648138844f79cbca99fd3810b4dc6c85fbc0"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_flow": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_flow.py",
+            "sha256": "19ef73e987440557c6a6f98cc669c30fcb9b77bb08a55f3e030d96597307c8dc"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_model": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_model.py",
+            "sha256": "f87dbb9d4ec7c956b265e50af3840a2b38b0bf0218e9241b644ccdfb242f626a"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_spline": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_spline.py",
+            "sha256": "ae6ba0577a87c53dd6f019f9487ec13bfa6fd774ac802b97baead5930d1931a5"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_training.py",
+            "sha256": "6552069eef4a7968dd3edebab125408346757cc4c5ac4315e9f8951f193359cc"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malex.ar.310995.err",
+          "sha256": "e9a07f51c29bc54c93e81a92e624d30d1052beeaf63d80231207838cd0a92bd4"
+        },
+        "out": {
+          "bytes": 14311,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malex.ar.310995.out",
+          "sha256": "de0f3454d44445a7b033111c3922c2c7d68517379c25a894153a50b251420a95"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "0492cffcc68685af2f9554e215db7c608e0cbb82d4bc612fa4830fffe9984044",
+        "dataset_id": "malex",
+        "experimental_seed": 42,
+        "family": "ar",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon11",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 2,
+          "class_mapping": [
+            "benign",
+            "malware"
+          ],
+          "dataset_id": "malex",
+          "dataset_provenance": {
+            "dataset_id": "malex",
+            "partition_policy": {
+              "cross_class_conflicting_identities": 19,
+              "policy_id": "malex_governed_revision_2026",
+              "post_exclusion_benign_count": 179706,
+              "post_exclusion_malware_count": 864650,
+              "source_benign_count": 179725,
+              "source_malware_count": 864669,
+              "test_size": 208872,
+              "train_size": 731049,
+              "validation_size": 104435
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "governed_adapter_constructor",
+            "source_fingerprints": {
+              "benign_identity_sequence_sha256": "30b7e6d4cead5263bb983356f6be77348b2ac48a2878b934ebfe68623b0f8424",
+              "label_archive_sha256": "0ef4285cc14d1edbf6f937f783bc9a3b896bff70e762907cf556d41413f9f0ff",
+              "malware_identity_sequence_sha256": "e20eff6ceaaaa3d87bcf2b185fa6ddd80615570e3677d887199dcf08754059e9",
+              "test_index_sha256": "c60e118991f4db59a30dd312c9c906a3e9fc8234b0a3fd743009b65097c4d8a7",
+              "test_membership_sha256": "f974c0c533ec23ef3e71b8037d22329bc5fcbc63e69d925662e8436b2429663c",
+              "train_index_sha256": "8c31521b7c2151d2c14bd3a9a3025ca5881bf241e27aaadc998279a9def3b32e",
+              "train_membership_sha256": "4c051c7e5ac388ab12e017c1f34eb1b93e650cded71de08abcad923bda7ebcf2",
+              "validation_index_sha256": "e0b6d6d63060f2b6bb54f244aa11ba3b5fd4e8455e2536a49e355bff1841d9ac",
+              "validation_membership_sha256": "5fcc103c2657b811b1a85b30d40370db3a6459da9cb4f36bb9e9dec24867b91b"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes",
+              "does_not_independently_rehash_image_contents",
+              "record_validation_does_not_repeat_adapter_checks"
+            ],
+            "verification_method": "production_adapter_integrity_checks_on_compute_node",
+            "verification_scope": "label_archive_identity_sequences_and_partition_fingerprints"
+          },
+          "dataset_provenance_sha256": "54d02159570692a6c201163a875f356bb02610b556035dafa23894abfa858569",
+          "experimental_seed": 42,
+          "family": "ar",
+          "family_controls": {
+            "constructor": "build_revision_pixelcnn",
+            "filters": 64,
+            "masked_layers": 6,
+            "max_log_scale": 3.0,
+            "min_log_scale": -7.0,
+            "observation": "channel_coupled_boundary_censored_logistic",
+            "sampling_temperature": 1.0
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310995",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "benign_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/ben_bigram_imgs_zipped/byteplot_imgs_RxR/256",
+          "label_archive": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/labels_zipped/MaleXv1-m864669-b179725_10062017.hdf5",
+          "malware_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/mal_byteplot_imgs_zipped/byteplot_imgs_RxR/256"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            731048
+          ]
+        ],
+        "training_losses": [
+          4.32139253616333,
+          4.2204413414001465
+        ],
+        "validation_loss": 4.013523578643799,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive.py",
+            "sha256": "e8e4cbf75527ac7ea339e158c04d5ff7a9811131499b4582f56fb4c454f7a38f"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_observation": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_observation.py",
+            "sha256": "4ae60def2aafdd473575f77989f9fb84b67b5125b54879f4363916965e547611"
+          },
+          "trustforge.models.paper01_revision_2026.autoregressive_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/autoregressive_training.py",
+            "sha256": "7740e5a44d2d65c1986ab28bb7a7d77ca37bede5c5e0d26312d9c0a74853c46d"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malex.maf.310996.err",
+          "sha256": "54bce3f7c4ce9f356196e774836372d8905ea4c541ed68fe3ddf6ad18abaa703"
+        },
+        "out": {
+          "bytes": 14952,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-three-datasets-c7a26cd-CGawMMtI/malex.maf.310996.out",
+          "sha256": "4ae0897a18d38b839fc143743ad92e91b386653782ffb98b8bd2c2452c71f049"
+        }
+      },
+      "result": {
+        "checkpoint_published": false,
+        "dataset_config_sha256": "0492cffcc68685af2f9554e215db7c608e0cbb82d4bc612fa4830fffe9984044",
+        "dataset_id": "malex",
+        "experimental_seed": 42,
+        "family": "maf",
+        "full_training_runner_enabled": false,
+        "head": "c7a26cd0346477158ef639e6197ebbb7f0ab5f37",
+        "host": "talon11",
+        "identity": {
+          "canonical_shape": [
+            40,
+            40,
+            3
+          ],
+          "checkpoint_use": "evaluation_and_synthesis",
+          "class_count": 2,
+          "class_mapping": [
+            "benign",
+            "malware"
+          ],
+          "dataset_id": "malex",
+          "dataset_provenance": {
+            "dataset_id": "malex",
+            "partition_policy": {
+              "cross_class_conflicting_identities": 19,
+              "policy_id": "malex_governed_revision_2026",
+              "post_exclusion_benign_count": 179706,
+              "post_exclusion_malware_count": 864650,
+              "source_benign_count": 179725,
+              "source_malware_count": 864669,
+              "test_size": 208872,
+              "train_size": 731049,
+              "validation_size": 104435
+            },
+            "schema_type": "paper01_revision2026_gan_dataset_provenance",
+            "schema_version": "1.0",
+            "source_contract": "governed_adapter_constructor",
+            "source_fingerprints": {
+              "benign_identity_sequence_sha256": "30b7e6d4cead5263bb983356f6be77348b2ac48a2878b934ebfe68623b0f8424",
+              "label_archive_sha256": "0ef4285cc14d1edbf6f937f783bc9a3b896bff70e762907cf556d41413f9f0ff",
+              "malware_identity_sequence_sha256": "e20eff6ceaaaa3d87bcf2b185fa6ddd80615570e3677d887199dcf08754059e9",
+              "test_index_sha256": "c60e118991f4db59a30dd312c9c906a3e9fc8234b0a3fd743009b65097c4d8a7",
+              "test_membership_sha256": "f974c0c533ec23ef3e71b8037d22329bc5fcbc63e69d925662e8436b2429663c",
+              "train_index_sha256": "8c31521b7c2151d2c14bd3a9a3025ca5881bf241e27aaadc998279a9def3b32e",
+              "train_membership_sha256": "4c051c7e5ac388ab12e017c1f34eb1b93e650cded71de08abcad923bda7ebcf2",
+              "validation_index_sha256": "e0b6d6d63060f2b6bb54f244aa11ba3b5fd4e8455e2536a49e355bff1841d9ac",
+              "validation_membership_sha256": "5fcc103c2657b811b1a85b30d40370db3a6459da9cb4f36bb9e9dec24867b91b"
+            },
+            "verification_limitations": [
+              "does_not_authenticate_checkpoint_origin",
+              "does_not_prove_continuous_source_immutability",
+              "does_not_prove_training_used_only_verified_bytes",
+              "does_not_independently_rehash_image_contents",
+              "record_validation_does_not_repeat_adapter_checks"
+            ],
+            "verification_method": "production_adapter_integrity_checks_on_compute_node",
+            "verification_scope": "label_archive_identity_sequences_and_partition_fingerprints"
+          },
+          "dataset_provenance_sha256": "54d02159570692a6c201163a875f356bb02610b556035dafa23894abfa858569",
+          "experimental_seed": 42,
+          "family": "maf",
+          "family_controls": {
+            "architecture": "existing_accepted_revision_2026",
+            "constructor": "ConditionalBlockMAF",
+            "log_slope_limit": 0.75,
+            "permutation_seeds": [
+              42,
+              43,
+              44,
+              45,
+              46
+            ]
+          },
+          "optimizer_controls": {
+            "amsgrad": false,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-07,
+            "gradient_clipping": null,
+            "learning_rate": 0.001,
+            "learning_rate_schedule": "constant",
+            "name": "Adam",
+            "weight_decay": null
+          },
+          "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+          "schema": "trustforge.paper01.ar-maf.checkpoint-identity.v1",
+          "training_controls": {
+            "batch_size": 64,
+            "class_distribution": "natural_training_distribution",
+            "class_weighting": null,
+            "drop_remainder": false,
+            "early_stopping": false,
+            "epoch_index_base": 0,
+            "epochs": 2,
+            "shuffle": "numpy_default_rng_permutation",
+            "shuffle_policy_amendment": "Prospective amendment before production: reuse existing two-component entropy scheme instead of seed addition; diagnostic candidate preserved.",
+            "shuffle_seed": "numpy.random.SeedSequence([experimental_seed, epoch_index])",
+            "traversal": "each_training_position_once_per_epoch",
+            "traversal_implementation": "variational_autoencoder_traversal.training_position_batches"
+          },
+          "training_resume_supported": false,
+          "validation_controls": {
+            "aggregation": "sample_weighted_mean_nll",
+            "cadence": "after_each_complete_epoch",
+            "coverage": "entire_governed_validation_split",
+            "minimum_improvement": 0.0,
+            "order": "governed_split_order",
+            "retain_roles": [
+              "best",
+              "last"
+            ],
+            "selection": "minimum_validation_nll",
+            "test_access": false,
+            "tie_break": "earliest_epoch"
+          }
+        },
+        "job_id": "310996",
+        "numpy": "2.2.6",
+        "optimizer_updates": 2,
+        "production_ready": false,
+        "purpose": "BOUNDED_ACTUAL_SOURCE_WIRING_ONLY",
+        "resolved_paths": {
+          "benign_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/ben_bigram_imgs_zipped/byteplot_imgs_RxR/256",
+          "label_archive": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/labels_zipped/MaleXv1-m864669-b179725_10062017.hdf5",
+          "malware_byteplot_root": "/home/bruno.fonkeng/gencys/data/MaleX_raw/extracted/mal_byteplot_imgs_zipped/byteplot_imgs_RxR/256"
+        },
+        "tensorflow": "2.20.0",
+        "train_positions": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          [
+            731048
+          ]
+        ],
+        "training_losses": [
+          480.7420959472656,
+          -342.4332275390625
+        ],
+        "validation_loss": 72.02294921875,
+        "validation_positions": [
+          0,
+          1,
+          2
+        ],
+        "verified_project_imports": {
+          "common": {
+            "path": "common/__init__.py",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "common.canonicalization": {
+            "path": "common/canonicalization.py",
+            "sha256": "4ab930d1c309eacee30138b0359e0d5b4744ea8fb5f859c7949e6d9c637a422f"
+          },
+          "common.partitioning": {
+            "path": "common/partitioning.py",
+            "sha256": "191e31ec933d135dc6d160af8ce9167ab2851dcf94a1ab7463467b54077295bb"
+          },
+          "trustforge": {
+            "path": "src/trustforge/__init__.py",
+            "sha256": "8c04948edfcdc8eb117d9509db0defd2b0178c65aff2acfc9e94f019747d75f7"
+          },
+          "trustforge.data": {
+            "path": "src/trustforge/data/__init__.py",
+            "sha256": "b367a998c5952dcf155d9f4327fe9ec8d066b3e9753d38bd985cd468633353ed"
+          },
+          "trustforge.data.paper01_revision_2026": {
+            "path": "src/trustforge/data/paper01_revision_2026/__init__.py",
+            "sha256": "a60d439c9d4e6ae82d266144819cc0095c2c2b7b80e6f0da97b38d60c804f7ad"
+          },
+          "trustforge.data.paper01_revision_2026.cicmaldroid": {
+            "path": "src/trustforge/data/paper01_revision_2026/cicmaldroid.py",
+            "sha256": "6e78cda1d2552b2de4493760403434fe8758a8b5169a3f1b23c7a45c478be235"
+          },
+          "trustforge.data.paper01_revision_2026.malex": {
+            "path": "src/trustforge/data/paper01_revision_2026/malex.py",
+            "sha256": "2f1f9c3c4e97b4a99fd0904bd5d5ae381fb1231e286f21504c00bf214b9448ed"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_image": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_image.py",
+            "sha256": "389a81e60c8992d37e179f068d09fadecd8cc2c98bd66fb70769a9edd8e9dfe2"
+          },
+          "trustforge.data.paper01_revision_2026.malnet_preparation": {
+            "path": "src/trustforge/data/paper01_revision_2026/malnet_preparation.py",
+            "sha256": "0743bdf98f874c6bba92e95120d4f80d95c224ec69f4f9c07b1aa4a7ac708a12"
+          },
+          "trustforge.data.paper01_revision_2026.ustc": {
+            "path": "src/trustforge/data/paper01_revision_2026/ustc.py",
+            "sha256": "5d44739740658e5b62736b56bf1ead450b08bd0a55787b3420e98957ea3aadff"
+          },
+          "trustforge.models": {
+            "path": "src/trustforge/models/__init__.py",
+            "sha256": "80bea023bdc20d21671478f208613ac2a5ebbaf29c5fb32ee4310d2834e73e7b"
+          },
+          "trustforge.models.paper01_revision_2026": {
+            "path": "src/trustforge/models/paper01_revision_2026/__init__.py",
+            "sha256": "0a905eb4ecc53ffa05584dbdf9dd2912a3d78f56f35da7687686e47400482fa0"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_identity.py",
+            "sha256": "73828e80d2c101b9764eabc8d28dd35402fcdd412ae86e317a035c27adf7cbb4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_manifest.py",
+            "sha256": "342a6fc037285168c8a323d8456388c808014b686937a3c6f7e25335175a3607"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_npz": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_npz.py",
+            "sha256": "552bb23e8b2748d490487e4547054788220b69eec6cd8581bddd5beb0f39a4ce"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_checkpoint_state": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_checkpoint_state.py",
+            "sha256": "4a1a311d14c9c7438660f177f906f2bc494bf536f8a61a9f80ad3bed22e6eaf4"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_dataset_preflight.py",
+            "sha256": "a54bc63cc577edf4310e75f65ad8d4ec6c6f570038f2238a5bb9ed86e6e6b77c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_execution_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_execution_inputs.py",
+            "sha256": "e7fcf3fbe4b2ea6996aea61b103195748f415e5ca4068703352e18d9c0ef3cf3"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_family_steps": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py",
+            "sha256": "71967337930888e17dd7d637b4c1c528ca4304655224b3d93b4eb08465ffa6f5"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_core": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py",
+            "sha256": "7e3824758e94245771a3f6307692bff471bf1f0e0b717f947b8b8d6e3022e5ac"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_runner": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py",
+            "sha256": "dc524d481c8729cf8d492c518d737c987134517b289614f425ccccdcddd5468c"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_training_setup": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_training_setup.py",
+            "sha256": "6ac33ac0b4a6893383c92ac6b885049bc56e2edc35583f41af85a5180c926055"
+          },
+          "trustforge.models.paper01_revision_2026.ar_maf_verified_inputs": {
+            "path": "src/trustforge/models/paper01_revision_2026/ar_maf_verified_inputs.py",
+            "sha256": "d43b6a2c329fdec972fb7cb665c6d98e817a4268874825c0fa08a5b001df5592"
+          },
+          "trustforge.models.paper01_revision_2026.gan_adapter_identity": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_adapter_identity.py",
+            "sha256": "8200e09650ef1df8b2f83ce905b511ea3654f9c5ceba33deab4b3aaadeec88cc"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_manifest": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_manifest.py",
+            "sha256": "dd53198cf1dacd77995e74ae05900d44f9c30c192aa1c018184cb8e464ff83bd"
+          },
+          "trustforge.models.paper01_revision_2026.gan_checkpoint_v3_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_checkpoint_v3_provenance.py",
+            "sha256": "636b21cec04646836cef9baa7f5d6a116bcde526a431278834bcf484a7dafc96"
+          },
+          "trustforge.models.paper01_revision_2026.gan_dataset_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_dataset_provenance.py",
+            "sha256": "6e7493119a49d050f1f4bbdccf16babdeb74f33d8e31486625d67bf64b77ffa0"
+          },
+          "trustforge.models.paper01_revision_2026.gan_v3_provenance_adapter": {
+            "path": "src/trustforge/models/paper01_revision_2026/gan_v3_provenance_adapter.py",
+            "sha256": "cf6a3ecfdb2f50232a59bf7936aa8f7ec32d7e9cc47f00c717b8ced038b5dd18"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_blocks": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_blocks.py",
+            "sha256": "48007744d2eeced50e431a7fb3c5b072b90d08ec8841d77074d1499ebfa84d06"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_conditioner": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_conditioner.py",
+            "sha256": "062734a9d422187540d2f425a5ff648138844f79cbca99fd3810b4dc6c85fbc0"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_flow": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_flow.py",
+            "sha256": "19ef73e987440557c6a6f98cc669c30fcb9b77bb08a55f3e030d96597307c8dc"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_model": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_model.py",
+            "sha256": "f87dbb9d4ec7c956b265e50af3840a2b38b0bf0218e9241b644ccdfb242f626a"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_spline": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_spline.py",
+            "sha256": "ae6ba0577a87c53dd6f019f9487ec13bfa6fd774ac802b97baead5930d1931a5"
+          },
+          "trustforge.models.paper01_revision_2026.masked_autoflow_training": {
+            "path": "src/trustforge/models/paper01_revision_2026/masked_autoflow_training.py",
+            "sha256": "6552069eef4a7968dd3edebab125408346757cc4c5ac4315e9f8951f193359cc"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_provenance": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_checkpoint_provenance.py",
+            "sha256": "d141d418fcc099856e03a409c52a762472af9bf219790c2628fae12bb3b90865"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_data_integration": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_data_integration.py",
+            "sha256": "7f3399d77f7a4c741874bd666d70460b70512b9e093ce44961c31302b1a84f1e"
+          },
+          "trustforge.models.paper01_revision_2026.variational_autoencoder_traversal": {
+            "path": "src/trustforge/models/paper01_revision_2026/variational_autoencoder_traversal.py",
+            "sha256": "83b9d2b330ce741d3ce9a8cfe8a1f9e2d9545a48792374f262ac8ca0ff5a8a43"
+          },
+          "trustforge.provenance": {
+            "path": "src/trustforge/provenance/__init__.py",
+            "sha256": "47311b2090f30609a0f9e45bfe07bec4678ffd53dc9daf9889214522a6250db6"
+          },
+          "trustforge.provenance.execution": {
+            "path": "src/trustforge/provenance/execution.py",
+            "sha256": "abf4aa2582a29fab4ca03a88af20ccd355a571d0739143c44d35b1b678936884"
+          },
+          "trustforge.provenance.git": {
+            "path": "src/trustforge/provenance/git.py",
+            "sha256": "69ee42599df2833bd74f6649043c30c0ca1d5a22c4077927915c75d7be789491"
+          },
+          "trustforge.provenance.hashing": {
+            "path": "src/trustforge/provenance/hashing.py",
+            "sha256": "f336d164b6003787390a41c5aa5fb98e19f65bac1de9bf8162b0ef79e1f51715"
+          },
+          "trustforge.provenance.manifest": {
+            "path": "src/trustforge/provenance/manifest.py",
+            "sha256": "0efeeb73296cae716d3e42c35962e34fec4a04765b112c5598ed5610800c6bc4"
+          },
+          "trustforge.provenance.validation": {
+            "path": "src/trustforge/provenance/validation.py",
+            "sha256": "d68edc19e308249c0f2a09e661b743d065ddec6c38d50a688fa323131959fbcf"
+          },
+          "trustforge.storage": {
+            "path": "src/trustforge/storage/__init__.py",
+            "sha256": "aac2cff216b37943b25cb7d3524e4144918f1bf69cb53ed70735fa17bbbba9b2"
+          },
+          "trustforge.storage.layout": {
+            "path": "src/trustforge/storage/layout.py",
+            "sha256": "98562597e83207a8124e3b4262c9e86eb73fb42ecf7256f1618ea734809bbf5f"
+          },
+          "trustforge.storage.paths": {
+            "path": "src/trustforge/storage/paths.py",
+            "sha256": "9de12d7e7c1dc64c6cb644f251030e2c60f3b36af67a6bf88b473139a9e05f25"
+          }
+        }
+      }
+    }
+  ],
+  "schema": "trustforge.paper01.real-input-integration-evidence.v1"
+}
