@@ -38,8 +38,8 @@ It does not establish production acceptance.
 | --- | --- | --- |
 | 1. Establish and preserve state | Reconcile Git/Talon, preserve relevant source, inventory external scripts and artifact identities | COMPLETE |
 | 2. Freeze experimental specification | Version datasets, splits, preprocessing, seeds, budgets, evaluation and analysis rules | IN_PROGRESS |
-| 3. Trace production execution | Verify requested-to-executed identities, imports, configuration precedence, fallback/resume and failure behavior | PENDING |
-| 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | PENDING |
+| 3. Trace production execution | Verify requested-to-executed identities, imports, configuration precedence, fallback/resume and failure behavior | IN_PROGRESS |
+| 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | IN_PROGRESS |
 | 5. Validate evaluation and reporting | Resolve weighting, classifier specification, memory, metrics, pairing, aggregation and statistics | PENDING |
 | 6. Establish professional reproduction workflow | Test installation, submodules, data preparation, quick start, documentation and paper traceability | PENDING |
 | 7. End-to-end acceptance | Bounded production-path runs plus identity, missing-output and incomplete-checkpoint rejection checks | PENDING |
@@ -71,7 +71,7 @@ tests alone do not establish complete scientific execution.
 | S7 | External validation scripts | INSPECTED: 19 immediate entries listed outside Git | Identify scripts required to reproduce accepted evidence and preserve appropriately |
 | S8 | Failed GMM source lineage | INSPECTED: historical runner/launcher hashes match v2 records; differences explain adapter label access correction and v3 selection | Bind execution outcomes separately |
 | P1 | Family training methodology | REPORTED 7/7; selected formal authorization records directly inspected | Verify remaining records as needed; do not restart hardening |
-| P2 | Exact seven seeds | INSPECTED: [42,43,44,45,46,47,48] remains proposed | Accept and freeze before full execution |
+| P2 | Exact seven seeds | COMPLETE for methodological selection: [42,43,44,45,46,47,48] explicitly accepted; benchmark specification Section 14 | Verify consumed seed identities during execution |
 | P3 | Production source binding | BLOCKED: GMM runner/launcher require HEAD 42ac1fa; current HEAD changed | Implement deliberate revision binding without rewriting historical freezes |
 | P4 | Runtime activation | INSPECTED: GAN/Diffusion disabled; VAE disabled per handoffs/contract | Verify and integrate each governed operational path |
 | P5 | RBM production sampling | BLOCKED: inspected training authorization withholds synthesis and leaves Gibbs depth unselected | Resolve bounded production sampling policy |
@@ -100,7 +100,7 @@ verify identity links between source, configuration, data and outputs.
 Current target: four datasets, seven families, seven repetitions,
 2,000 synthetic samples per class, canonical 40x40x3 float32 [0,1].
 
-Exact seeds remain proposed. Larger native source images do not establish
+Exact seeds 42-48 are accepted. Larger native source images do not establish
 high-resolution generation. Historical two-dataset/three-seed results
 must not be combined with revised results as equivalent experiments.
 
@@ -183,4 +183,71 @@ These short synthetic checks do not establish sustained stability,
 real-data integration, generalization, convergence or full-scale runtime.
 Synthesis stream identity, checkpoint restoration, resource/retry rules
 and production acceptance remain open. Stage 2 remains IN_PROGRESS.
+FULL_BENCHMARK_GO remains NO.
+
+
+## AR/MAF engineering integration status at b44e060
+
+This section updates current status without rewriting earlier execution
+records or treating component tests as complete production acceptance.
+
+### Accepted methodology
+
+Benchmark specification Section 14 records Bruno's acceptance of the
+shared policies in Sections 11-13. This includes seeds 42-48, paired
+unweighted classifier comparison, specified diagnostics, estimation-focused
+reporting, and explicit incomplete-run/retry identity rules.
+
+E1 and E4 therefore retain implementation and execution requirements;
+their shared methodological choices are no longer awaiting selection.
+Stage 2 remains IN_PROGRESS because the complete executable specification
+and remaining family-specific decisions are not all frozen.
+
+### Execution evidence
+
+- Jobs 310961 (AR) and 310962 (MAF) passed actual-model synthetic
+  two-epoch integration: four optimizer updates, validation-state guards,
+  and in-memory best/last restoration.
+- Evidence: audits/revision_2026/ar_maf_training_integration_483e3ec.json.
+- Jobs 310978 (AR) and 310979 (MAF) passed fresh-process restoration
+  using two-class models and diagnostic checkpoint artifacts.
+- Evidence: audits/revision_2026/ar_maf_checkpoint_roundtrip_182cd92.json.
+- Observed inventories: AR 32 tensors / 955962 archive bytes;
+  MAF 70 tensors / 8422022 archive bytes.
+- These jobs did not exercise the subsequently added complete manifest
+  and publication path with governed real-data training.
+
+### Implemented and component-tested
+
+- Canonical traversal and fixed-batch synthesis seed assignment.
+- Sample-weighted two-epoch training with strict minimum-loss selection.
+- Actual-family batch bindings with optimizer and validation-state guards.
+- Bounded state codec, ordered snapshots, identity and manifest contracts.
+- Descriptor-anchored bundle verification and exclusive publication.
+- Same-adapter preflight/input binding and canonical/integer label agreement.
+- Selected model/optimizer setup and restricted training-to-checkpoint runner.
+
+Reported focused checks, each with its own scope:
+- Checkpoint component suites: 116 passed.
+- Full checkpoint fixture integration with validators active: 12 passed.
+- Input/preflight suites: 63 passed.
+- Setup orchestration using model/TensorFlow stand-ins: 5 passed.
+- Runner orchestration using stand-ins: 10 passed.
+
+These counts are separate suite observations, not a combined fresh test run.
+Constructed provenance records do not establish actual source verification.
+
+### Mandatory remaining AR/MAF checks
+
+- Actual governed source preflight and consumed-label integration.
+- Import locations bound to the captured checkout.
+- Actual-model execution through complete manifest/publication/loading.
+- Architecture/source and environment identities sufficient for restoration.
+- Checkpoint-backed synthesis and nonrepeating stream integration.
+- Resource/retry acceptance and bounded production-path validation.
+
+ar_maf_training_runner.TRAINING_EXECUTION_ENABLED remains False.
+No existing family authorization gates were enabled.
+Stages 3 and 4 are IN_PROGRESS; neither is complete.
+
 FULL_BENCHMARK_GO remains NO.
