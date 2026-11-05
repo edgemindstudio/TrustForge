@@ -342,6 +342,33 @@ def _gather_scalar_bin(
     )
 
 
+def _interpolate_from_knots(value, source0, source1, target0, target1):
+    """Interpolate using represented intervals and the nearer endpoint."""
+    source_interval = source1 - source0
+    target_interval = target1 - target0
+    tf.debugging.assert_positive(
+        source_interval, message="nonpositive represented source interval",
+    )
+    tf.debugging.assert_positive(
+        target_interval, message="nonpositive represented target interval",
+    )
+    fraction = (value - source0) / source_interval
+    tf.debugging.assert_greater_equal(
+        fraction, tf.zeros_like(fraction),
+        message="interpolation fraction below zero",
+    )
+    tf.debugging.assert_less_equal(
+        fraction, tf.ones_like(fraction),
+        message="interpolation fraction above one",
+    )
+    result = tf.where(
+        fraction <= 0.5,
+        target0 + fraction * target_interval,
+        target1 - (1.0 - fraction) * target_interval,
+    )
+    return result
+
+
 def forward(
     x: tf.Tensor,
     raw_widths: tf.Tensor,
@@ -409,22 +436,20 @@ def forward(
     )
 
     width = _gather_scalar_bin(
-        widths,
+        x_knots[..., 1:] - x_knots[..., :-1],
         indices,
     )
 
     height = _gather_scalar_bin(
-        heights,
+        y_knots[..., 1:] - y_knots[..., :-1],
         indices,
     )
 
     slope = height / width
 
-    y = (
-        y0
-        + slope
-        * (x - x0)
-    )
+    x1 = _gather_scalar_bin(x_knots[..., 1:], indices)
+    y1 = _gather_scalar_bin(y_knots[..., 1:], indices)
+    y = _interpolate_from_knots(x, x0, x1, y0, y1)
 
     log_abs_det = tf.math.log(
         slope
@@ -451,6 +476,15 @@ def forward(
     tf.debugging.assert_all_finite(
         y,
         "non-finite spline forward output",
+    )
+
+    tf.debugging.assert_greater_equal(
+        y, tf.zeros_like(y),
+        message="spline output below canonical lower bound",
+    )
+    tf.debugging.assert_less_equal(
+        y, tf.ones_like(y),
+        message="spline output above canonical upper bound",
     )
 
     tf.debugging.assert_all_finite(
@@ -531,22 +565,20 @@ def inverse(
     )
 
     width = _gather_scalar_bin(
-        widths,
+        x_knots[..., 1:] - x_knots[..., :-1],
         indices,
     )
 
     height = _gather_scalar_bin(
-        heights,
+        y_knots[..., 1:] - y_knots[..., :-1],
         indices,
     )
 
     slope = height / width
 
-    x = (
-        x0
-        + (y - y0)
-        / slope
-    )
+    x1 = _gather_scalar_bin(x_knots[..., 1:], indices)
+    y1 = _gather_scalar_bin(y_knots[..., 1:], indices)
+    x = _interpolate_from_knots(y, y0, y1, x0, x1)
 
     inverse_log_abs_det = (
         -tf.math.log(
@@ -575,6 +607,15 @@ def inverse(
     tf.debugging.assert_all_finite(
         x,
         "non-finite spline inverse output",
+    )
+
+    tf.debugging.assert_greater_equal(
+        x, tf.zeros_like(x),
+        message="spline output below canonical lower bound",
+    )
+    tf.debugging.assert_less_equal(
+        x, tf.ones_like(x),
+        message="spline output above canonical upper bound",
     )
 
     tf.debugging.assert_all_finite(
