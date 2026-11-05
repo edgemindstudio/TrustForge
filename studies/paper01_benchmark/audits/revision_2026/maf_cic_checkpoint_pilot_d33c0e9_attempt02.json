@@ -1,0 +1,149 @@
+{
+  "checkpoint_artifacts": {
+    "best": {
+      "bytes": 8425862,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/maf_publications/maf_cic_seed42/best_state.npz",
+      "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+    },
+    "last": {
+      "bytes": 8425862,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/maf_publications/maf_cic_seed42/last_state.npz",
+      "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+    },
+    "manifest": {
+      "bytes": 79804,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/maf_publications/maf_cic_seed42/manifest.json",
+      "sha256": "a514cbe19a3cb62f8991d0326a6a0ac79ad09077f081269d5998552b53749229"
+    }
+  },
+  "configuration_artifact": {
+    "bytes": 280,
+    "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/dataset_config.json",
+    "sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b"
+  },
+  "logs": {
+    "stderr": {
+      "bytes": 1672,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/maf.311007.err",
+      "sha256": "8b72b9fd1aecc1b9f1e0d571213ed97d5ff89dbc3d20ed883bea1ea357a21728"
+    },
+    "stdout": {
+      "bytes": 3465,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-checkpoint-d33c0e9-a0N775tC/maf.311007.out",
+      "sha256": "a1a41c0691e802432c69ea130bd90ce38fcd44b645b88cef2350c0685d4a8c02"
+    }
+  },
+  "numerical_regression_job": "311004",
+  "previous_failed_job": "311000",
+  "results": [
+    {
+      "artifacts": {
+        "best": {
+          "bytes": 8425862,
+          "epoch_index": 1,
+          "filename": "best_state.npz",
+          "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+        },
+        "last": {
+          "bytes": 8425862,
+          "epoch_index": 1,
+          "filename": "last_state.npz",
+          "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+        }
+      },
+      "best_epoch_index": 1,
+      "config_sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b",
+      "dataset_id": "cicmaldroid2020",
+      "experimental_seed": 42,
+      "family": "maf",
+      "full_benchmark_ready": false,
+      "general_training_enabled": false,
+      "generation_name": "maf_cic_seed42",
+      "head": "d33c0e9146caab11fb3b492361873daf059ce6ce",
+      "history": [
+        {
+          "completed_training_steps": 127,
+          "epoch_index": 0,
+          "train_nll": 103.6767911282434,
+          "training_batches": 127,
+          "training_examples": 8117,
+          "validation_batches": 19,
+          "validation_examples": 1158,
+          "validation_nll": 96.68899329256311
+        },
+        {
+          "completed_training_steps": 254,
+          "epoch_index": 1,
+          "train_nll": 89.65998425541862,
+          "training_batches": 127,
+          "training_examples": 8117,
+          "validation_batches": 19,
+          "validation_examples": 1158,
+          "validation_nll": 83.87659391096837
+        }
+      ],
+      "host": "talon06.cm.cluster",
+      "job_id": "311007",
+      "numpy": "2.2.6",
+      "optimizer_updates": 254,
+      "phase": "train",
+      "pid": 1451977,
+      "publication_status": "WRITTEN_VERIFIED_AND_SYNCED",
+      "tensorflow": "2.20.0",
+      "verified_project_import_count": 52
+    },
+    {
+      "artifacts": {
+        "best": {
+          "bytes": 8425862,
+          "epoch_index": 1,
+          "filename": "best_state.npz",
+          "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+        },
+        "last": {
+          "bytes": 8425862,
+          "epoch_index": 1,
+          "filename": "last_state.npz",
+          "sha256": "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
+        }
+      },
+      "config_sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b",
+      "dataset_id": "cicmaldroid2020",
+      "experimental_seed": 42,
+      "family": "maf",
+      "fresh_process_restoration_passed": true,
+      "full_benchmark_ready": false,
+      "general_training_enabled": false,
+      "generation_name": "maf_cic_seed42",
+      "head": "d33c0e9146caab11fb3b492361873daf059ce6ce",
+      "host": "talon06.cm.cluster",
+      "job_id": "311007",
+      "numpy": "2.2.6",
+      "phase": "restore",
+      "pid": 1452897,
+      "tensorflow": "2.20.0",
+      "validation_examples_per_role": 1158,
+      "validation_losses": {
+        "best": {
+          "expected": 83.87659391096837,
+          "observed": 83.87659391096837
+        },
+        "last": {
+          "expected": 83.87659391096837,
+          "observed": 83.87659391096837
+        }
+      },
+      "verified_project_import_count": 52
+    }
+  ],
+  "scheduler_accounting": [
+    "311007",
+    "COMPLETED",
+    "0:0",
+    "00:08:08",
+    "talon06"
+  ],
+  "schema": "trustforge.paper01.checkpoint-pilot-attempt.v1",
+  "scope": "CICMalDroid2020 seed 42 train/publication/restoration",
+  "source_commit": "d33c0e9146caab11fb3b492361873daf059ce6ce"
+}
