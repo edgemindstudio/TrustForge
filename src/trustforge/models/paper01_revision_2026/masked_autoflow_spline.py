@@ -342,6 +342,19 @@ def _gather_scalar_bin(
     )
 
 
+def _assert_no_negative_nonzero_float32(value):
+    """Reject negative values even when CPU comparisons treat subnormals as zero."""
+    bits = tf.bitcast(value, tf.int32)
+    permitted = tf.logical_or(
+        bits >= tf.constant(0, dtype=tf.int32),
+        tf.equal(bits, tf.constant(-2147483648, dtype=tf.int32)),
+    )
+    tf.debugging.assert_equal(
+        permitted, tf.ones_like(permitted),
+        message="negative nonzero float32 input below canonical lower bound",
+    )
+
+
 def _interpolate_from_knots(value, source0, source1, target0, target1):
     """Interpolate using represented intervals and the nearer endpoint."""
     source_interval = source1 - source0
@@ -385,6 +398,8 @@ def forward(
         2,
         message="x must have shape (B,D)",
     )
+
+    _assert_no_negative_nonzero_float32(x)
 
     tf.debugging.assert_greater_equal(
         x,
@@ -514,6 +529,8 @@ def inverse(
         2,
         message="y must have shape (B,D)",
     )
+
+    _assert_no_negative_nonzero_float32(y)
 
     tf.debugging.assert_greater_equal(
         y,

@@ -1,0 +1,92 @@
+{
+  "artifacts": {
+    "junit": {
+      "bytes": 8251,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f213251-LsCi7RbO/pytest_results.xml",
+      "sha256": "79ab224a80cb879c6c011d10e158a732837bccd27c0783fac81dbea377843532"
+    },
+    "stderr": {
+      "bytes": 0,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f213251-LsCi7RbO/tests.311002.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 2087,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f213251-LsCi7RbO/tests.311002.out",
+      "sha256": "2cf670b7050ae4eb8d1dc0401c4559431184ab598e1ae6911e8ddd8e3b047f84"
+    },
+    "subnormal_probe": {
+      "bytes": 1499,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/tf-subnormal-f213251-wEJSYo5z/probe.txt",
+      "sha256": "21e2b4e4397911df1d22aff24a032f931810a0d8603a27a6ba73979f51bf39d9"
+    }
+  },
+  "limitations": [
+    "Regression outcome: 43 passed, 2 failed.",
+    "Probe establishes behavior in the recorded CPU environment.",
+    "New bit-level guard and negative-zero tests are not yet execution-verified.",
+    "No MAF retraining or scale-out acceptance."
+  ],
+  "probe": {
+    "job_id": "311003",
+    "numpy": "2.2.6",
+    "numpy_bits": [
+      2147483649,
+      2155872256,
+      2147483648,
+      0
+    ],
+    "numpy_less_than_zero": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "numpy_values": [
+      -1.401298464324817e-45,
+      -1.1754943508222875e-38,
+      -0.0,
+      0.0
+    ],
+    "tensorflow": "2.20.0",
+    "tensorflow_bits": [
+      2147483649,
+      2155872256,
+      2147483648,
+      0
+    ],
+    "tensorflow_equal_zero": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "tensorflow_less_than_zero": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "tensorflow_values": [
+      -1.401298464324817e-45,
+      -1.1754943508222875e-38,
+      -0.0,
+      0.0
+    ]
+  },
+  "regression_job": "311002",
+  "schema": "trustforge.paper01.maf-numerical-regression-evidence.v1",
+  "test_suites": [
+    {
+      "errors": "0",
+      "failures": "2",
+      "hostname": "talon06.cm.cluster",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "45",
+      "time": "29.529",
+      "timestamp": "2026-11-04T20:37:38.070405-06:00"
+    }
+  ],
+  "tested_commit": "f213251315ebc70ef64a90d8a84d97b900305cc9"
+}

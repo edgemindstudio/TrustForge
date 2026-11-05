@@ -132,3 +132,11 @@ def test_random_parameter_roundtrip_and_logdet_cancellation():
         (forward_ld + inverse_ld).numpy(), 0, rtol=0,
         atol=spline.LOGDET_CANCELLATION_TOLERANCE,
     )
+
+
+@pytest.mark.parametrize("direction", ["forward", "inverse"])
+def test_negative_zero_remains_a_valid_endpoint(direction):
+    x, widths, controls = parameters([-0.0])
+    output, logdet = getattr(spline, direction)(x, widths, controls)
+    assert float(output.numpy()[0, 0]) == 0.0
+    assert np.isfinite(logdet.numpy()).all()
