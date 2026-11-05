@@ -1,0 +1,120 @@
+{
+  "limitations": [
+    "Synthetic fixtures only; governed dataset adapters not exercised.",
+    "Two epochs over 65 training and 3 validation examples.",
+    "Restoration was in-memory within the original process.",
+    "No checkpoint publication or fresh-process restoration verified.",
+    "No convergence, synthesis quality or production-readiness claim.",
+    "Scheduler completion and zero exits reviewed separately.",
+    "Scheduler MaxRSS is unsuitable for resource sizing in these runs."
+  ],
+  "records": [
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-integration-483e3ec-7rWBZ15J/ar.310961.err",
+          "sha256": "45326112519634a28e0b4a7eab8e022e9f60d3dcd68e643b56d9866921a1086b"
+        },
+        "out": {
+          "bytes": 1828,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-integration-483e3ec-7rWBZ15J/ar.310961.out",
+          "sha256": "3962269b679a1346e3714bcdbadf446b10b00d0a4fec77da9978d26ea108631b"
+        }
+      },
+      "result": {
+        "best_epoch_index": 1,
+        "family": "ar",
+        "head": "483e3ecea592528ed40791ed460ee3b9713cd072",
+        "history": [
+          {
+            "completed_training_steps": 2,
+            "epoch_index": 0,
+            "train_nll": 4.411628869863657,
+            "training_batches": 2,
+            "training_examples": 65,
+            "validation_batches": 1,
+            "validation_examples": 3,
+            "validation_nll": 3.4521589279174805
+          },
+          {
+            "completed_training_steps": 4,
+            "epoch_index": 1,
+            "train_nll": 3.9337531823378344,
+            "training_batches": 2,
+            "training_examples": 65,
+            "validation_batches": 1,
+            "validation_examples": 3,
+            "validation_nll": 3.300755262374878
+          }
+        ],
+        "host": "talon16",
+        "in_memory_restoration_passed": true,
+        "job_id": "310961",
+        "numpy": "2.2.6",
+        "optimizer_updates": 4,
+        "production_ready": false,
+        "publication_status": "NOT_PUBLISHED",
+        "purpose": "SYNTHETIC_TRAINING_INTEGRATION_ONLY",
+        "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+        "script_sha256": "95e7b0bc9b5ffdce3ba3467961632fdd7f956f22b0281ea3dddad0a6d2ede5be",
+        "tensorflow": "2.20.0",
+        "validation_state_guards_passed": true
+      }
+    },
+    {
+      "logs": {
+        "err": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-integration-483e3ec-7rWBZ15J/maf.310962.err",
+          "sha256": "b41ed418b632da12d8ce4fd1408ab86178a30b413abb7a093ddf33cd35a1a216"
+        },
+        "out": {
+          "bytes": 1832,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-integration-483e3ec-7rWBZ15J/maf.310962.out",
+          "sha256": "e1254a2edd32f1aef7882f3168f28675278d6a17a28e2e88722ce21acf798587"
+        }
+      },
+      "result": {
+        "best_epoch_index": 1,
+        "family": "maf",
+        "head": "483e3ecea592528ed40791ed460ee3b9713cd072",
+        "history": [
+          {
+            "completed_training_steps": 2,
+            "epoch_index": 0,
+            "train_nll": 887.9109088604267,
+            "training_batches": 2,
+            "training_examples": 65,
+            "validation_batches": 1,
+            "validation_examples": 3,
+            "validation_nll": -1.0988973379135132
+          },
+          {
+            "completed_training_steps": 4,
+            "epoch_index": 1,
+            "train_nll": 209.39244877741888,
+            "training_batches": 2,
+            "training_examples": 65,
+            "validation_batches": 1,
+            "validation_examples": 3,
+            "validation_nll": -72.28333282470703
+          }
+        ],
+        "host": "talon16",
+        "in_memory_restoration_passed": true,
+        "job_id": "310962",
+        "numpy": "2.2.6",
+        "optimizer_updates": 4,
+        "production_ready": false,
+        "publication_status": "NOT_PUBLISHED",
+        "purpose": "SYNTHETIC_TRAINING_INTEGRATION_ONLY",
+        "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+        "script_sha256": "95e7b0bc9b5ffdce3ba3467961632fdd7f956f22b0281ea3dddad0a6d2ede5be",
+        "tensorflow": "2.20.0",
+        "validation_state_guards_passed": true
+      }
+    }
+  ],
+  "schema": "trustforge.paper01.training-integration-evidence.v1"
+}
