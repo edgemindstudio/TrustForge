@@ -183,3 +183,53 @@ def test_source_change_blocks_manifest(execution, monkeypatch):
     with pytest.raises(RuntimeError, match="source identity changed"):
         runner.run_training_and_prepare_checkpoint(**args)
     assert "manifest" not in events
+
+
+@pytest.mark.parametrize("family,dataset,seed", [
+    ("gan", "cicmaldroid2020", 42),
+    ("ar", "malex", 42),
+    ("maf", "ustc_tfc2016", 42),
+    ("ar", "cicmaldroid2020", 43),
+    ("maf", "cicmaldroid2020", True),
+    ("ar", "cicmaldroid2020", 42.0),
+])
+def test_bounded_allowance_rejects_other_scope_before_source_access(
+    monkeypatch, family, dataset, seed,
+):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("invalid pilot crossed source boundary")
+
+    monkeypatch.setattr(runner, "TRAINING_EXECUTION_ENABLED", False)
+    monkeypatch.setattr(runner, "capture_source_identity", forbidden)
+    with pytest.raises(RuntimeError, match="bounded CIC seed42 scope"):
+        runner.run_training_and_prepare_checkpoint(
+            repository_root="unused", family=family, dataset_id=dataset,
+            experimental_seed=seed, adapter=object(),
+            bounded_integration=True,
+        )
+
+
+@pytest.mark.parametrize("family", ["ar", "maf"])
+def test_bounded_allowance_reaches_source_check_with_general_gate_disabled(
+    monkeypatch, family,
+):
+    def stop_at_source(*args, **kwargs):
+        raise ValueError("source boundary reached")
+
+    monkeypatch.setattr(runner, "TRAINING_EXECUTION_ENABLED", False)
+    monkeypatch.setattr(runner, "capture_source_identity", stop_at_source)
+    with pytest.raises(ValueError, match="source boundary reached"):
+        runner.run_training_and_prepare_checkpoint(
+            repository_root="unused", family=family,
+            dataset_id="cicmaldroid2020", experimental_seed=42,
+            adapter=object(), bounded_integration=True,
+        )
+
+
+def test_nonboolean_bounded_flag_rejected():
+    with pytest.raises(TypeError, match="must be boolean"):
+        runner.run_training_and_prepare_checkpoint(
+            repository_root="unused", family="ar",
+            dataset_id="cicmaldroid2020", experimental_seed=42,
+            adapter=object(), bounded_integration=1,
+        )

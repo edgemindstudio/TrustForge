@@ -1,6 +1,7 @@
 """Restricted AR/MAF training-to-checkpoint preparation.
 
-Execution remains disabled pending bounded integration acceptance.
+General execution remains disabled. Explicit bounded integration permits
+only CICMalDroid2020, seed 42, AR or MAF, under the complete selected recipe.
 No checkpoint publication, synthesis or scheduler submission occurs here.
 """
 
@@ -55,9 +56,20 @@ def capture_source_identity(repository_root):
 
 def run_training_and_prepare_checkpoint(
     *, repository_root, family, dataset_id, experimental_seed, adapter,
+    bounded_integration=False,
 ):
     """Run the selected complete recipe and prepare unpublished bundle bytes."""
-    if TRAINING_EXECUTION_ENABLED is not True:
+    if type(bounded_integration) is not bool:
+        raise TypeError("bounded_integration must be boolean")
+    if bounded_integration:
+        if not (
+            family in ("ar", "maf")
+            and dataset_id == "cicmaldroid2020"
+            and type(experimental_seed) is int
+            and experimental_seed == 42
+        ):
+            raise RuntimeError("request outside bounded CIC seed42 scope")
+    elif TRAINING_EXECUTION_ENABLED is not True:
         raise RuntimeError("AR/MAF training execution remains disabled")
 
     root = Path(repository_root)
