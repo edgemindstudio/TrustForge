@@ -1,0 +1,124 @@
+{
+  "artifacts": {
+    "boundary_report.json": {
+      "bytes": 2170,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-boundary-71dba7b-2L4p2utS/boundary_report.json",
+      "sha256": "9924744f0381a67c431c89c7c8038778a05e509d6e8f0d7b4490aae3e05cbb81"
+    },
+    "dataset_config.json": {
+      "bytes": 280,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-boundary-71dba7b-2L4p2utS/dataset_config.json",
+      "sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b"
+    },
+    "maf.311001.err": {
+      "bytes": 836,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-boundary-71dba7b-2L4p2utS/maf.311001.err",
+      "sha256": "293a961b298f88f22c36d304b195a5973f3bab3711736f00acdd9bb44c7e1bc1"
+    },
+    "maf.311001.out": {
+      "bytes": 2474,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-boundary-71dba7b-2L4p2utS/maf.311001.out",
+      "sha256": "2f4c62ccc0abdb719607c08903a86105712ed060bb60538e33a36a482f374d09"
+    }
+  },
+  "limitations": [
+    "Observed first violation in this instrumented execution.",
+    "Scalar analysis uses float64 arithmetic on recorded float32 values.",
+    "It is not an exact replay of TensorFlow float32 operation ordering.",
+    "No numerical correction, retraining or synthesis acceptance established."
+  ],
+  "report": {
+    "checkpoint_publication_allowed": false,
+    "context": {
+      "spline_call_in_step": 2,
+      "training_step_started": 5
+    },
+    "examples": [
+      {
+        "batch_row": 9,
+        "coordinate": 3984,
+        "heights": [
+          0.09082160145044327,
+          0.057591233402490616,
+          0.003913404420018196,
+          0.014708977192640305,
+          0.19735336303710938,
+          0.025276271626353264,
+          0.5597467422485352,
+          0.05058843269944191
+        ],
+        "input": 0.9999999403953552,
+        "output": 1.0000001192092896,
+        "output_float32_bits": 1065353217,
+        "raw_slope_controls": [
+          -1.6414223909378052,
+          -2.2768919467926025,
+          -0.4529585540294647,
+          3.5982184410095215,
+          3.3876187801361084,
+          -5.048325538635254,
+          -4.503073692321777,
+          -0.11975565552711487
+        ],
+        "raw_widths": [
+          1.4527256488800049,
+          1.0309288501739502,
+          -2.440072536468506,
+          -2.0834760665893555,
+          0.7757799029350281,
+          0.2049505114555359,
+          3.333325147628784,
+          0.23933430016040802
+        ],
+        "widths": [
+          0.10703601688146591,
+          0.07054556161165237,
+          0.0031618857756257057,
+          0.004088164307177067,
+          0.05488397181034088,
+          0.03144749253988266,
+          0.6963242292404175,
+          0.0325125977396965
+        ],
+        "x_knots": [
+          0.0,
+          0.10703601688146591,
+          0.1775815784931183,
+          0.18074347078800201,
+          0.1848316341638565,
+          0.2397156059741974,
+          0.27116310596466064,
+          0.9674873352050781,
+          1.0
+        ],
+        "y_knots": [
+          0.0,
+          0.09082160145044327,
+          0.14841283857822418,
+          0.15232624113559723,
+          0.16703522205352783,
+          0.3643885850906372,
+          0.3896648585796356,
+          0.9494116306304932,
+          1.0
+        ]
+      }
+    ],
+    "job_id": "311001",
+    "outcome": "FIRST_OUT_OF_RANGE_SPLINE_OUTPUT",
+    "purpose": "UNCHANGED_MAF_BOUNDARY_DIAGNOSTIC",
+    "script_sha256": "5775ff716e34c96fc61450a7e089b5f73c6b5885c29786dd164e0d08745a08b7",
+    "source_head_requested": "71dba7b4fdb2640b60231328ba677fc1383d3ebe",
+    "violation_count": 1
+  },
+  "scalar_analysis": {
+    "float64_evaluation_using_recorded_width_height": 1.0000000749227704,
+    "float64_evaluation_using_stored_knot_intervals": 0.9999999072576239,
+    "recorded_height": 0.05058843269944191,
+    "recorded_output": 1.0000001192092896,
+    "recorded_width": 0.0325125977396965,
+    "stored_knot_height": 0.050588369369506836,
+    "stored_knot_width": 0.032512664794921875
+  },
+  "schema": "trustforge.paper01.maf-boundary-evidence.v1"
+}
