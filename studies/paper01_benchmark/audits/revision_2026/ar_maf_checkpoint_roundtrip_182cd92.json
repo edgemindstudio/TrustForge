@@ -1,0 +1,102 @@
+{
+  "limitations": [
+    "Synthetic fixtures and two-class model constructions only.",
+    "One training update; no convergence or full-training claim.",
+    "Separate writer and reader processes in the same job/environment.",
+    "Diagnostic artifacts are not production checkpoint publications.",
+    "Production architecture/provenance manifest integration remains pending.",
+    "Training resume and filesystem crash durability were not verified.",
+    "Scheduler completion and zero exits reviewed separately."
+  ],
+  "records": [
+    {
+      "artifacts": {
+        "diagnostic.json": {
+          "bytes": 3155,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/ar_state/diagnostic.json",
+          "sha256": "464eda8866404ed653800cf9a071fcf954e3db28e1cf86309d22959bda4406e4"
+        },
+        "state.npz": {
+          "bytes": 955962,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/ar_state/state.npz",
+          "sha256": "48149d32ab0122d689c339dc41b0cd3d76de02759f885ddbe1cc823531cd56f2"
+        }
+      },
+      "logs": {
+        "err": {
+          "bytes": 1672,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/ar.310978.err",
+          "sha256": "538a7a413e1378999d49e447983dc7190696bac4c99fd7f9cf3480775afb5d23"
+        },
+        "out": {
+          "bytes": 1717,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/ar.310978.out",
+          "sha256": "604b5a42266a088eadfd3077e4705a22dd61fb700a73fb763235d68b066299e8"
+        }
+      },
+      "result": {
+        "expected_validation_nll": 3.404005527496338,
+        "family": "ar",
+        "fresh_process_restoration_passed": true,
+        "head": "182cd92abfe7ad221c5be7faf2ef8bafc910eef1",
+        "job_id": "310978",
+        "numpy": "2.2.6",
+        "production_ready": false,
+        "reader_pid": 1435914,
+        "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+        "restored_validation_nll": 3.404005527496338,
+        "script_sha256": "bd9e0f9dd02ea61647248cb20ce9eeda06827e49d05a68555f39341fcf023947",
+        "state_bytes": 955962,
+        "state_sha256": "48149d32ab0122d689c339dc41b0cd3d76de02759f885ddbe1cc823531cd56f2",
+        "tensor_count": 32,
+        "tensorflow": "2.20.0",
+        "writer_pid": 1435811
+      }
+    },
+    {
+      "artifacts": {
+        "diagnostic.json": {
+          "bytes": 6216,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/maf_state/diagnostic.json",
+          "sha256": "0cc21efebbe7980270b314cdaf9039ede6cf8eb40d0366b58c93ea96f3981b55"
+        },
+        "state.npz": {
+          "bytes": 8422022,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/maf_state/state.npz",
+          "sha256": "6191c98100547ed5f878486fd103d9275c4da51a5d471f6691ea56199e2e5b68"
+        }
+      },
+      "logs": {
+        "err": {
+          "bytes": 1672,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/maf.310979.err",
+          "sha256": "ab440f46ef964f43413dead6659241be9dc04a1562b184aef0028b88cf00118e"
+        },
+        "out": {
+          "bytes": 1725,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-roundtrip-182cd92-XufYnvXk/maf.310979.out",
+          "sha256": "1081bf3c624f54922dcb7fefc901e4c9e003bed9ec67f46a64544f8a39914988"
+        }
+      },
+      "result": {
+        "expected_validation_nll": -418.7374267578125,
+        "family": "maf",
+        "fresh_process_restoration_passed": true,
+        "head": "182cd92abfe7ad221c5be7faf2ef8bafc910eef1",
+        "job_id": "310979",
+        "numpy": "2.2.6",
+        "production_ready": false,
+        "reader_pid": 1435928,
+        "recipe_sha256": "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478",
+        "restored_validation_nll": -418.7374267578125,
+        "script_sha256": "bd9e0f9dd02ea61647248cb20ce9eeda06827e49d05a68555f39341fcf023947",
+        "state_bytes": 8422022,
+        "state_sha256": "6191c98100547ed5f878486fd103d9275c4da51a5d471f6691ea56199e2e5b68",
+        "tensor_count": 70,
+        "tensorflow": "2.20.0",
+        "writer_pid": 1435810
+      }
+    }
+  ],
+  "schema": "trustforge.paper01.checkpoint-roundtrip-evidence.v1"
+}
