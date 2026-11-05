@@ -1,0 +1,46 @@
+{
+  "artifacts": {
+    "pytest_results.xml": {
+      "bytes": 6993,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f4920c5-c626vTFR/pytest_results.xml",
+      "sha256": "0fe29dfd99077bdafb08425d4686f71fca51ed94e3f4096b387e4b99d8c24222"
+    },
+    "tests.311004.err": {
+      "bytes": 0,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f4920c5-c626vTFR/tests.311004.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests.311004.out": {
+      "bytes": 231,
+      "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-knot-regression-f4920c5-c626vTFR/tests.311004.out",
+      "sha256": "f1551549b2604be990d9e898d0057ebea33ea9f04f32d39b0ffbf6ce54657b81"
+    }
+  },
+  "job_id": "311004",
+  "limitations": [
+    "Scheduler completion and zero exit reviewed separately.",
+    "Tests establish scoped numerical regression coverage.",
+    "Complete CIC training/publication/restoration retry remains pending.",
+    "No synthesis or benchmark scale-out acceptance."
+  ],
+  "schema": "trustforge.paper01.maf-numerical-regression-evidence.v1",
+  "test_suites": [
+    {
+      "errors": "0",
+      "failures": "0",
+      "hostname": "talon06.cm.cluster",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "47",
+      "time": "29.136",
+      "timestamp": "2026-11-04T20:44:51.407257-06:00"
+    }
+  ],
+  "tested_commit": "f4920c5d2e352036c0f248aee27d4c76f3606754",
+  "totals": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 47
+  }
+}
