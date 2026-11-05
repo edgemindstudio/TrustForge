@@ -1,0 +1,151 @@
+{
+  "limitations": [
+    "AR acceptance limited to CIC seed42 train/publication/restoration.",
+    "Scheduler terminal status reviewed separately.",
+    "MAF failed during training; no successful pilot checkpoint claimed.",
+    "MAF offending value, stage and update remain unmeasured.",
+    "No synthesis, downstream evaluation or scale-out acceptance."
+  ],
+  "records": [
+    {
+      "family": "ar",
+      "job_id": "310999",
+      "logs": {
+        "err": {
+          "bytes": 1672,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-cic-checkpoint-e4473ab-gGW9PBPL/ar.310999.err",
+          "sha256": "053665fcb3abc1ce8ecaeb6618f293b606c0c27a4da0b0c932641fe187c70270"
+        },
+        "out": {
+          "bytes": 3468,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-cic-checkpoint-e4473ab-gGW9PBPL/ar.310999.out",
+          "sha256": "1770fd5a561403926b5bf6bf9ff3c028c9860575e0fb84f96af03af151a2aa6f"
+        }
+      },
+      "outcome": "TRAIN_PUBLISH_RESTORE_RECORDS_PASSED",
+      "results": [
+        {
+          "artifacts": {
+            "best": {
+              "bytes": 961338,
+              "epoch_index": 1,
+              "filename": "best_state.npz",
+              "sha256": "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0"
+            },
+            "last": {
+              "bytes": 961338,
+              "epoch_index": 1,
+              "filename": "last_state.npz",
+              "sha256": "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0"
+            }
+          },
+          "best_epoch_index": 1,
+          "config_sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b",
+          "dataset_id": "cicmaldroid2020",
+          "experimental_seed": 42,
+          "family": "ar",
+          "full_benchmark_ready": false,
+          "general_training_enabled": false,
+          "generation_name": "ar_cic_seed42",
+          "head": "e4473abcdbc53f0de3a01ebe48858f2f3c7b841a",
+          "history": [
+            {
+              "completed_training_steps": 127,
+              "epoch_index": 0,
+              "train_nll": -1.8207904012299854,
+              "training_batches": 127,
+              "training_examples": 8117,
+              "validation_batches": 19,
+              "validation_examples": 1158,
+              "validation_nll": -5.090645792570757
+            },
+            {
+              "completed_training_steps": 254,
+              "epoch_index": 1,
+              "train_nll": -5.021027363211677,
+              "training_batches": 127,
+              "training_examples": 8117,
+              "validation_batches": 19,
+              "validation_examples": 1158,
+              "validation_nll": -5.960004059556029
+            }
+          ],
+          "host": "talon06.cm.cluster",
+          "job_id": "310999",
+          "numpy": "2.2.6",
+          "optimizer_updates": 254,
+          "phase": "train",
+          "pid": 1447680,
+          "publication_status": "WRITTEN_VERIFIED_AND_SYNCED",
+          "tensorflow": "2.20.0",
+          "verified_project_import_count": 49
+        },
+        {
+          "artifacts": {
+            "best": {
+              "bytes": 961338,
+              "epoch_index": 1,
+              "filename": "best_state.npz",
+              "sha256": "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0"
+            },
+            "last": {
+              "bytes": 961338,
+              "epoch_index": 1,
+              "filename": "last_state.npz",
+              "sha256": "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0"
+            }
+          },
+          "config_sha256": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b",
+          "dataset_id": "cicmaldroid2020",
+          "experimental_seed": 42,
+          "family": "ar",
+          "fresh_process_restoration_passed": true,
+          "full_benchmark_ready": false,
+          "general_training_enabled": false,
+          "generation_name": "ar_cic_seed42",
+          "head": "e4473abcdbc53f0de3a01ebe48858f2f3c7b841a",
+          "host": "talon06.cm.cluster",
+          "job_id": "310999",
+          "numpy": "2.2.6",
+          "phase": "restore",
+          "pid": 1448360,
+          "tensorflow": "2.20.0",
+          "validation_examples_per_role": 1158,
+          "validation_losses": {
+            "best": {
+              "expected": -5.960004059556029,
+              "observed": -5.960004059556029
+            },
+            "last": {
+              "expected": -5.960004059556029,
+              "observed": -5.960004059556029
+            }
+          },
+          "verified_project_import_count": 49
+        }
+      ],
+      "traceback": null
+    },
+    {
+      "family": "maf",
+      "job_id": "311000",
+      "logs": {
+        "err": {
+          "bytes": 3676,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-cic-checkpoint-e4473ab-gGW9PBPL/maf.311000.err",
+          "sha256": "d21f83db2f89658c422a7e303dff54369f5db842e8a14813e16ed9030efe9844"
+        },
+        "out": {
+          "bytes": 836,
+          "path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/ar-maf-cic-checkpoint-e4473ab-gGW9PBPL/maf.311000.out",
+          "sha256": "06253fb5269122dc7b4b2812d45b78d0c801f102020950ffd5940ff567c1781a"
+        }
+      },
+      "outcome": "TRAINING_FAILED_SPLINE_INPUT_UPPER_BOUND",
+      "results": [],
+      "traceback": "Traceback (most recent call last):\n  File \"/home/bruno.fonkeng/TrustForge/scripts/check_paper01_ar_maf_cic_checkpoint_pilot.py\", line 212, in <module>\n    main()\n  File \"/home/bruno.fonkeng/TrustForge/scripts/check_paper01_ar_maf_cic_checkpoint_pilot.py\", line 124, in main\n    prepared = runner.run_training_and_prepare_checkpoint(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/ar_maf_training_runner.py\", line 90, in run_training_and_prepare_checkpoint\n    trained = run_training_core(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py\", line 92, in run_training_core\n    train_loss, train_count, train_batches = _aggregate(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/ar_maf_training_core.py\", line 51, in _aggregate\n    value = _loss(step(images, labels))\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py\", line 42, in train\n    loss = _loss(training_step(images, labels))\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/ar_maf_family_steps.py\", line 117, in train\n    return train_step(model, optimizer, x, y)[\"loss\"]\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_training.py\", line 109, in train_step\n    loss = conditional_nll(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_training.py\", line 44, in conditional_nll\n    log_prob = model.log_prob(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_model.py\", line 264, in log_prob\n    ) = self.forward_blocks(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_model.py\", line 133, in forward_blocks\n    ) = stage.forward(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_flow.py\", line 213, in forward\n    ) = spline_forward(\n  File \"/home/bruno.fonkeng/TrustForge/src/trustforge/models/paper01_revision_2026/masked_autoflow_spline.py\", line 371, in forward\n    tf.debugging.assert_less_equal(\n  File \"/home/bruno.fonkeng/miniforge3/envs/gcs_py310/lib/python3.10/site-packages/tensorflow/python/util/traceback_utils.py\", line 153, in error_handler\n    raise e.with_traceback(filtered_tb) from None\n  File \"/home/bruno.fonkeng/miniforge3/envs/gcs_py310/lib/python3.10/site-packages/tensorflow/python/ops/check_ops.py\", line 488, in _binary_assert\n    raise errors.InvalidArgumentError(\ntensorflow.python.framework.errors_impl.InvalidArgumentError: spline input above canonical upper bound\nCondition x <= y did not hold.\nFirst 3 elements of x:\n[0.39784947 0.4441376  0.444646  ]\nFirst 1 elements of y:\n[1.]\n"
+    }
+  ],
+  "schema": "trustforge.paper01.checkpoint-pilot-attempt.v1",
+  "source_commit": "e4473abcdbc53f0de3a01ebe48858f2f3c7b841a"
+}
