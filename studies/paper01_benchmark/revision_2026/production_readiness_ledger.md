@@ -755,3 +755,30 @@ evaluation completeness/reporting. Reuse accepted component evidence without
 repeating generator training or enlarging synthesis solely for these checks.
 
 FULL_BENCHMARK_GO=NO
+
+
+## Reference-to-Inception/KID integration acceptance — job 311694
+
+PASS for bounded synthetic-fixture integration at
+a9946a6700088755afa96f3894bdc1749f670f81.
+
+Job 311694 completed on talon05 in 1m06s with exit 0:0.
+Persisted balanced references were consumed by actual verified-weight Inception
+extraction and the KID orchestration. Each condition produced ten float32
+2048-dimensional feature rows, two per class.
+
+Saved file identities, feature-byte identities, deterministic draw indices
+and independent NumPy KID recalculation passed. Fixture KID mean:
+0.24403195325683105. All draws used all ten rows; these are not independent
+experimental-seed observations.
+
+Evidence: audits/revision_2026/fidelity_integration_311694.
+
+This closes the bounded reference-to-feature/KID fixture check.
+Real-data provenance, generator lineage and primary fidelity remain open.
+Next: implement and verify FID/cFID mathematics against independent references,
+then the remaining selected metrics and evaluation completeness/reporting.
+No repeat training or enlarged synthesis is required for this fixture scope.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
