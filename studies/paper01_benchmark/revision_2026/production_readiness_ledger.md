@@ -782,3 +782,23 @@ No repeat training or enlarged synthesis is required for this fixture scope.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Saved-feature FID/cFID acceptance — job 311699
+
+PASS for saved 2048-dimensional Inception fixture features.
+Job 311699 completed on talon05 in four seconds with exit 0:0 at
+483b28940572ce183215d5ad986a1211dd333b20.
+
+Pooled FID and all five class FIDs matched the constant-synthetic analytic
+reference. Equal-weight macro cFID and missing-class rejection passed.
+No diagonal regularization was applied.
+
+Evidence: audits/revision_2026/fid_features_311699.
+
+Scope: engineering fixture only. A nonzero covariance cross-term at 2048
+dimensions, production-scale resources and full fidelity orchestration remain
+unverified. No real-data scientific fidelity conclusion is established.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
