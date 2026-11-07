@@ -1,0 +1,7 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/inception-features-c4d4d8f-stwo1jYG",
+  "sha256": {
+    "check.slurm": "1e2edb43ba50fa7a12d7f8bef7cfa435410169aa77f58afc747a1677f9556848",
+    "report.json": "49658427b098911322c773c73f3650a6815ad1c12aa4562eb5d0ae0fb4816239"
+  }
+}

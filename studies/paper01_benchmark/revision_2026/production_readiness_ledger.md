@@ -730,3 +730,28 @@ real-data orchestration and broader production gates remain unresolved.
 
 Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Inception RGB feature acceptance — job 311693
+
+PASS for bounded synthetic-fixture feature extraction at
+c4d4d8f24c8dde9f98918af0582080a48a3690e8.
+Job 311693 completed on talon07 in 23 seconds with exit 0:0.
+
+Verified-weight loading, RGB preprocessing, finite float32 2048-dimensional
+features, same-input replay, unchanged model weights, selected-position order,
+[16,1] iterator batching and tested invalid-input rejection passed.
+
+Evidence: audits/revision_2026/inception_features_311693.
+
+This closes the bounded extractor fixture check. Primary reference-to-feature
+integration and provenance binding remain pending. No primary fidelity result
+or malware-semantic representation claim is established.
+
+Stage 5 remains IN_PROGRESS.
+Next: connect persisted class-balanced references to verified feature batches
+and KID, then finish FID/cFID, three-scale MS-SSIM, downstream metrics and
+evaluation completeness/reporting. Reuse accepted component evidence without
+repeating generator training or enlarging synthesis solely for these checks.
+
+FULL_BENCHMARK_GO=NO
