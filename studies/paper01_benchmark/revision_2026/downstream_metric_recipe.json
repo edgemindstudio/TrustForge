@@ -1,0 +1,78 @@
+{
+  "brier": {
+    "binary_representation": "two_column_authoritative_class_probabilities",
+    "definition": "mean_over_samples_sum_over_classes_squared_probability_error",
+    "divide_by_class_count": false
+  },
+  "classification": {
+    "balanced_accuracy": "equal_weight_all_authoritative_class_recall",
+    "confusion_matrix": "rows_true_columns_predicted_authoritative_order",
+    "f1_zero_denominator": 0.0,
+    "macro_f1": "equal_weight_all_authoritative_class_f1",
+    "per_class": [
+      "precision",
+      "recall",
+      "f1",
+      "support"
+    ],
+    "precision_zero_denominator": 0.0
+  },
+  "ece": {
+    "aggregation": "sum_bin_fraction_times_abs_accuracy_minus_mean_confidence",
+    "bin_count": 15,
+    "bin_edges": "equally_spaced_zero_to_one",
+    "confidence": "maximum_predicted_probability",
+    "correctness": "argmax_prediction_equals_true_label",
+    "empty_bins": "report_count_zero_contribution_zero",
+    "intervals": "left_closed_right_open_last_includes_one",
+    "persist_bin_counts_accuracy_and_mean_confidence": true,
+    "variant": "top_label"
+  },
+  "execution": {
+    "complete_evaluation_requires_outer_provenance_and_coverage_checks": true,
+    "missing_class": "fail_complete_metric_status",
+    "nonfinite_or_failed_metric": "fail_complete_metric_status",
+    "numeric_accumulation": "float64",
+    "preserve_ordered_prediction_and_split_identities": true,
+    "test_based_selection_tuning_or_calibration": false
+  },
+  "full_benchmark_go": false,
+  "implementation_verified": false,
+  "inputs": {
+    "all_authoritative_classes_required": true,
+    "each_class_requires_positive_and_negative_examples": true,
+    "labels": "ordered_integer_authoritative_class_ids",
+    "prediction": "argmax_lowest_class_id_on_tie",
+    "probabilities": "finite_float32_or_float64_N_by_K",
+    "probability_range": [
+      0.0,
+      1.0
+    ],
+    "renormalize": false,
+    "row_sum_absolute_tolerance": 1e-06
+  },
+  "macro_auprc": {
+    "aggregation": "equal_weight_all_authoritative_classes",
+    "estimator": "one_vs_rest_average_precision",
+    "integration": "sum_recall_increments_times_precision",
+    "score_ties": "group_equal_scores_at_one_threshold",
+    "trapezoidal_pr_auc": false
+  },
+  "origin": "prospective_selection_before_revised_test_evaluation",
+  "recall_at_1pct_fpr": {
+    "include_origin": true,
+    "interpolation": false,
+    "interpretation": "descriptive_test_roc_not_deployable_operating_threshold",
+    "maximum_fpr": 0.01,
+    "report": [
+      "per_class_recall",
+      "macro_recall",
+      "positive_and_negative_counts"
+    ],
+    "score_ties": "group_equal_scores_at_one_threshold",
+    "selection": "maximum_tpr_among_empirical_points_with_fpr_at_most_limit",
+    "variant": "one_vs_rest_empirical_roc"
+  },
+  "schema": "trustforge.paper01.downstream-metric-recipe.v1",
+  "status": "SELECTED_FOR_IMPLEMENTATION_NOT_EXECUTION_VERIFIED"
+}
