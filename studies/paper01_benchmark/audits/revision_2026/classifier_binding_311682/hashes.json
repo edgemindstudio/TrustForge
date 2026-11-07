@@ -1,0 +1,7 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/classifier-binding-69a6bc0-bs9z0qzK",
+  "sha256": {
+    "check.slurm": "7c1eb77179aedcea060e359b42920ebf540e5ef006d00005881d70444b160524",
+    "report.json": "3a6327d2c67d70a72ccb6ee22c2d1887759bbce84cadf9c3a17af1caa8fa08fc"
+  }
+}

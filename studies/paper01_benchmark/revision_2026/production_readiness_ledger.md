@@ -643,3 +643,33 @@ Real-data orchestration, lineage binding and all-family coverage remain open.
 S2-04 / Stage 5: IN_PROGRESS.
 S2-03 and the other recorded specification/operational gaps remain open.
 FULL_BENCHMARK_GO=NO
+
+
+## Classifier TensorFlow binding acceptance — job 311682
+
+PASS for bounded synthetic-fixture execution at
+69a6bc0beacd9e459eb39d6cd4a7312616907b55.
+Job 311682 completed on talon07 in 24 seconds with exit 0:0.
+
+Actual architecture, checked Adam controls, initialization replay/variation,
+optimizer update and validation-state isolation passed. Both fixture arms
+shared initial weights and completed 20 epochs/updates, selecting epoch 19.
+
+Evidence: audits/revision_2026/classifier_binding_311682.
+
+Scope remains component binding. The production paired entry point was not
+exercised; no real data or held-out test was evaluated. Actual patience
+stopping and nonterminal-best restoration were not demonstrated in this job.
+The earlier stand-in control tests remain separate evidence for those cases.
+
+Stage 5 remains IN_PROGRESS. Remaining finite work:
+1. Verify the paired entry point with bounded input/lineage orchestration.
+2. Implement and validate the accepted metric definitions.
+3. Enforce evaluation completeness, paired reporting and missing-run rules.
+4. Complete bounded real-data production-path acceptance before scale-out.
+
+Other family execution, S2-03 adoption, reproduction and launch gates retain
+their recorded unresolved status. No additional generator training or larger
+synthesis run is selected by this acceptance.
+
+FULL_BENCHMARK_GO=NO
