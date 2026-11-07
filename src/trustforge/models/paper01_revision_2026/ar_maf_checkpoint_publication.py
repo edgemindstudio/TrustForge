@@ -27,6 +27,7 @@ def publish_checkpoint_bundle(
     parent, generation_name, *, manifest_raw, best_raw, last_raw,
     recipe_raw, expected_identity,
     expected_source_commit, expected_source_files,
+    expected_fitted_state_sha256=None,
 ):
     """Publish a new bundle without overwriting any existing generation.
 
@@ -46,6 +47,7 @@ def publish_checkpoint_bundle(
         recipe_raw=recipe_raw, expected_identity=expected_identity,
         expected_source_commit=expected_source_commit,
         expected_source_files=expected_source_files,
+        expected_fitted_state_sha256=expected_fitted_state_sha256,
     )
 
     with open_checkpoint_directory(parent) as parent_fd:

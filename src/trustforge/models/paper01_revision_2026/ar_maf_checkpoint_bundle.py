@@ -24,8 +24,25 @@ BUNDLE_MEMBERS = frozenset({
 def verify_checkpoint_bundle_bytes(
     *, manifest_raw, best_raw, last_raw, recipe_raw,
     expected_identity, expected_source_commit, expected_source_files,
+    expected_fitted_state_sha256=None,
 ):
-    """Verify supplied bytes against independently requested identities."""
+    """Verify legacy bytes or explicitly requested CIC execution evidence."""
+    if expected_fitted_state_sha256 is not None:
+        # Lazy import avoids a cycle: the execution verifier reuses this
+        # function's unchanged legacy path for its inner v1 manifest.
+        from .ar_maf_cic_execution_manifest import (
+            verify_cic_execution_manifest,
+        )
+        return verify_cic_execution_manifest(
+            execution_manifest_raw=manifest_raw,
+            best_raw=best_raw,
+            last_raw=last_raw,
+            recipe_raw=recipe_raw,
+            expected_identity=expected_identity,
+            expected_source_commit=expected_source_commit,
+            expected_source_files=expected_source_files,
+            expected_fitted_state_sha256=expected_fitted_state_sha256,
+        )
     if type(manifest_raw) is not bytes:
         raise TypeError("manifest must be bytes")
     if not 0 < len(manifest_raw) <= MAX_MANIFEST_BYTES:
@@ -70,6 +87,7 @@ def verify_checkpoint_bundle_bytes(
 def read_checkpoint_bundle(
     directory, *, recipe_raw, expected_identity,
     expected_source_commit, expected_source_files,
+    expected_fitted_state_sha256=None,
 ):
     """Read exactly one complete bundle through one directory descriptor.
 
@@ -79,8 +97,14 @@ def read_checkpoint_bundle(
     with open_checkpoint_directory(directory) as fd:
         if frozenset(anchored_member_names(fd)) != BUNDLE_MEMBERS:
             raise ValueError("incomplete or unexpected checkpoint inventory")
+        manifest_limit = MAX_MANIFEST_BYTES
+        if expected_fitted_state_sha256 is not None:
+            from .ar_maf_cic_execution_manifest import (
+                MAX_EXECUTION_MANIFEST_BYTES,
+            )
+            manifest_limit = MAX_EXECUTION_MANIFEST_BYTES
         manifest_raw = read_anchored_regular_file(
-            fd, "manifest.json", max_bytes=MAX_MANIFEST_BYTES,
+            fd, "manifest.json", max_bytes=manifest_limit,
         )
         best_raw = read_anchored_regular_file(
             fd, "best_state.npz", max_bytes=MAX_ARCHIVE_BYTES,
@@ -96,6 +120,7 @@ def read_checkpoint_bundle(
             expected_identity=expected_identity,
             expected_source_commit=expected_source_commit,
             expected_source_files=expected_source_files,
+            expected_fitted_state_sha256=expected_fitted_state_sha256,
         )
         if frozenset(anchored_member_names(fd)) != BUNDLE_MEMBERS:
             raise ValueError("checkpoint inventory changed during reading")
