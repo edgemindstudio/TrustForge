@@ -1,0 +1,7 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/inception-weight-99a9866-A6OcJmnO",
+  "sha256": {
+    "check.slurm": "9ad60692d8adfd7484f5a17613e869319c89b908c66e95aebf1ad9deeb23e379",
+    "report.json": "c68831492d28696001e1a2689769bc2c242ef6580d2d683cc583d757debb07b9"
+  }
+}

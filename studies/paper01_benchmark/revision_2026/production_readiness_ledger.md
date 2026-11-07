@@ -703,3 +703,30 @@ No repeat paired fixture or larger generation run is required solely to
 re-establish this accepted scope.
 
 FULL_BENCHMARK_GO=NO
+
+
+## Inception weight identity acceptance — job 311685
+
+PASS for cached no-top ImageNet weight identity.
+Job 311685 completed on talon05 in 11 seconds with exit 0:0 at
+99a98663508061334fd1c1658fc4c173bc2f9c9e.
+
+The 87910968-byte artifact matched the installed Keras checksum.
+Weight SHA-256:
+9617109a16463f250180008f9818336b767bdf5164315e8cd5761a8c34caa62a
+
+Evidence: audits/revision_2026/inception_weight_identity_311685.
+
+Metric-component progress:
+- 5cb7893: polynomial KID estimator; ten focused tests passed.
+- 99a9866: class-balanced reference selection; ten focused tests passed.
+- Feature weight artifact identity now has compute-node evidence.
+
+These are separate component observations. Feature extraction has not run.
+Next: implement verified-weight InceptionV3 loading and bounded RGB feature
+extraction using the accepted resize/preprocessing/inference contract.
+FID/cFID, three-scale MS-SSIM, downstream metric/reporting completeness,
+real-data orchestration and broader production gates remain unresolved.
+
+Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
