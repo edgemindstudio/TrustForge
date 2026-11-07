@@ -847,3 +847,30 @@ completeness/reporting, followed by bounded real-data orchestration.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Trained EvalCNN test-prediction acceptance — job 311891
+
+PASS for bounded synthetic-fixture integration at
+1d90df8977a3a4f8ad81c125ec240bcf1a02f541.
+
+Job 311891 completed on talon07 in 2m49s with exit 0:0.
+Actual EvalCNN training was followed by a persisted selected-weight/test
+expectation and complete ordered prediction collection over 257 fixture
+examples in batches [128,128,1].
+
+Saved expectations, prediction archive, selected-weight binding, inference-state
+isolation, ordered prediction identity and exact metric replay passed.
+The scoped component suite observed 35 passed, including earlier metric tests;
+counts are not additive.
+
+Evidence: audits/revision_2026/test_predictions_311891.
+
+This accepts one-classifier engineering integration, not a paired scientific
+evaluation. Real-data provenance, generator lineage, selected-weight publication,
+fresh-process model restoration and evaluation completeness remain open.
+Next: paired result linkage and explicit completeness/reporting checks,
+then bounded real-data orchestration.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
