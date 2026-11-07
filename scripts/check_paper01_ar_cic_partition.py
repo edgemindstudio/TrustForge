@@ -269,6 +269,7 @@ def main():
             "tensorflow": tf.__version__,
             "numpy": np.__version__,
             "verified_project_import_count": import_count,
+            "recipe_sha256": hashlib.sha256(recipe_raw).hexdigest(),
         }
         encoded = json.dumps(report, sort_keys=True, allow_nan=False)
         with (batch_output / "report.json").open("x", encoding="utf-8") as stream:
