@@ -583,3 +583,33 @@ Next: reconcile remaining CIC consumer integration requirements against this
 accepted shared path before selecting another implementation or compute run.
 
 FULL_BENCHMARK_GO=NO
+
+
+## MAF CIC envelope synthesis acceptance — job 311680
+
+PASS for bounded synthesis consuming the required fitted-state execution
+envelope from job 311675.
+
+Job 311680 completed on talon16 in 44 seconds with exit 0:0 at synthesis
+revision e48016b8339cf04a0039484e84649471c7da8476.
+Live preprocessing matched training evidence. The restored best checkpoint
+replayed all 1158 validation examples at NLL 83.87659391096837.
+
+Five canonical images with conditioning IDs 0-4 passed saved-archive checks.
+Same-seed replay and alternate-seed variation passed.
+
+Evidence: audits/revision_2026/maf_cic_envelope_synthesis_311680.
+
+Together with job 311675, this verifies the bounded MAF/CIC seed42
+train -> publish -> independent restore -> synthesize path with required
+fitted-state evidence. It does not establish complete-pool synthesis,
+evaluation, semantic class fidelity or other-family consumer adoption.
+
+S2-03: MAF/CIC seed42 training and synthesis consumers verified;
+remaining consumers and evaluation adoption pending.
+Stages 3-4 retain their broader unresolved coverage.
+FULL_BENCHMARK_GO=NO
+
+Next: inspect production evaluator entry points and map the accepted shared
+protocol to executable consumers (S2-04 / Stage 5). Do not launch another
+MAF training run or enlarge synthesis solely to repeat this accepted scope.

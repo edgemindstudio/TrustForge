@@ -1,0 +1,8 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-envelope-synth-e48016b-nKnbRjZa",
+  "sha256": {
+    "check.slurm": "7b43617d9672e704819003ec89f81e6674980b95c00057010caacb8206862257",
+    "output/report.json": "4216a68e00fbd996176cd944822a125f5bd01ac40e68c0510b4eb63e596e8396",
+    "output/samples.npz": "251e4994d1c24ae4e529621d7255bc92822556df6f9fad2d26cc14b91b5e942a"
+  }
+}
