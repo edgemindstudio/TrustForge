@@ -802,3 +802,25 @@ unverified. No real-data scientific fidelity conclusion is established.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Three-scale MS-SSIM scorer acceptance — job 311889
+
+PASS for bounded synthetic-fixture scorer execution at
+5cd3cb933bd007955c8b913fce319f5b45c00a59.
+
+Job 311889 completed on talon07 in 1m05s with exit 0:0.
+Selected TensorFlow settings, three-scale geometry, direct-call agreement,
+replay, unchanged inputs, identity scores, a constant RGB analytic reference
+and nine invalid-input/pair-count rejection cases passed.
+Saved report and score-byte identities were verified.
+
+Evidence: audits/revision_2026/ms_ssim_scorer_311889.
+
+The direct-call comparison establishes TensorFlow binding agreement, not
+independent general-algorithm validation. The analytic RGB case is separate.
+Persisted-pair consumption, complete-class reporting, failed-pair propagation
+and complete-pool integration remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
