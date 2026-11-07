@@ -385,3 +385,80 @@ Next action after this ledger update is reviewed and committed:
 perform a read-only Stage 2 gap audit linking accepted settings to executable
 configuration and identifying the exact unresolved decisions. Do not submit
 the proposed full CIC pool as part of ledger reconciliation.
+
+
+## Stage 2 bounded source audit at 2e52664
+
+Source revision: 2e52664d5bf867799e3f37ae8b9f6d82d17fbdf4.
+
+Scope: source inspection and tracked-file content searches. No model execution,
+dataset computation, runtime activation or synthesis occurred. Successful
+inventory/search commands establish inspection completion, not implementation
+or production acceptance. Stage 2 remains IN_PROGRESS.
+
+### Established links
+
+- AR/MAF core implements two complete epochs, sample-weighted losses,
+  complete split coverage and strict minimum validation NLL selection.
+  Strict comparison retains the earliest epoch on ties.
+- AR/MAF traversal uses batch 64 and SeedSequence([experimental_seed, epoch]),
+  retains the final partial batch and traverses validation in governed order.
+- AR batch primitives consume likelihood bounds [-7,3]. Their configuration's
+  patience field does not activate early stopping: legacy fit() is bypassed.
+- AR/MAF synthesis seed assignment implements the selected fixed-batch formula.
+  This does not establish complete checkpoint-backed pool execution.
+- VAE and Diffusion inspected boundaries/runners link selected training controls
+  to traversal, seeded stochastic operations and validation selection.
+- GAN governed runner consumes its run plan, checks discriminator/generator
+  update accounting and publishes only after terminal accounting.
+- RBM budget implements batch 256, 2B updates, validation at 0/B/2B and final
+  authoritative update.
+- GMM budget implements max(100,5B) updates, max(20,B) validation interval and
+  six validation observations including step zero.
+
+### Sampling and preprocessing findings
+
+- gan_class_sampling_policy.md governs real-training example selection,
+  not synthetic-generation quotas or a production synthesis recipe.
+- diffusion_governed_sampling.py provides reverse-sampling mechanics but
+  explicitly excludes checkpoint loading, provenance, publication and
+  production authorization. Numerical stream identity is dataset-independent;
+  the caller's production identity contract remains to be established.
+- VAE records describe standard-normal prior draws, decoder-mean generation,
+  canonical conversion and selected-best checkpoint use. Do not describe
+  decoder-mean generation as a full Gaussian observation draw.
+- variational_autoencoder_checkpoint_committed_generation.py concerns
+  checkpoint publication generations, not image synthesis.
+- CIC adapter fits StandardScaler on revised training rows only.
+  Inspected dataset provenance binds source hashes and partition policy,
+  but fitted scaler-state identity was not established.
+- Content-search results do not prove repository-wide absence. Searches were
+  restricted to the stated paths and patterns; historical code is not
+  automatically a Revision-2026 production consumer.
+
+### Remaining Stage 2 register
+
+| ID | Item | Classification | Closure condition |
+| --- | --- | --- | --- |
+| S2-01 | RBM production Gibbs depth | BLOCKED scientific decision | Separately governed prospective sampling decision preserving the closed INDETERMINATE assessment |
+| S2-02 | GAN/VAE/Diffusion synthesis recipes | PENDING consolidation/integration | Bind checkpoint role, generation semantics, streams, quotas and batching to executable consumers; preserve existing accepted choices |
+| S2-03 | CIC fitted preprocessing identity | PENDING evidence | Record fitted scaler state bound to source, ordered features, training membership, implementation and environment |
+| S2-04 | Shared evaluator configuration | ACCEPTED methodology; PENDING executable linkage | Map accepted classifier, metrics and statistical settings to production evaluator consumers |
+| S2-05 | Complete benchmark configuration linkage | PENDING consolidation | Identify authoritative settings and consumers across four datasets, seven families and seeds 42-48 |
+
+### Stage boundaries and next action
+
+Runtime activation, GMM current-revision binding, checkpoint publication and
+complete pool execution remain Stage 3-4 requirements. Resource/retry freeze
+remains a Stage 8 requirement. Their existence does not reopen accepted
+training methodology.
+
+Next implementation preparation: define the smallest fitted-state evidence
+contract for S2-03, reusing the existing CIC adapter and provenance boundaries.
+Present the contract and complete proposed files before applying changes.
+This does not authorize heavy computation on a login node.
+
+S2-01 remains explicitly blocked while independent requirements proceed.
+No additional RBM confirmatory run or changed stability criterion is selected.
+
+FULL_BENCHMARK_GO=NO
