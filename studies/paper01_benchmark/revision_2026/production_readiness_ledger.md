@@ -553,3 +553,33 @@ configuration linkage remain pending within their recorded scopes.
 Stages 5-8 and all-family production acceptance remain unresolved.
 
 FULL_BENCHMARK_GO=NO
+
+
+## MAF CIC execution-envelope acceptance — job 311675
+
+PASS for bounded CICMalDroid2020 / MAF / experimental seed42 execution at
+913d86f9c64e6a3a1a0d009f112bcfa889a02ec8.
+
+Job 311675 completed on talon16 in 12m11s with exit 0:0. The selected
+two-epoch recipe completed 254 updates through the fitted-state-aware caller.
+Required-envelope publication and fresh-process restoration passed.
+
+Best and last states each replayed 1158 validation examples, with expected
+and observed NLL both 83.87659391096837. Incompatible fitted-state identity
+was rejected. Saved evidence and checkpoint hashes passed verification.
+
+Evidence: audits/revision_2026/maf_cic_execution_311675.
+
+This satisfies the MAF-first execution check in the preceding S2-03 entry.
+It does not satisfy AR or other CIC-family consumer adoption, synthesis,
+evaluation, clean reproduction or benchmark-wide operational acceptance.
+Existing historical checkpoints remain unchanged.
+
+S2-03 remains IN_PROGRESS for remaining consumer adoption and coverage.
+Stages 3-4 gain bounded MAF-path evidence; neither stage is complete.
+S2-01, S2-02, S2-04 and S2-05 retain their previously recorded status.
+
+Next: reconcile remaining CIC consumer integration requirements against this
+accepted shared path before selecting another implementation or compute run.
+
+FULL_BENCHMARK_GO=NO

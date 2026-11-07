@@ -1,0 +1,11 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-execution-913d86f-VPyYjqz5",
+  "fitted_state_payload_sha256": "c177c31e8602e94b06dc965e14dafe8ec3374fd07816b93107df3f5c1fc7f5cf",
+  "sha256": {
+    "check.slurm": "40f7f2b18fb15f062bfb2b27b1f6f4a66f73445a50e813cd90a2267ce3616993",
+    "checkpoints/maf_cic_seed42_execution/manifest.json": "d82709d879a173e3b0ada30d7e3db1b5f9dbfba823db64a5bc3ad41d52b3240f",
+    "expectations.json": "2e8f64a58b8900c9d6c6fd5580794c8374353abc14e51fab49e8155d675526ec",
+    "restore_report.json": "576b0601c41d17cebca3c1bd00cae2ea8d35f67596eab9afc15209cde1991070",
+    "train_report.json": "b45b7dc668a3f08ed0b6a8cd330ca07925d75baf8645ff258b25b6cc3ba9f8f8"
+  }
+}
