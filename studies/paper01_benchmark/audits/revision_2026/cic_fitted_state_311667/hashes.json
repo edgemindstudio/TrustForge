@@ -1,0 +1,11 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/cic-fitted-state-e813232-ogfyI95a",
+  "payload_sha256": "fd4ccde26974243f469ad569978fce181a126ae01795957b95a9447220c32fbd",
+  "sha256": {
+    "check.slurm": "09849ca8bf93fb32c35aa259dfe27f9c76cbe276a971d509b5b481d1bfd12405",
+    "dataset_config.json": "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b",
+    "evidence/capture_report.json": "3c9a78cc0295ec3ca9c1fea33d7079749304b4ce5a9b1fef6da137dbc8aa08ee",
+    "evidence/fitted_state.json": "c49a4f4f30abf59f4066ceeeb48bff168307ae98f6cf795e006e5ce22f586002",
+    "evidence/restore_report.json": "1cab01bc58c6bfbfe280fa61b77f5213c5470713b73e50d6776fc57cca54fa95"
+  }
+}

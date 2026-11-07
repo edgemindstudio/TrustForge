@@ -462,3 +462,25 @@ S2-01 remains explicitly blocked while independent requirements proceed.
 No additional RBM confirmatory run or changed stability criterion is selected.
 
 FULL_BENCHMARK_GO=NO
+
+
+## CIC fitted-state bounded acceptance — job 311667
+
+S2-03: COMPONENT_AND_REAL_DATA_RESTORATION_VERIFIED;
+PRODUCTION_PROVENANCE_INTEGRATION_PENDING.
+
+Job 311667 completed on talon07 with exit 0:0 in 51 seconds at revision
+e81323282a2662d775f1cee7ea7bd2730ab1184b. Separate capture/restore processes
+agreed on fitted-state identity and exact transforms for five training probes.
+
+Evidence: audits/revision_2026/cic_fitted_state_311667.
+The record preserves reports, launcher and external artifact hashes.
+
+This advances Stage 2 preprocessing evidence and bounded restoration
+verification. It does not close production provenance integration, migrate
+existing checkpoints, or establish all-family readiness.
+
+Next: integrate fitted-state evidence into a deliberately versioned consuming
+execution contract, preserving existing checkpoint identities and acceptance.
+
+FULL_BENCHMARK_GO=NO
