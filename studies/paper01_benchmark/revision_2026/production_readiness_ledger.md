@@ -484,3 +484,72 @@ Next: integrate fitted-state evidence into a deliberately versioned consuming
 execution contract, preserving existing checkpoint identities and acceptance.
 
 FULL_BENCHMARK_GO=NO
+
+
+## S2-03 execution integration status at 9b31b43
+
+Source cutoff: 9b31b43a04ce8c15aa0c30d9e4154cb26b9b79bd.
+
+### Verified bounded progress
+
+- Commit 465d8e4 adds the exact fitted-state codec; eight focused checks passed.
+- Commit e813232 adds the compute-node capture/restore driver.
+- Job 311667 verified real-CIC fitted-state capture and independent-process
+  restoration. Acceptance evidence is preserved by commit 87487b7.
+- Commit cf529f3 adds the versioned CIC execution envelope and explicit
+  fitted-state expectations in shared publication/loading.
+- The associated checkpoint regression observation was 153 passed across
+  ten modules. This is not a full repository regression.
+- Commit 9b31b43 adds the fitted-state-aware CIC execution caller.
+- Its scoped suite observation was 30 passed, using training/live-capture
+  stand-ins and real envelope/filesystem verification components.
+- These suite observations overlap and must not be added as independent tests.
+
+### Implemented contract and limits
+
+The new caller captures the same adapter's fitted state and provenance before
+and after the existing selected training procedure. A changed record prevents
+execution-envelope preparation.
+
+The versioned envelope links the unchanged inner v1 checkpoint manifest,
+captured fitted-state file bytes and fitted-state payload identity.
+
+An explicit expected_fitted_state_sha256 requires the envelope during
+publication and loading. Existing legacy calls retain v1 behavior.
+No claim is made that all production entry points now require this path.
+
+The caller retains the existing authorization restrictions. General training
+execution remains disabled; bounded integration remains CIC seed42 AR/MAF.
+Existing checkpoint artifacts and identities are not migrated.
+
+No real model has yet executed through this new caller. Earlier real-CIC
+scaler restoration evidence and earlier AR/MAF checkpoints do not establish
+that combined execution.
+
+### Remaining S2-03 acceptance
+
+1. Exercise CIC seed42 MAF through the new caller under its unchanged selected
+   training recipe, publish the required envelope, and verify restoration in
+   a fresh process using externally recorded expected identities.
+2. Verify runtime fitted-state/source/environment evidence, checkpoint identity,
+   restored validation behavior and rejection of an incompatible expectation.
+3. Establish adoption by the relevant production entry points. AR and other
+   CIC family consumers retain separate integration/coverage requirements.
+
+The next execution check is MAF first. Its scope is changed-path acceptance,
+not convergence, favorable metrics or benchmark-scale synthesis. It does not
+authorize reuse of a historical checkpoint as newly trained evidence.
+Launcher, resource settings and exact acceptance checks must be reviewed
+before submission.
+
+### Connection to the main plan
+
+S2-03 remains IN_PROGRESS. This work also advances bounded Stage 3-4
+integration but does not close those stages.
+
+S2-01 RBM sampling decision remains blocked.
+S2-02 synthesis recipes, S2-04 evaluator linkage and S2-05 complete benchmark
+configuration linkage remain pending within their recorded scopes.
+Stages 5-8 and all-family production acceptance remain unresolved.
+
+FULL_BENCHMARK_GO=NO
