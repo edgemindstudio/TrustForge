@@ -1,0 +1,121 @@
+{
+  "architecture": {
+    "convolution_activation": "relu",
+    "convolution_kernel": [
+      3,
+      3
+    ],
+    "convolution_padding": "same",
+    "convolution_widths": [
+      32,
+      64,
+      128
+    ],
+    "dropout_rate": 0.1,
+    "head": "global_average_pooling",
+    "name": "EvalCNN",
+    "output": "authoritative_class_count_softmax",
+    "pool_after_each_convolution": {
+      "size": [
+        2,
+        2
+      ],
+      "strides": [
+        2,
+        2
+      ]
+    }
+  },
+  "authority": {
+    "acceptance_section": 14,
+    "path": "studies/paper01_benchmark/revision_2026/benchmark_specification.md",
+    "selected_policy_sections": [
+      11,
+      12,
+      13
+    ],
+    "sha256": "d54a94e4497ebd7ae0880b737e20aa3fe3e21d974f0cf4bb8dae20502df17110"
+  },
+  "baseline_reuse_requires_matching": [
+    "dataset",
+    "split",
+    "evaluator_configuration",
+    "seed",
+    "source",
+    "environment"
+  ],
+  "canonical_input": {
+    "dtype": "float32",
+    "layout": "NHWC",
+    "range": [
+      0.0,
+      1.0
+    ],
+    "shape": [
+      40,
+      40,
+      3
+    ]
+  },
+  "comparison": {
+    "arms": [
+      "real_only",
+      "real_plus_synthetic"
+    ],
+    "equal_optimizer_updates_claimed": false,
+    "initial_architecture_and_weights": "identical_verified_digest",
+    "primary_endpoint": "augmented_minus_real_only_macro_f1",
+    "test_based_selection": false,
+    "test_membership": "same_governed_real_test_split",
+    "validation_membership": "same_governed_real_validation_split"
+  },
+  "evaluator_seed": "associated_experimental_seed",
+  "experimental_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "full_benchmark_go": false,
+  "implementation_requirements": [
+    "Bind every selected control to its runtime consumer",
+    "Record remaining framework defaults and traversal/randomization semantics",
+    "Verify paired initialization and validation-selected restoration",
+    "Verify bounded-memory input execution",
+    "Reject incomplete primary synthetic pools",
+    "Separate engineering smoke outputs from primary evaluation outputs"
+  ],
+  "implementation_verified": false,
+  "input_execution": {
+    "bounded_memory_loading_required": true,
+    "deterministic_sample_identities_required": true,
+    "primary_synthetic_samples_per_class": 2000
+  },
+  "schema": "trustforge.paper01.classifier-recipe.v1",
+  "status": "ACCEPTED_METHODOLOGY_IMPLEMENTATION_PENDING",
+  "training": {
+    "batch_size": 128,
+    "class_weighting": null,
+    "early_stopping": {
+      "direction": "minimize",
+      "monitor": "real_validation_loss",
+      "patience": 5,
+      "restore_best_weights": true
+    },
+    "epoch": "complete_respective_training_condition",
+    "learning_rate": 0.001,
+    "loss": "categorical_crossentropy",
+    "maximum_epochs": 20,
+    "optimizer": "Adam",
+    "report": [
+      "sample_count",
+      "optimizer_updates",
+      "completed_epochs",
+      "stopping_outcome",
+      "selected_checkpoint"
+    ]
+  }
+}
