@@ -1,0 +1,8 @@
+{
+  "external_run_directory": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/paired-classifier-ff6bbb4-6j3j8sX7",
+  "sha256": {
+    "check.slurm": "0f2cce002bb6877eda693eaa2c8dadd28d2dea24c367d5819d2ed284018b4ac2",
+    "fixture_pool/manifest.json": "53896ef041c03eaa99ea385fb00068efbb189e994e89ea5a0464edfd79951c38",
+    "report.json": "e1fbe27bdd4a7ba9f2f0dbc559f5ea0bd8a91c5697503e69535714826e89634f"
+  }
+}

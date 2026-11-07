@@ -673,3 +673,33 @@ their recorded unresolved status. No additional generator training or larger
 synthesis run is selected by this acceptance.
 
 FULL_BENCHMARK_GO=NO
+
+
+## Paired classifier entry-point acceptance — job 311683
+
+PASS for synthetic-fixture execution at
+ff6bbb416c281cedfbd7d4a8ca26a5b274058dcf.
+Job 311683 completed on talon07 in 11m32s with exit 0:0.
+
+prepare_paired_classifiers exercised the actual input views and classifier
+binding. Both arms shared initial weights. Real-only completed 20 updates;
+the augmented arm completed 1580 updates under the same 20-epoch maximum.
+
+Selected epochs were 19 and 17 respectively. The augmented arm supplies
+actual fixture evidence for nonterminal-best selection/restoration through
+the driver's selected-state checks. Both arms reached the epoch limit.
+Patience-triggered stopping remains separately covered by stand-in tests.
+
+Evidence: audits/revision_2026/paired_classifier_311683.
+
+This satisfies bounded paired-entry-point fixture acceptance. It does not
+establish real-data provenance, generator lineage, held-out test evaluation,
+metric completeness, all-family coverage or large-dataset memory acceptance.
+
+Stage 5 remains IN_PROGRESS.
+Next: implement and validate accepted metric definitions, followed by
+completeness/reporting and bounded real-data orchestration.
+No repeat paired fixture or larger generation run is required solely to
+re-establish this accepted scope.
+
+FULL_BENCHMARK_GO=NO
