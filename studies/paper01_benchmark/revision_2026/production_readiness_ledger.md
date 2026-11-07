@@ -613,3 +613,33 @@ FULL_BENCHMARK_GO=NO
 Next: inspect production evaluator entry points and map the accepted shared
 protocol to executable consumers (S2-04 / Stage 5). Do not launch another
 MAF training run or enlarge synthesis solely to repeat this accepted scope.
+
+
+## Stage 5 input components and classifier implementation selection
+
+Source cutoff: 92b278ce20c63e1550c5739f5cc4514e0f58cf50.
+
+- f1e2e21 consolidates the accepted classifier protocol into classifier_recipe.json.
+- 86a79a3 adds bounded canonical real-split views.
+- 6f9b9b8 adds the CIC AR/MAF streaming synthetic-pool view.
+- 92b278c adds bounded logical real-plus-synthetic training access.
+- Latest scoped input-suite observation: 26 passed.
+  This includes earlier component checks; counts are not additive.
+- These checks use fixtures, not complete real-data evaluator execution.
+- CIC synthetic-pool byte validation does not authenticate checkpoint lineage.
+- Real views retain a declared provenance digest; the orchestration boundary
+  must establish the underlying evidence.
+- Combined training rejects real validation/test views.
+
+classifier_recipe.json now records prospective implementation selections for
+training randomization, optimizer defaults, initialization, loss aggregation,
+selection/stopping, loading and determinism. These are not presented as
+recovered historical choices or as execution-verified settings.
+
+Next: implement and verify paired classifier execution consuming the selected
+recipe. Then implement selected metrics and evaluation completeness/reporting.
+Real-data orchestration, lineage binding and all-family coverage remain open.
+
+S2-04 / Stage 5: IN_PROGRESS.
+S2-03 and the other recorded specification/operational gaps remain open.
+FULL_BENCHMARK_GO=NO

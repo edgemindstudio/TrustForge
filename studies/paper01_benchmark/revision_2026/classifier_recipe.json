@@ -88,6 +88,85 @@
     "Reject incomplete primary synthetic pools",
     "Separate engineering smoke outputs from primary evaluation outputs"
   ],
+  "implementation_selection": {
+    "determinism": {
+      "cross_environment_bitwise_replay_claimed": false,
+      "record_framework_versions_and_thread_settings": true,
+      "request_tensorflow_op_determinism": true,
+      "unsupported_deterministic_operation": "fail_execution"
+    },
+    "loading": {
+      "background_prefetch": false,
+      "full_image_array_concatenation": false,
+      "index_permutation_memory": "linear_in_condition_sample_count",
+      "maximum_images_per_request": 128
+    },
+    "loss": {
+      "accumulator_dtype": "float64",
+      "epoch_reporting": "sample_weighted_mean",
+      "from_logits": false,
+      "label_smoothing": 0.0,
+      "name": "categorical_crossentropy",
+      "training_objective": "mean_per_example_batch_loss"
+    },
+    "network": {
+      "bias_initializer": "Zeros",
+      "biases_enabled": true,
+      "compute_dtype": "float32",
+      "convolution_strides": [
+        1,
+        1
+      ],
+      "dropout_seed": "evaluator_seed",
+      "identical_dropout_masks_across_arms_claimed": false,
+      "kernel_initializer": "GlorotUniform",
+      "pool_padding": "valid",
+      "regularizers": null,
+      "reset_before_each_arm": "tf.keras.utils.set_random_seed(evaluator_seed)",
+      "verify_initial_weight_digest": true
+    },
+    "optimizer": {
+      "amsgrad": false,
+      "beta_1": 0.9,
+      "beta_2": 0.999,
+      "epsilon": 1e-07,
+      "gradient_accumulation": null,
+      "gradient_clipping": null,
+      "learning_rate": 0.001,
+      "learning_rate_schedule": "constant",
+      "name": "Adam",
+      "use_ema": false,
+      "weight_decay": null
+    },
+    "origin": "prospective_selection_before_revised_classifier_execution",
+    "status": "SELECTED_FOR_IMPLEMENTATION_NOT_EXECUTION_VERIFIED",
+    "training_traversal": {
+      "coverage": "each_condition_position_once_per_epoch",
+      "drop_remainder": false,
+      "entropy": [
+        "evaluator_seed",
+        "epoch_index"
+      ],
+      "epoch_index_base": 0,
+      "method": "numpy_default_rng_permutation",
+      "paired_sample_order_or_exposure_equivalence_claimed": false,
+      "seed_sequence": "numpy.random.SeedSequence"
+    },
+    "validation_and_selection": {
+      "aggregation": "sample_weighted_mean_crossentropy",
+      "improvement": "validation_loss_strictly_less_than_best",
+      "maximum_epochs": 20,
+      "minimum_improvement": 0.0,
+      "network_training_mode": false,
+      "nonfinite_loss": "fail_execution",
+      "optimizer_updates": 0,
+      "patience": 5,
+      "patience_counts": "consecutive_nonimproving_completed_epochs",
+      "restore": "selected_best_weights_before_test",
+      "tie_break": "earliest_epoch",
+      "traversal": "complete_governed_order"
+    }
+  },
   "implementation_verified": false,
   "input_execution": {
     "bounded_memory_loading_required": true,
