@@ -1,6 +1,6 @@
 # TrustForge Paper 1 Production Readiness Ledger
 
-Updated: 2026-11-04
+Updated: 2026-11-06 (America/New_York); reconciliation at f276fa9
 
 ## Objective
 
@@ -251,3 +251,137 @@ No existing family authorization gates were enabled.
 Stages 3 and 4 are IN_PROGRESS; neither is complete.
 
 FULL_BENCHMARK_GO remains NO.
+
+
+## Production-readiness reconciliation at f276fa9
+
+Evidence cutoff: f276fa9dfe9640b27200f02672f412a80a2a64e1.
+
+This section supplies the current consolidated status and supersedes older
+status wording only within the evidence scopes stated below. Earlier entries,
+failed attempts, source freezes and historical results remain preserved.
+
+INSPECTED below means committed records were reviewed. It does not mean the
+recorded Talon execution was rerun during this reconciliation. REPORTED means
+supporting execution evidence has not been independently inspected in this
+reconciliation. PENDING and BLOCKED identify requirements still open.
+
+### Goal and success conditions
+
+Establish an evidence-backed decision to execute the complete four-dataset,
+seven-family, seven-seed train -> synthesize -> evaluate benchmark and provide
+a documented reproduction workflow without rewriting historical research.
+
+The locked target is seeds 42-48, 2000 synthetic samples per class per seed,
+and canonical float32 NHWC 40x40x3 inputs in [0,1]. There are 196
+dataset/family/seed combinations, plus class-specific work units.
+
+Methodological acceptance, operational activation, training completion,
+checkpoint publication, independent restoration, synthesis completion and
+evaluation completion remain separate evidence states.
+
+### Authority reconciliation
+
+- Benchmark specification Section 14 accepts the selected shared policies
+  in Sections 11-13. Earlier proposed/pending wording does not reopen those
+  methodological choices.
+- Seeds 42-48, paired unweighted classifier comparison, selected diagnostics,
+  estimation-focused reporting and incomplete-run identity rules are accepted.
+- ar_maf_integration_recipe.json selects implementation settings, including
+  two training epochs, Adam controls, validation selection, batch-eight
+  synthesis, stream derivation and bounded retry rules.
+- Its production_execution_authorized value remains false. Recipe selection
+  does not establish full operational acceptance.
+- P6 is no longer wholly pending: bounded CIC seed-42 checkpoint-backed
+  restoration and synthesis passed for AR and MAF.
+- E1 and E4 retain implementation requirements; policy selection is complete.
+- The earlier AR/MAF checklist is partially satisfied by later CIC evidence.
+  Remaining dataset/seed and production-path coverage must be assessed
+  separately rather than repeating completed checks by default.
+
+### Current family readiness matrix
+
+Paths in this section are relative to studies/paper01_benchmark unless
+explicitly rooted elsewhere.
+
+| Family | Inspected acceptance/evidence | Remaining mandatory gate |
+| --- | --- | --- |
+| GAN | revision_2026/gan_formal_training_authorization.md accepts methodology and implementation; operational flags disabled | Verify governed launcher, dataset preflight, controlled activation, actual publication/restoration and synthesis |
+| VAE | revision_2026/variational_autoencoder_formal_training_authorization.md accepts methodology; real-data activation and production publication/synthesis withheld | Verify actual real-data production path through persistence, independent restoration and synthesis |
+| Diffusion | revision_2026/diffusion_formal_training_authorization.md accepts methodology; approved-width in-memory restoration evidence is bounded | Verify controlled activation, filesystem persistence/restoration and production synthesis |
+| AR | Selected recipe; CIC seed-42 restoration/synthesis acceptance; batch-eight timing, recipe-report and class-four range boundary checks | Complete checkpoint-backed pool publication, evaluator integration, remaining dataset/seed operational coverage and resource acceptance |
+| MAF | Selected recipe; CIC seed-42 restoration/synthesis acceptance and batch-eight timing | Complete pool publication, evaluator integration, remaining dataset/seed operational coverage and resource acceptance |
+| RBM | revision_2026/restricted_boltzmann_training_authorization.md accepts training; Stage 1 records CIC/MaleX checkpoint integrity | BLOCKED: production Gibbs depth unselected; production sampling/synthesis withheld |
+| GMM | revision_2026/gaussian_mixture_sampling_policy.md accepts integrated checkpoint/sampling implementation; Stage 1 records MaleX checkpoint integrity | Resolve current execution-source binding, reusable-checkpoint provenance and actual production-path acceptance |
+
+Seven-family methodological acceptance does not establish seven-family
+production readiness. No new convergence or sample-quality threshold is
+introduced by this reconciliation.
+
+### Later CIC evidence and its limits
+
+| Evidence | Accepted scope | Remaining limitation |
+| --- | --- | --- |
+| revision_2026/ar_maf_cic_seed42_synthesis_acceptance.md; acceptance ef99cec; jobs 311064/311065 | Verified best-checkpoint restoration, full CIC validation NLL replay, five valid images/family, same-seed replay and alternate-seed variation | Not a complete 2000/class pool or full benchmark |
+| revision_2026/ar_maf_cic_seed42_evaluation_input_acceptance.md; acceptance 12f8a708; job 311073 | All CIC splits and both five-image archives passed input checks | Not complete evaluator acceptance |
+| audits/revision_2026/cic_paired_evaluator_smoke_311308; acceptance 2dcb080 | Paired starting weights, shared validation/test, two epochs/arm and five synthetic images/augmented arm | Engineering smoke only; not full protocol or large-dataset memory acceptance |
+| audits/revision_2026/cic_batch8_311471_311472; acceptance 56c8ed9 | One checkpoint-backed class-0 batch/family; AR about 125.20 s, MAF about 3.17 s | Single-batch timing does not guarantee full-run resources |
+| audits/revision_2026/cic_ar_partition_311540; acceptance 09911ef | Bounded two-worker partition diagnostic | Not complete pool coverage |
+| audits/revision_2026/cic_ar_recipe_contract_311628; acceptance dd047b9 | Recipe identity and four archives verified; finalizer correctly rejected incomplete coverage without publication | Full pool pending; preceding 311611 startup failure remains unresolved |
+| audits/revision_2026/cic_ar_range_boundary_311664; acceptance f276fa9 | Class 4, batches [248,250), seeds 24749/24750 passed | Full checkpoint-backed pool and evaluator integration pending |
+
+The handoff reports bounded component fixture passes for the pool validator
+(35ee7c8, job 311469), publisher (1e96d05, job 311470), and partition finalizer
+(bf614c8, job 311610). These remain REPORTED in this reconciliation; fixtures
+do not establish full checkpoint-backed pool publication or crash durability.
+
+At the evidence cutoff, slurm/paper01_revision_2026/ar_cic_seed42_pool.slurm
+is absent from the committed tree. The proposed 50-task, 25-batch/task,
+90-minute/task, concurrency-two launcher was not accepted or submitted in
+the observed evidence.
+
+### Shared readiness matrix
+
+| Gate | Current status | Remaining acceptance condition |
+| --- | --- | --- |
+| Preservation / Stage 1 | COMPLETE within recorded closure scope | Recheck current Talon state before mutations; preserve historical evidence |
+| Dataset contracts / Stage 2 | INSPECTED specification and governed CIC input acceptance; four-dataset job 310126 remains REPORTED here | Bind consumed data, partitions, preprocessing and class identities; resolve outstanding fitted-state evidence |
+| Executable specification / Stage 2 | IN_PROGRESS; shared methodology and AR/MAF recipe selected | Complete configuration linkage and remaining family-specific sampling decisions |
+| Execution / Stage 3 | IN_PROGRESS; later CIC AR/MAF evidence advances bounded paths | Verify remaining family launchers, source/import identities, activation and failure behavior |
+| Checkpoint/synthesis / Stage 4 | IN_PROGRESS; CIC AR/MAF bounded restoration/synthesis accepted | Accept distinct remaining persistence/restoration/sampling paths and full-pool integration |
+| Evaluation/reporting / Stage 5 | IN_PROGRESS; policy accepted and paired smoke passed | Tracked bounded-memory evaluator; metric mathematics, feature-weight identity, complete coverage/failure records and statistical aggregation |
+| Reproduction / Stage 6 | PENDING | Clean-environment installation and bounded workflow; reviewer requirement-to-evidence mapping |
+| End-to-end / Stage 7 | PENDING | Bounded integrated production-path acceptance with identity and incomplete-output rejection |
+| Freeze/launch / Stage 8 | BLOCKED | Freeze accepted revision, configuration, environment, matrix, resources and retries after prerequisite gates |
+| Results/release / Stage 9 | PENDING AFTER AUTHORIZED EXECUTION | Reconcile expected/observed runs, regenerate outputs, audit claims and preserve release |
+
+Four-dataset validation job 310126 is reported as COMPLETED with counts:
+USTC 72900/8100/9000; CIC 8117/1158/2323; MalNet 883416/126202/252406;
+MaleX 731049/104435/208872 (train/validation/test).
+These counts agree with the inspected specification; this reconciliation
+does not independently authenticate that job's execution output.
+
+### Finite remaining acceptance sequence
+
+1. Reconcile this central ledger and review/commit the bounded status update.
+2. Close Stage 2 executable-specification gaps, including RBM sampling policy,
+   preprocessing identities and accepted-setting-to-runtime linkage.
+3. Close Stages 3-4 for each distinct family execution/checkpoint/sampling path.
+4. Close Stage 5 production evaluation, metric and reporting implementation.
+5. Close Stage 6 clean reproduction and reviewer traceability.
+6. Close Stage 7 bounded integrated production-path acceptance.
+7. Close Stage 8 source/configuration/environment/matrix/resource/retry freeze
+   and record an evidence-backed GO or NO-GO.
+8. After authorized execution, close Stage 9 results and release acceptance.
+
+This sequence organizes existing requirements; it does not add retrospective
+scientific gates. Completed bounded evidence is reused within its valid scope.
+Each subsequent command must state its parent stage, purpose and acceptance
+condition. Resource decisions precede larger synthesis submissions.
+
+FULL_BENCHMARK_GO=NO
+
+Next action after this ledger update is reviewed and committed:
+perform a read-only Stage 2 gap audit linking accepted settings to executable
+configuration and identifying the exact unresolved decisions. Do not submit
+the proposed full CIC pool as part of ledger reconciliation.
