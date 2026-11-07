@@ -824,3 +824,26 @@ and complete-pool integration remain open.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Persisted-pair MS-SSIM integration acceptance — job 311890
+
+PASS for bounded synthetic-fixture integration at
+0c882596cc37e1180938f0d9f13ad18565f8e2b8.
+
+Job 311890 completed on talon07 in 51 seconds with exit 0:0.
+Actual CICPoolView preflight, persisted pair selection and TensorFlow scoring
+covered all five classes: 200 unique unordered pairs per class, 1000 total.
+Saved selection replay, pair-score coverage, class means and equal-weight macro
+checks passed. Fixture macro MS-SSIM was 1.0 for identical images.
+
+Evidence: audits/revision_2026/ms_ssim_integration_311890.
+
+The bounded MS-SSIM scorer and persisted-pair integration checks are complete.
+Primary generated-pool evaluation and authenticated lineage remain open.
+Failure propagation is covered by stand-in tests, not triggered by this job.
+Next: downstream metric definitions, implementation checks and evaluation
+completeness/reporting, followed by bounded real-data orchestration.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
