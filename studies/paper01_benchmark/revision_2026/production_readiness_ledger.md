@@ -874,3 +874,76 @@ then bounded real-data orchestration.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Stage 5 result validation reconciliation at 7175b27
+
+Source cutoff: 7175b27f0122a21d7c6cce69cd685338dd923ca8.
+
+### Implemented and scoped verification
+
+- 47c88e3 adds paired classifier result linkage; 20 focused tests passed.
+- b11bae1 records the prospective revision evaluation completeness contract.
+- b1ad819 adds structural status/coverage validation; 29 focused tests passed.
+- c760fa5 binds exact result/configuration bytes with strict JSON parsing.
+  Its scoped suite observed 62 passed, including the earlier 29 status tests.
+- 39b5915 adds downstream metric semantic replay; 11 focused tests passed.
+- a3fff32 adds reference/feature-bound KID semantic replay; 20 tests passed.
+- 375b182 adds pooled/all-class FID replay using the KID-bound feature sets;
+  13 focused tests passed.
+- 7175b27 adds MS-SSIM selection, score-identity and aggregation verification;
+  20 focused tests passed.
+
+These observations are scoped suites, not a full repository regression.
+Overlapping test counts must not be added as independent checks.
+
+### Saved execution evidence replay
+
+The new downstream verifier passed against the saved 257-example EvalCNN
+fixture from job 311891.
+
+The KID verifier passed against the saved reference selection and actual
+Inception fixture features from job 311694.
+
+The FID verifier passed against job 311699 using those same KID-bound features.
+
+The MS-SSIM verifier passed against job 311890: five classes, 200 pairs/class.
+Its supplied score array was derived from the pinned report. This validates
+selection/coverage/aggregation consistency, not independent image rescoring.
+
+Standalone metric representations used in these checks were derived from pinned
+saved reports. They are not claimed as separately persisted historical files.
+
+### Limits and remaining acceptance
+
+No component currently grants complete_evaluation=true.
+Status declarations, artifact hashes and semantic replay are distinct checks.
+They do not independently establish source-data authenticity, feature-extraction
+lineage, generator lineage or durable publication.
+
+Remaining Stage 5 work:
+
+1. Integrate status, byte binding and semantic checks with explicit cross-result
+   identities, coverage and provenance requirements.
+2. Publish selected classifier artifacts and verify fresh-process restoration.
+3. Exercise actual paired training, selected-weight loading, test prediction and
+   result linkage together under one reviewed execution contract.
+4. Integrate fidelity/diversity results and preserve incomplete/failure outcomes.
+5. Verify seven-seed reporting and benchmark completion denominators.
+6. Exercise bounded real-data orchestration with authenticated source,
+   preprocessing, generator-checkpoint and synthetic-pool lineage.
+
+Successful fixtures from separate jobs must not be combined into a fictional
+complete scientific evaluation.
+
+### Connection to the main plan
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+S2-03 adoption and other recorded specification/operational gaps remain open.
+Clean reproduction, family-level end-to-end acceptance, resource/retry freeze
+and full-matrix launch acceptance remain unresolved.
+
+No additional generator training or expanded synthesis is authorized by this
+reconciliation.
+
+FULL_BENCHMARK_GO=NO
