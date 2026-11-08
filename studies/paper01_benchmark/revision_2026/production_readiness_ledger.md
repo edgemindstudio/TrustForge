@@ -974,3 +974,31 @@ test predictions and paired result linkage under one reviewed fixture contract.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Paired classifier publication/restoration acceptance — job 312074
+
+PASS for integrated synthetic-fixture execution at
+9ba6c26d8ad93d6fc4dc592c12d306c4970d3751.
+
+Job 312074 completed on talon06 in 8m26s with exit 0:0.
+Actual paired training, both selected-classifier publications, externally
+recorded expectations, fresh-process restoration, ordered test predictions
+and paired-result linkage were exercised together.
+
+Saved bundle identities, training/context links, prediction archives and exact
+paired-result replay passed. Each arm covered 257 test examples in batches
+[128,128,1]. The fixture macro-F1 difference was -0.19999999999999998.
+
+Evidence: audits/revision_2026/paired_restoration_312074.
+
+This closes the bounded paired classifier persistence-to-result-linkage fixture.
+It does not establish real-data utility, authenticated generator lineage,
+complete fidelity/diversity integration or complete evaluation.
+
+Next: integrate required-result status, byte binding, metric semantics and
+cross-result identity/coverage checks, preserving explicit failure blockers.
+Then verify seven-seed reporting and bounded real-data orchestration.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
