@@ -947,3 +947,30 @@ No additional generator training or expanded synthesis is authorized by this
 reconciliation.
 
 FULL_BENCHMARK_GO=NO
+
+
+## Selected-classifier publication/restoration acceptance — job 312073
+
+PASS for actual EvalCNN synthetic-fixture execution at
+5fd21c9a50a232fe6db67d84743bdf8e406ce710.
+
+Job 312073 completed on talon06 in 1m23s with exit 0:0.
+Training/publication PID 3449958 and restoration PID 3450177 were distinct.
+Selected weights, validated training history, recipe-derived tensor shapes,
+external expectation receipt, exclusive publication and anchored loading passed.
+
+Fresh-process assignment reproduced all 257 fixture probabilities exactly.
+Saved context links, bundle identities, ordered predictions, metric replay and
+incompatible-expectation rejection passed. Optimizer state was not restored.
+
+Evidence: audits/revision_2026/classifier_restoration_312073.
+
+This closes the bounded selected-classifier publication/fresh-restoration
+fixture requirement. It does not close paired real-data execution, authenticated
+source/generator lineage, general crash durability or evaluation completeness.
+
+Next: integrate paired training, both selected-classifier bundles, restored
+test predictions and paired result linkage under one reviewed fixture contract.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
