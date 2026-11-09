@@ -1002,3 +1002,57 @@ Then verify seven-seed reporting and bounded real-data orchestration.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Stage 5 inventory integration reconciliation at 3e2aece
+
+Source cutoff: 3e2aecec7efc05297aa21cc285e7eb271da1e104.
+
+### Implemented and verified
+
+- d095c76 integrates downstream status records and exact artifact bytes with
+  arm-metric and paired-result replay; 18 focused tests passed.
+- Saved paired execution 312074 passed this downstream integration:
+  three downstream groups verified, four fidelity/diversity groups pending,
+  complete_evaluation=false. Standalone inventory representations were derived
+  from pinned reports, not separately persisted historical metric files.
+- 3e2aece integrates KID, pooled FID, class FID and MS-SSIM inventory validation;
+  25 focused tests passed.
+- Fidelity/diversity integration checks shared synthetic-manifest identity,
+  ordered synthetic labels, configuration links and result-specific coverage.
+  FID replay consumes the KID-verified feature arrays.
+- The combined nine-file scoped suite passed: 189 tests.
+
+These counts overlap earlier component suites and are not additive.
+This was not a full repository regression or real-data evaluation.
+
+### Coverage and incomplete outcomes
+
+Downstream coverage counts ordered test examples per arm; paired coverage
+counts two comparison arms. Fidelity/diversity coverage counts KID subset
+estimates, one pooled FID result, authoritative classes for class FID,
+and selected pairs for MS-SSIM.
+
+Pending/failed fidelity/diversity groups remain explicit without requiring
+their arrays. FID verification currently requires successful KID evidence.
+The downstream integration currently requires both arms' replay inputs even
+when a downstream artifact is pending; missing-prediction execution handling
+remains open.
+
+### Remaining acceptance boundaries
+
+The two inventory integrations are not yet one complete evaluation orchestrator.
+Shared manifest declarations do not authenticate generator lineage, consumed
+image bytes, feature extraction or image-score computation.
+
+Older KID/FID and MS-SSIM fixtures used different synthetic manifests.
+Their successes cannot be combined into one accepted scientific evaluation.
+
+Remaining work includes cross-result evaluation identity and provenance checks,
+shared-execution fidelity/diversity acceptance, partial downstream execution
+handling, complete-result publication, seven-seed reporting and bounded
+authenticated real-data orchestration.
+
+All completion and full-benchmark authorization gates remain open.
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
