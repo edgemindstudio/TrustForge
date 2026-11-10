@@ -1056,3 +1056,32 @@ authenticated real-data orchestration.
 All completion and full-benchmark authorization gates remain open.
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Shared-pool fidelity/diversity acceptance — job 312192
+
+PASS for bounded synthetic-fixture integration at
+804686c23eac27f111f6a2182d58b4d563601932.
+
+Job 312192 completed on talon06 in 40 seconds with exit 0:0.
+The report records its fully qualified hostname, talon06.cm.cluster.
+
+Actual Inception extraction and TensorFlow MS-SSIM scoring exercised one
+shared fixture pool. KID and pooled/all-class FID shared selected feature
+arrays; MS-SSIM covered all five classes and 1000 persisted selected pairs.
+Four fidelity/diversity groups passed exact-byte, configuration, coverage
+and saved semantic replay checks. Three downstream groups remain pending.
+
+Evidence: studies/paper01_benchmark/audits/revision_2026/shared_fidelity_312192.
+Feature and score arrays remain external with checked hashes.
+
+This closes bounded shared-pool fidelity/diversity fixture execution only.
+It does not authenticate source data or generator lineage, establish durable
+complete-evaluation publication, or combine separate classifier and fidelity
+jobs into a complete scientific evaluation.
+
+Cross-result orchestration/provenance, partial downstream handling,
+seven-seed reporting and bounded authenticated real-data acceptance remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO

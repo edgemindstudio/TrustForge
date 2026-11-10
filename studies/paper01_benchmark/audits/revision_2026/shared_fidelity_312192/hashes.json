@@ -1,0 +1,20 @@
+{
+  "check.slurm": "8b62d972c622df016f8ef412792e2e03c4a57c8411f135b36ea90a0b1e94496f",
+  "class_fid.configuration.json": "e96b27e5f0e6e6e0eff01966c8093c89ad8031661ac074d0b77cf1100a8db92c",
+  "class_fid.json": "b8991d6c5c9a383430baa60d4810cae4d12135acfb999580437df531b7c26bf7",
+  "inception/fixture_pool/manifest.json": "5195132be967a107cb9545525d3a837eca3ae961eacadb3a942826e91f271e7b",
+  "inception/real_features.npy": "99c55839f6c30fb158606df158d9c751f43ffd8dfb42ab6aad9dd4fb019142b0",
+  "inception/report.json": "119e8fd4c71141d27e431b6323303433d6b0a72c94a1e3c563b8bf79b2ae16b2",
+  "inception/selection.json": "9774a6ff1160a805560d22b35983ceb300934a0ad765913ee0ba6ff2574d7927",
+  "inception/synthetic_features.npy": "514aa71bceaf708f362a4e92e9d78ea96191642a187ae7dd3f06dd1d7eb7dc75",
+  "intra_class_ms_ssim.configuration.json": "cfd031a9271c4290bc1f3e5313d0023064c0431c502e3bc0ac6e918a3edde420",
+  "intra_class_ms_ssim.json": "cb320ea0366e1d2b6f4a8d2c44099a77334d94412ea16b66942326afe4d6fbe2",
+  "pair_scores.npy": "d6ff0ea212e12405cc1330cdc24434ebc1134c4ae6313f1babfee83ed180b16b",
+  "pair_selection.json": "458ad0df80f57beb7d58c7c906c6d2bdc7fcdef7318cdc9b278516217b20b20b",
+  "pooled_balanced_fid.configuration.json": "e96b27e5f0e6e6e0eff01966c8093c89ad8031661ac074d0b77cf1100a8db92c",
+  "pooled_balanced_fid.json": "9bf49f603d3f4abfedf095751e1310495c0878b55185e89c5dc445a2c73d4925",
+  "pooled_balanced_kid.configuration.json": "de2c6221af71b5347cc1a18f55761fa46946062c0c5288ca8e35cd2d7f4e2595",
+  "pooled_balanced_kid.json": "bd072958872020fe54adb043e3eb01c33ad416d850a505ec209a21a2d143fb9d",
+  "report.json": "f1bebcc2e69dc3aa4d11a865fddddce1a6bd1d51801c699fb3ceee0813ebef82",
+  "status_inventory.json": "8d1f2b4583d348ac1179a6d77e34d9e224b9f1af3f4b8460bff443eac0a5cda5"
+}
