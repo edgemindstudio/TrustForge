@@ -1085,3 +1085,36 @@ seven-seed reporting and bounded authenticated real-data acceptance remain open.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Seven-seed reporting arithmetic acceptance at cdb6124
+
+Source: cdb61245f3118e9457c2da4ebcc7a6f6f75551f9.
+
+The focused suite passed 31 tests, including independent SciPy checks of
+paired mean, sample SD, standard error and the pointwise 95% Student-t
+interval. The reporter requires explicit records for seeds 42-48 and
+withholds the interval when fewer than seven declared pairs succeed.
+
+The pinned job 312074 fixture yielded one declared pair and six pending
+seeds, with no seven-pair interval. Evidence-backed aggregation, attempt
+selection and benchmark-wide completion denominators remain open.
+
+
+## Partial downstream inventory acceptance at c942dd1
+
+Source: c942dd1c94a08e2bb00d83416eca248cd4555cfe.
+
+The five-file scoped suite passed 121 tests on the Mac and on Talon
+(login1, gcs_py310). Either classifier arm can be verified when the
+other is pending or failed and has no prediction arrays. The inventory
+retains the verified arm and the explicit blockers. Paired success still
+requires both verified arms and matching ordered test labels.
+
+The verifier requires predictions from at least one arm. Handling a run
+with neither arm available remains an orchestration concern.
+Unified evaluation orchestration, cross-result provenance, complete-result
+publication and bounded authenticated real-data acceptance remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
