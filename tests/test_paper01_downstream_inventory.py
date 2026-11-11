@@ -86,6 +86,22 @@ def record(data, name):
     return next(item for item in data["records"] if item["result_id"] == name)
 
 
+def withdraw_arm(data, name, status="PENDING"):
+    """Declare an arm without prediction arrays, leaving the other intact."""
+    record(data, f"{name}_downstream").update(
+        status=status,
+        reason="arm execution did not produce a verified artifact",
+        result_file_sha256=None, configuration_sha256=None, coverage=None,
+    )
+    data["artifact_bytes"].pop(f"{name}_downstream", None)
+    data["paired_arguments"]["arms"][name] = None
+    record(data, "paired_downstream").update(
+        status="PENDING", reason="paired linkage requires both verified arms",
+        result_file_sha256=None, configuration_sha256=None, coverage=None,
+    )
+    data["artifact_bytes"].pop("paired_downstream", None)
+
+
 def replace(data, name, field, value):
     encoded = raw(value)
     data["artifact_bytes"][name][field] = encoded
@@ -197,3 +213,96 @@ def test_pending_pair_preserves_verified_arm_results():
     assert len(result["downstream_verifications"]) == 2
     assert len(result["required_status_blockers"]) == 5
     assert result["complete_evaluation"] is False
+
+
+ARM_NAMES = ("real_only", "real_plus_synthetic")
+
+
+@pytest.mark.parametrize("arm", ARM_NAMES)
+@pytest.mark.parametrize("status", ["PENDING", "FAILED"])
+def test_single_arm_verified_when_other_arm_has_no_predictions(arm, status):
+    data = fixture()
+    other = next(name for name in ARM_NAMES if name != arm)
+    withdraw_arm(data, other, status)
+    before = deepcopy(data["records"])
+    result = verify_downstream_inventory(**data)
+    assert set(result["downstream_verifications"]) == {f"{arm}_downstream"}
+    blockers = {
+        item["result_id"]: item["status"]
+        for item in result["required_status_blockers"]
+    }
+    assert blockers[f"{other}_downstream"] == status
+    assert blockers["paired_downstream"] == "PENDING"
+    assert len(blockers) == 6
+    assert result["semantic_validation_not_performed"] == []
+    assert result["provenance_validation"] == "NOT_PERFORMED"
+    assert result["complete_evaluation"] is False
+    assert data["records"] == before
+
+
+def test_failed_arm_with_supplied_predictions_preserves_verified_arm():
+    data = fixture()
+    record(data, "real_only_downstream").update(
+        status="FAILED", reason="saved arm artifact unavailable",
+        result_file_sha256=None, configuration_sha256=None, coverage=None,
+    )
+    del data["artifact_bytes"]["real_only_downstream"]
+    record(data, "paired_downstream").update(
+        status="PENDING", reason="paired artifact publication pending",
+        result_file_sha256=None, configuration_sha256=None, coverage=None,
+    )
+    del data["artifact_bytes"]["paired_downstream"]
+    result = verify_downstream_inventory(**data)
+    assert set(result["downstream_verifications"]) == {
+        "real_plus_synthetic_downstream"
+    }
+    assert len(result["required_status_blockers"]) == 6
+    assert result["complete_evaluation"] is False
+
+
+def test_successful_arm_result_rejected_without_prediction_arrays():
+    data = fixture()
+    data["paired_arguments"]["arms"]["real_only"] = None
+    with pytest.raises(ValueError, match="prediction arrays"):
+        verify_downstream_inventory(**data)
+
+
+def test_no_arms_with_predictions_rejected():
+    data = fixture()
+    for name in ARM_NAMES:
+        withdraw_arm(data, name)
+    with pytest.raises(ValueError, match="at least one"):
+        verify_downstream_inventory(**data)
+
+
+def test_successful_pair_rejected_when_arm_has_no_predictions():
+    data = fixture()
+    record(data, "real_only_downstream").update(
+        status="FAILED", reason="saved arm artifact unavailable",
+        result_file_sha256=None, configuration_sha256=None, coverage=None,
+    )
+    del data["artifact_bytes"]["real_only_downstream"]
+    data["paired_arguments"]["arms"]["real_only"] = None
+    with pytest.raises(ValueError, match="both arm artifacts"):
+        verify_downstream_inventory(**data)
+
+
+def test_single_arm_semantic_tampering_rejected():
+    data = fixture()
+    withdraw_arm(data, "real_only")
+    name = "real_plus_synthetic_downstream"
+    value = json.loads(data["artifact_bytes"][name]["result_raw"])
+    value["macro_f1"] += 0.1
+    replace(data, name, "result_raw", value)
+    with pytest.raises(ValueError):
+        verify_downstream_inventory(**data)
+
+
+def test_single_arm_training_identity_rejected():
+    data = fixture()
+    withdraw_arm(data, "real_only")
+    data["paired_arguments"]["arms"]["real_plus_synthetic"]["training"][
+        "evaluator_seed"
+    ] = 43
+    with pytest.raises(ValueError, match="training seed"):
+        verify_downstream_inventory(**data)
