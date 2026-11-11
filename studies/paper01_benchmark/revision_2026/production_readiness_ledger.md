@@ -1118,3 +1118,28 @@ publication and bounded authenticated real-data acceptance remain open.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Unified evaluation result validation at 0836506
+
+Source: 0836506f86c230c7345edd9e78825621d20b83a0.
+
+The 11-file scoped suite passed 269 tests on the Mac and on Talon
+(login1, gcs_py310), including 39 tests for the unified validator.
+The validator composes downstream and fidelity/diversity verification
+under one declared evaluation identity and retains explicit blockers.
+It preserves a verified classifier arm if the other is unavailable.
+With both arms unavailable, pending or failed downstream records can
+coexist with verified fidelity results. Contradictory success or
+malformed supplied test identities are rejected.
+
+A matching augmented-pool declaration does not clear the blocker for
+evidence that the classifier consumed that pool. Generator lineage,
+real-data provenance, complete-result publication and evidence-backed
+aggregation remain open. The unified checks used coherent test fixtures.
+
+Next, trace and bind consumed-pool evidence to augmented training and
+selected weights, then exercise that linkage in one bounded evaluation.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
