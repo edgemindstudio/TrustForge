@@ -78,13 +78,15 @@ def _finite_loss(value):
 def fit_classifier_control(
     *, training, validation, evaluator_seed, recipe_raw,
     train_step, validation_step, get_weights, set_weights,
-    get_execution_state, optimizer_updates,
+    get_execution_state, optimizer_updates, pool_consumption=None,
 ):
     """Fit through callbacks and restore earliest minimum-validation weights.
 
     get_execution_state must include model and optimizer variables, including
     optimizer iteration state. Callbacks return mean per-example batch loss.
     Input provenance and callback implementation require outer verification.
+    An optional empty pool_consumption dictionary receives the completed
+    augmented-arm record after successful selected-weight restoration.
     """
     recipe = selected_recipe(recipe_raw)
     if type(evaluator_seed) is not int or evaluator_seed not in recipe["experimental_seeds"]:
@@ -114,6 +116,14 @@ def fit_classifier_control(
     best_epoch = None
     wait = 0
     history = []
+    tracker = None
+    selected_consumption = None
+    if pool_consumption is not None:
+        if type(pool_consumption) is not dict or pool_consumption:
+            raise ValueError("empty pool consumption output required")
+        from .paper01_pool_consumption import PoolConsumption
+
+        tracker = PoolConsumption(training, evaluator_seed)
 
     for epoch in range(controls["maximum_epochs"]):
         if training.identity != training_identity or validation.identity != validation_identity:
@@ -127,10 +137,16 @@ def fit_classifier_control(
             selected = positions[start:start + batch_size]
             images, labels = _batch(training, selected, classes)
             before = _count(optimizer_updates())
+            batch_evidence = (
+                tracker.prepare_batch(selected, images, labels)
+                if tracker is not None else None
+            )
             loss = _finite_loss(train_step(images, labels))
             if _count(optimizer_updates()) != before + 1:
                 raise RuntimeError("training must perform exactly one update")
             snapshot(get_execution_state())
+            if batch_evidence is not None:
+                tracker.record_update(before + 1, batch_evidence)
             train_total += np.float64(len(selected)) * np.float64(loss)
             train_count += len(selected)
 
@@ -171,6 +187,8 @@ def fit_classifier_control(
             best_loss = val_loss
             best_epoch = epoch
             best_weights = snapshot(get_weights())
+            if tracker is not None:
+                selected_consumption = tracker.prefix(expected_updates)
             wait = 0
         else:
             wait += 1
@@ -183,7 +201,7 @@ def fit_classifier_control(
     selected_digest = state_digest(best_weights)
     if state_digest(get_weights()) != selected_digest:
         raise RuntimeError("selected classifier weights were not restored")
-    return {
+    report = {
         "recipe_sha256": RECIPE_SHA256,
         "evaluator_seed": evaluator_seed,
         "initial_weights_sha256": initial_digest,
@@ -197,3 +215,6 @@ def fit_classifier_control(
         ),
         "history": history,
     }
+    if tracker is not None:
+        pool_consumption.update(tracker.finish(report, selected_consumption))
+    return report

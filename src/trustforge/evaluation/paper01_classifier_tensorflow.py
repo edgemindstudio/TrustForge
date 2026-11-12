@@ -215,10 +215,11 @@ def prepare_paired_classifiers(
             initial_digest = observed_digest
         if observed_digest != initial_digest:
             raise RuntimeError("paired initial classifier weights differ")
+        consumption = {} if arm == "real_plus_synthetic" else None
         report = fit_classifier_control(
             training=training, validation=validation,
             evaluator_seed=evaluator_seed, recipe_raw=recipe_raw,
-            **binding["controls"],
+            pool_consumption=consumption, **binding["controls"],
         )
         if report["initial_weights_sha256"] != initial_digest:
             raise RuntimeError("classifier changed before controlled training")
@@ -226,6 +227,8 @@ def prepare_paired_classifiers(
             "report": report,
             "selected_weights": snapshot(binding["model"].get_weights()),
         }
+        if consumption is not None:
+            result[arm]["pool_consumption"] = consumption
         del binding
 
     return {
