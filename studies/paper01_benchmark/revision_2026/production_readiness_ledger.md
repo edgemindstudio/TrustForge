@@ -1,6 +1,6 @@
 # TrustForge Paper 1 Production Readiness Ledger
 
-Updated: 2026-11-06 (America/New_York); reconciliation at f276fa9
+Updated: 2026-11-13 (America/New_York); status reconciliation at 0f0a594
 
 ## Objective
 
@@ -39,12 +39,12 @@ It does not establish production acceptance.
 | 1. Establish and preserve state | Reconcile Git/Talon, preserve relevant source, inventory external scripts and artifact identities | COMPLETE |
 | 2. Freeze experimental specification | Version datasets, splits, preprocessing, seeds, budgets, evaluation and analysis rules | IN_PROGRESS |
 | 3. Trace production execution | Verify requested-to-executed identities, imports, configuration precedence, fallback/resume and failure behavior | IN_PROGRESS |
-| 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | IN_PROGRESS |
-| 5. Validate evaluation and reporting | Resolve weighting, classifier specification, memory, metrics, pairing, aggregation and statistics | PENDING |
-| 6. Establish professional reproduction workflow | Test installation, submodules, data preparation, quick start, documentation and paper traceability | PENDING |
-| 7. End-to-end acceptance | Bounded production-path runs plus identity, missing-output and incomplete-checkpoint rejection checks | PENDING |
-| 8. Freeze and launch | Accepted launch revision, configuration, environment, matrix, resources, retries and GO decision | PENDING |
-| 9. Verify results and release | Reconcile runs, regenerate tables/figures, audit claims and preserve reproduction release | PENDING |
+| 4. Complete checkpoint and synthesis integration | Verify durable restoration and correct labeled sampling for every distinct family path | IN_PROGRESS — CIC MAF seed-42 full pool publication and streaming verification accepted; benchmark-wide closure remains open |
+| 5. Validate evaluation and reporting | Resolve weighting, classifier specification, memory, metrics, pairing, aggregation and statistics | IN_PROGRESS — fixture evaluation and fresh-process consumption paths verified; real-data evaluation and completion evidence remain open |
+| 6. Establish professional reproduction workflow | Test installation, submodules, data preparation, quick start, documentation and paper traceability | PENDING — clean-environment bounded workflow and reviewer traceability map not yet executed |
+| 7. End-to-end acceptance | Bounded production-path runs plus identity, missing-output and incomplete-checkpoint rejection checks | PENDING — no bounded integrated real-data production path and rejection suite yet accepted |
+| 8. Freeze and launch | Accepted launch revision, configuration, environment, matrix, resources, retries and GO decision | PENDING/BLOCKED after prerequisite gates — no accepted revision/configuration/resource freeze or GO decision |
+| 9. Verify results and release | Reconcile runs, regenerate tables/figures, audit claims and preserve reproduction release | PENDING AFTER AUTHORIZED EXECUTION — no authorized full matrix exists to verify or release |
 
 ## Evidence vocabulary
 
@@ -75,7 +75,7 @@ tests alone do not establish complete scientific execution.
 | P3 | Production source binding | BLOCKED: GMM runner/launcher require HEAD 42ac1fa; current HEAD changed | Implement deliberate revision binding without rewriting historical freezes |
 | P4 | Runtime activation | INSPECTED: GAN/Diffusion disabled; VAE disabled per handoffs/contract | Verify and integrate each governed operational path |
 | P5 | RBM production sampling | BLOCKED: inspected training authorization withholds synthesis and leaves Gibbs depth unselected | Resolve bounded production sampling policy |
-| P6 | Checkpoint-backed synthesis | PENDING across all seven families | Verify distinct persistence/restoration/sampling paths |
+| P6 | Checkpoint-backed synthesis | PARTIAL: CIC MAF seed-42 full pool publication and streaming verification accepted at 0f0a594; other families/seeds remain open | Verify distinct persistence/restoration/sampling paths and complete benchmark pool coverage |
 | E1 | Downstream class weighting | REPORTED confound: real-only weighted, augmented unweighted | Inspect pinned evaluator and freeze comparable policy |
 | E2 | Large-dataset evaluation | REPORTED materialization risk | Verify bounded-memory execution |
 | E3 | Required metrics and silent skipping | PENDING comprehensive production-path audit | Verify explicit completeness and failure records |
@@ -310,7 +310,7 @@ explicitly rooted elsewhere.
 | VAE | revision_2026/variational_autoencoder_formal_training_authorization.md accepts methodology; real-data activation and production publication/synthesis withheld | Verify actual real-data production path through persistence, independent restoration and synthesis |
 | Diffusion | revision_2026/diffusion_formal_training_authorization.md accepts methodology; approved-width in-memory restoration evidence is bounded | Verify controlled activation, filesystem persistence/restoration and production synthesis |
 | AR | Selected recipe; CIC seed-42 restoration/synthesis acceptance; batch-eight timing, recipe-report and class-four range boundary checks | Complete checkpoint-backed pool publication, evaluator integration, remaining dataset/seed operational coverage and resource acceptance |
-| MAF | Selected recipe; CIC seed-42 restoration/synthesis acceptance and batch-eight timing | Complete pool publication, evaluator integration, remaining dataset/seed operational coverage and resource acceptance |
+| MAF | Selected recipe; CIC seed-42 restoration/synthesis acceptance; full pool publication and streaming verification accepted (array 313821, finalizer 313832) | Complete evaluator integration, remaining dataset/seed operational coverage and resource acceptance; authenticate generator lineage separately |
 | RBM | revision_2026/restricted_boltzmann_training_authorization.md accepts training; Stage 1 records CIC/MaleX checkpoint integrity | BLOCKED: production Gibbs depth unselected; production sampling/synthesis withheld |
 | GMM | revision_2026/gaussian_mixture_sampling_policy.md accepts integrated checkpoint/sampling implementation; Stage 1 records MaleX checkpoint integrity | Resolve current execution-source binding, reusable-checkpoint provenance and actual production-path acceptance |
 
@@ -328,7 +328,8 @@ introduced by this reconciliation.
 | audits/revision_2026/cic_batch8_311471_311472; acceptance 56c8ed9 | One checkpoint-backed class-0 batch/family; AR about 125.20 s, MAF about 3.17 s | Single-batch timing does not guarantee full-run resources |
 | audits/revision_2026/cic_ar_partition_311540; acceptance 09911ef | Bounded two-worker partition diagnostic | Not complete pool coverage |
 | audits/revision_2026/cic_ar_recipe_contract_311628; acceptance dd047b9 | Recipe identity and four archives verified; finalizer correctly rejected incomplete coverage without publication | Full pool pending; preceding 311611 startup failure remains unresolved |
-| audits/revision_2026/cic_ar_range_boundary_311664; acceptance f276fa9 | Class 4, batches [248,250), seeds 24749/24750 passed | Full checkpoint-backed pool and evaluator integration pending |
+| audits/revision_2026/cic_ar_range_boundary_311664; acceptance f276fa9 | Class 4, batches [248,250), seeds 24749/24750 passed | Full checkpoint-backed AR pool and evaluator integration pending |
+| jobs 313819/313821/313832; commit 0f0a594 | CIC MAF seed-42 two-batch range, full 1,250-batch pool publication and streaming preflight | Other families/seeds, generator-lineage authentication, real-split classifier and evaluator remain open |
 
 The handoff reports bounded component fixture passes for the pool validator
 (35ee7c8, job 311469), publisher (1e96d05, job 311470), and partition finalizer
@@ -348,12 +349,22 @@ the observed evidence.
 | Dataset contracts / Stage 2 | INSPECTED specification and governed CIC input acceptance; four-dataset job 310126 remains REPORTED here | Bind consumed data, partitions, preprocessing and class identities; resolve outstanding fitted-state evidence |
 | Executable specification / Stage 2 | IN_PROGRESS; shared methodology and AR/MAF recipe selected | Complete configuration linkage and remaining family-specific sampling decisions |
 | Execution / Stage 3 | IN_PROGRESS; later CIC AR/MAF evidence advances bounded paths | Verify remaining family launchers, source/import identities, activation and failure behavior |
-| Checkpoint/synthesis / Stage 4 | IN_PROGRESS; CIC AR/MAF bounded restoration/synthesis accepted | Accept distinct remaining persistence/restoration/sampling paths and full-pool integration |
-| Evaluation/reporting / Stage 5 | IN_PROGRESS; policy accepted and paired smoke passed | Tracked bounded-memory evaluator; metric mathematics, feature-weight identity, complete coverage/failure records and statistical aggregation |
-| Reproduction / Stage 6 | PENDING | Clean-environment installation and bounded workflow; reviewer requirement-to-evidence mapping |
-| End-to-end / Stage 7 | PENDING | Bounded integrated production-path acceptance with identity and incomplete-output rejection |
-| Freeze/launch / Stage 8 | BLOCKED | Freeze accepted revision, configuration, environment, matrix, resources and retries after prerequisite gates |
-| Results/release / Stage 9 | PENDING AFTER AUTHORIZED EXECUTION | Reconcile expected/observed runs, regenerate outputs, audit claims and preserve release |
+| Checkpoint/synthesis / Stage 4 | IN_PROGRESS; CIC AR/MAF bounded restoration/synthesis accepted; CIC MAF seed-42 full pool publication and streaming verification accepted (array 313821, finalizer 313832, commit 0f0a594) | Close accepted full-pool publication and streaming verification for remaining AR and other family/seed paths; retain benchmark-wide Stage 4 closure until every distinct persistence/restoration/sampling path is accepted |
+| Evaluation/reporting / Stage 5 | IN_PROGRESS; policy accepted, paired fixtures and unified validation verified, including fresh-process consumption acceptance in job 313741 | Complete real-data evaluation with authenticated splits/pool; complete-result publication; bounded-memory execution at required scale; evidence-backed aggregation and completion denominators |
+| Reproduction / Stage 6 | PENDING | Execute the documented clean-environment installation, submodule/data preparation and one bounded train->synthesize->evaluate workflow from a fresh checkout; retain a reviewer requirement-to-evidence map |
+| End-to-end / Stage 7 | PENDING | Execute one bounded integrated production path using governed real data and accepted checkpoint/pool identities, with missing-output, incomplete-checkpoint, identity-mismatch and test-access rejection checks |
+| Freeze/launch / Stage 8 | BLOCKED | After prerequisite gates, freeze accepted revision, configuration, environment, matrix, resources and retries, then record an evidence-backed GO or NO-GO; fixture evidence cannot justify GO |
+| Results/release / Stage 9 | PENDING AFTER AUTHORIZED EXECUTION | After authorized execution, reconcile every expected/observed run, regenerate tables/figures, audit claims and preserve the reproduction release |
+
+Status reconciliation at 0f0a594: Stage 4 now includes accepted CIC MAF
+seed-42 full-pool publication and streaming verification only; it does not
+close benchmark-wide Stage 4. Stage 5 remains IN_PROGRESS with fixture-level
+paired evaluation, publication/restoration, unified validation and
+fresh-process consumption evidence, but real-data evaluation, complete-result
+publication, required-scale bounded-memory execution and evidence-backed
+aggregation/completion denominators remain open. Stages 6-9 retain their
+original exit criteria; their remaining acceptance conditions are stated in
+the matrix above. `complete_evaluation=false`; `FULL_BENCHMARK_GO=NO`.
 
 Four-dataset validation job 310126 is reported as COMPLETED with counts:
 USTC 72900/8100/9000; CIC 8117/1158/2323; MalNet 883416/126202/252406;
