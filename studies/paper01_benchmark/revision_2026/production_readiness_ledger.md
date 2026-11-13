@@ -1297,3 +1297,21 @@ run remain open. complete_evaluation=false.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Research continuity charter reference — 2026-11-13
+
+The durable research-context document is
+studies/paper01_benchmark/revision_2026/research_continuity_charter.md
+(SHA-256 e03873f7cd2c29aa66e28d4a35732725a952d8ea48b9e0fa102d5e1f1c48f79a).
+
+It preserves the research mission, the separate Paper 1–4 publication arcs,
+and the reasons for the Revision-2026 engineering audit. It is governance
+context, not operational evidence or execution authorization. The current
+benchmark specification, accepted decisions, and verified execution evidence
+govern operational status; the charter and historical manuscripts do not
+override them.
+
+This reference does not change stage statuses, family methodology
+authorizations, budgets, runtime activation flags, or completion gates.
+complete_evaluation=false. FULL_BENCHMARK_GO=NO.
