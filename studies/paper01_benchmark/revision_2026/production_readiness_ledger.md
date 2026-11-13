@@ -1143,3 +1143,38 @@ selected weights, then exercise that linkage in one bounded evaluation.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Augmented classifier pool consumption acceptance — job 313732
+
+PASS for bounded synthetic-fixture evidence of augmented classifier pool
+consumption at f2bf9269dc5c48b818e77c1b1743c44ea4b54f2a.
+
+Job 313732 completed on talon07 in 00:09:43 with exit code 0:0.
+The saved-evidence check passed. The driver hashed the returned selected
+weights during the run, and the saved-evidence check reconciled that digest
+across both JSON files.
+
+Execution used evaluator seed 42 and the pinned CIC fixture pool from job
+311683. Test-split access was disabled. The selected checkpoint was at
+zero-based epoch index 17. Through that checkpoint, 18 epochs accounted for
+180,000 synthetic example presentations and 1,422 optimizer updates. Through
+the end of training, 20 epochs accounted for 200,000 presentations and 1,580
+updates.
+
+Selected weights SHA-256:
+9ca712c98dc7a952f3d71e2bcacfd0ebfb66e0536b9ca5acf6f0613cb1bd44ad
+
+Evidence directory:
+~/trustforge_revision_2026_artifacts/paper01/diagnostics/pool-consumption-f2bf926-kxLBmm2q
+
+SHA-256:
+pool_consumption.json  4b48540e0e033dff034729a2ed20951d5d81fa783b8c41f17cbd2c859c2ca9be
+report.json            185794c5b7208bd498cf43e520c6c067fc06584c55e28f2579da9dfa8c98b59d
+
+This closes bounded synthetic-fixture consumption evidence only. Unified
+validator integration and real-data and generator lineage authentication
+remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
