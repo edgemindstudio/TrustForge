@@ -1197,3 +1197,35 @@ augmented training identity to the selected checkpoint.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Paired pool-consumption restoration acceptance — job 313741
+
+PASS for bounded synthetic-fixture acceptance at
+1076e64a5d4685331f6ced101e738493f0aa88ad.
+
+Job 313741 completed on talon07 in 00:09:13 with exit code 0:0 and emitted
+PAIRED_POOL_CONSUMPTION_ACCEPTANCE_JOB=PASS. Training PID 1314850 published
+the selected checkpoint and consumption record; fresh restoration PID 1332339
+verified them independently.
+
+The matching augmented consumption record cleared the
+augmented_pool_consumption blocker. Omitting the record restored that blocker.
+Both cases reported three verified downstream groups.
+
+Evidence directory:
+~/trustforge_revision_2026_artifacts/paper01/diagnostics/paired-pool-restoration-1076e64-RsbkPWRg
+Verification report: pool_consumption_verification.json
+
+Expectation receipt SHA-256:
+0885e68a306820f52feff5cb649edf323f84ea6063a099659581a26ab6f898ba
+Pool consumption record SHA-256:
+4b48540e0e033dff034729a2ed20951d5d81fa783b8c41f17cbd2c859c2ca9be
+Selected weights SHA-256, matching the receipt, restored checkpoint, and
+verified downstream result:
+9ca712c98dc7a952f3d71e2bcacfd0ebfb66e0536b9ca5acf6f0613cb1bd44ad
+
+Real-data validation and generator-lineage authentication remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
