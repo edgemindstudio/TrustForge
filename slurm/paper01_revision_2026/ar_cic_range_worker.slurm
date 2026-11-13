@@ -23,10 +23,10 @@ umask 077
 : "${TF_SYNTH_CLASS_ID:?Class ID required}"
 : "${TF_SYNTH_BATCH_START:?Batch start required}"
 : "${TF_SYNTH_BATCH_STOP:?Exclusive batch stop required}"
-[[ "$TF_SYNTH_FAMILY" == ar ]]
 
 case "$TF_SYNTH_FAMILY" in
-    ar|maf) generation="${TF_SYNTH_FAMILY}_cic_seed42" ;;
+    ar) generation=ar_cic_seed42 ;;
+    maf) generation=maf_cic_seed42_execution ;;
     *) echo "Unsupported synthesis family" >&2; exit 1 ;;
 esac
 
@@ -51,6 +51,17 @@ done
 [[ ! -e "$TF_SYNTH_OUTPUT" && ! -L "$TF_SYNTH_OUTPUT" ]]
 printf '%s  %s\n' "$TF_SYNTH_CONFIG_SHA256" "$TF_SYNTH_DATASET_CONFIG" |
     sha256sum --check -
+
+extra_args=()
+if [[ "$TF_SYNTH_FAMILY" == maf ]]; then
+    : "${TF_SYNTH_EXPECTATIONS:?Accepted execution expectations required}"
+    : "${TF_SYNTH_EXPECTATIONS_SHA256:?Expectation digest required}"
+    [[ -f "$TF_SYNTH_EXPECTATIONS" && ! -L "$TF_SYNTH_EXPECTATIONS" ]]
+    extra_args+=(
+        --expectations "$TF_SYNTH_EXPECTATIONS"
+        --expectations-sha256 "$TF_SYNTH_EXPECTATIONS_SHA256"
+    )
+fi
 
 python_executable="$HOME/miniforge3/envs/gcs_py310/bin/python"
 [[ -x "$python_executable" ]]
@@ -78,6 +89,7 @@ hostname
     --class-id "$TF_SYNTH_CLASS_ID" \
     --batch-start "$TF_SYNTH_BATCH_START" \
     --batch-stop "$TF_SYNTH_BATCH_STOP" \
-    --output "$TF_SYNTH_OUTPUT"
+    --output "$TF_SYNTH_OUTPUT" \
+    "${extra_args[@]}"
 
 check_source

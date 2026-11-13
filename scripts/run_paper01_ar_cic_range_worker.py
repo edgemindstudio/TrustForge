@@ -1,4 +1,4 @@
-"""Generate a declared CIC AR class and batch range from a verified checkpoint."""
+"""Generate a declared CIC AR/MAF class and batch range from a checkpoint."""
 
 import argparse
 import hashlib
@@ -23,11 +23,15 @@ def main():
     parser.add_argument("--config-sha256", required=True)
     parser.add_argument("--publication-parent", required=True)
     parser.add_argument("--generation-name", required=True)
+    parser.add_argument("--expectations", type=Path)
+    parser.add_argument("--expectations-sha256")
     args = parser.parse_args()
     if not 0 <= args.batch_start < args.batch_stop <= 250:
         parser.error("require 0 <= batch-start < batch-stop <= 250")
-    if args.family != "ar":
-        parser.error("this partition diagnostic requires --family ar")
+    if args.family == "maf" and (
+        args.expectations is None or args.expectations_sha256 is None
+    ):
+        parser.error("MAF range requires accepted execution expectations")
 
     if (
         not os.environ.get("SLURM_JOB_ID")
@@ -131,13 +135,32 @@ def main():
             "ar_cic_seed42",
         ),
         "maf": (
-            "d33c0e9146caab11fb3b492361873daf059ce6ce",
+            "913d86f9c64e6a3a1a0d009f112bcfa889a02ec8",
             "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d",
-            "maf_cic_seed42",
+            "maf_cic_seed42_execution",
         ),
     }[args.family]
     if args.generation_name != generation:
         raise ValueError("unexpected checkpoint generation")
+    receipt = None
+    expected_fitted_state_sha256 = None
+    if args.family == "maf":
+        if args.expectations.is_symlink() or not args.expectations.is_file():
+            raise ValueError("expectation receipt unavailable")
+        receipt_raw = args.expectations.read_bytes()
+        if hashlib.sha256(receipt_raw).hexdigest() != args.expectations_sha256:
+            raise ValueError("expectation receipt digest mismatch")
+        receipt = json.loads(receipt_raw)
+        if (
+            receipt["schema"]
+            != "trustforge.paper01.maf-cic.execution-expectations.v1"
+            or receipt["configuration_sha256"] != args.config_sha256
+            or receipt["generation_name"] != generation
+            or receipt["source_commit"] != training_commit
+            or receipt["job_id"] != "311675"
+        ):
+            raise ValueError("unexpected accepted MAF execution receipt")
+        expected_fitted_state_sha256 = receipt["fitted_state_sha256"]
     if args.output.exists() or args.output.is_symlink():
         raise FileExistsError(args.output)
 
@@ -166,7 +189,61 @@ def main():
         expected_identity=identity,
         expected_source_commit=training_commit,
         expected_source_files=historical,
+        expected_fitted_state_sha256=expected_fitted_state_sha256,
     )
+    if receipt is not None:
+        from trustforge.models.paper01_revision_2026.ar_maf_checkpoint_identity import (
+            canonical_json_bytes,
+        )
+        envelope_raw = (
+            canonical_json_bytes(loaded["execution_manifest"]) + bytes([10])
+        )
+        if hashlib.sha256(envelope_raw).hexdigest() != (
+            receipt["execution_manifest_file_sha256"]
+        ):
+            raise RuntimeError(
+                "execution envelope differs from accepted receipt"
+            )
+        from trustforge.models.paper01_revision_2026.ar_maf_cic_execution import (
+            _capture,
+        )
+        live = _capture(
+            repository_root=root, adapter=adapter,
+            dataset_config_raw=config_raw,
+        )
+        captured = json.loads(loaded["fitted_state_raw"])
+        for key in ("scaler", "training_indices"):
+            if canonical_json_bytes(
+                live["payload"][key]
+            ) != canonical_json_bytes(captured["payload"][key]):
+                raise RuntimeError(
+                    "live preprocessing differs from training: " + key
+                )
+        for key in (
+            "source_preflight", "configuration_sha256", "feature_columns",
+            "partition", "environment",
+        ):
+            if canonical_json_bytes(
+                live["payload"]["declared_context"][key]
+            ) != canonical_json_bytes(
+                captured["payload"]["declared_context"][key]
+            ):
+                raise RuntimeError(
+                    "preprocessing context differs from training: " + key
+                )
+        for name, module in tuple(sys.modules.items()):
+            if not (
+                name == "trustforge" or name.startswith("trustforge.")
+                or name == "common" or name.startswith("common.")
+            ):
+                continue
+            filename = getattr(module, "__file__", None)
+            if filename is not None:
+                relative = Path(filename).resolve().relative_to(root).as_posix()
+                if source_files.get(relative) != historical.get(relative):
+                    raise RuntimeError(
+                        "consumed project source differs from training: " + name
+                    )
     manifest = loaded["manifest"]
     if (
         manifest["completed_training_steps"] != 254
@@ -249,7 +326,11 @@ def main():
             np.savez(stream, images=images, class_ids=class_ids)
 
         report = {
-            "scope": "checkpoint_backed_ar_partition_batch_diagnostic",
+            "scope": (
+                "checkpoint_backed_maf_partition_batch_diagnostic"
+                if args.family == "maf"
+                else "checkpoint_backed_ar_partition_batch_diagnostic"
+            ),
             "family": args.family,
             "dataset_id": "cicmaldroid2020",
             "experimental_seed": 42,
@@ -274,12 +355,24 @@ def main():
             "verified_project_import_count": import_count,
             "recipe_sha256": hashlib.sha256(recipe_raw).hexdigest(),
         }
+        if receipt is not None:
+            report.update({
+                "expectations_sha256": args.expectations_sha256,
+                "execution_manifest_file_sha256":
+                    receipt["execution_manifest_file_sha256"],
+                "training_fitted_state_sha256": receipt["fitted_state_sha256"],
+                "execution_envelope_required": True,
+                "live_preprocessing_matches_training": True,
+            })
         encoded = json.dumps(report, sort_keys=True, allow_nan=False)
         with (batch_output / "report.json").open("x", encoding="utf-8") as stream:
             stream.write(encoded + "\n")
         print("CIC_AR_PARTITION_BATCH_RESULT", encoded, flush=True)
-    print("CIC_AR_RANGE_WORKER=PASS", class_id,
-          args.batch_start, args.batch_stop, flush=True)
+    marker = (
+        "CIC_MAF_RANGE_WORKER=PASS" if args.family == "maf"
+        else "CIC_AR_RANGE_WORKER=PASS"
+    )
+    print(marker, class_id, args.batch_start, args.batch_stop, flush=True)
 
 
 if __name__ == "__main__":
