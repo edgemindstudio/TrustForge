@@ -145,6 +145,7 @@ def fixture():
                 "selected_weights_sha256"
             ],
         },
+        "augmented_pool_consumption": None,
     }
 
 
@@ -166,6 +167,111 @@ def withdraw_downstream(data):
     data["downstream_arguments"]["arms"] = {
         "real_only": None, "real_plus_synthetic": None,
     }
+
+
+def refresh_paired_artifact(data):
+    """Re-link the paired artifact after changing the augmented training report."""
+    paired = link_paired_results(**data["downstream_arguments"])
+    result_raw = raw(paired)
+    record(data, "paired_downstream")["result_file_sha256"] = sha(result_raw)
+    data["artifact_bytes"]["paired_downstream"]["result_raw"] = result_raw
+
+
+def training_identity(data, *, real_size=9):
+    """Build the independent augmented training identity fixture."""
+    manifest = data["fidelity_arguments"]["expected_synthetic_manifest_sha256"]
+    return {
+        "condition": "real_plus_synthetic",
+        "real": {
+            "dataset_id": "cicmaldroid2020", "split": "train",
+            "size": real_size, "class_count": 5,
+            "declared_provenance_sha256": "b" * 64,
+        },
+        "synthetic": {
+            "schema_version": 1, "dataset_id": "cicmaldroid2020",
+            "family": "maf", "experimental_seed": 42,
+            "recipe_sha256": "1" * 64,
+            "checkpoint_sha256": data["augmented_pool_linkage"][
+                "checkpoint_sha256"
+            ],
+            "manifest_sha256": manifest,
+        },
+        "position_order": "real_then_synthetic",
+    }
+
+
+def consumption(data, *, selected=17, completed=20):
+    """Attach a complete training history and matching consumption record."""
+    arm = data["downstream_arguments"]["arms"]["real_plus_synthetic"]
+    report = arm["training"]
+    real_size, synthetic_size = 9, 10000
+    training_size = real_size + synthetic_size
+    updates_per_epoch = (training_size + 127) // 128
+    report.update({
+        "selected_epoch_index": selected,
+        "selected_validation_loss": 1.0,
+        "completed_epochs": completed,
+        "optimizer_updates": completed * updates_per_epoch,
+        "stopping_outcome": "maximum_epochs",
+        "history": [
+            {
+                "epoch_index": index,
+                "training_loss": 1.0,
+                "validation_loss": float(completed - index),
+                "training_examples": training_size,
+                "validation_examples": 5,
+                "optimizer_updates": (index + 1) * updates_per_epoch,
+            }
+            for index in range(completed)
+        ],
+    })
+    real_report = data["downstream_arguments"]["arms"]["real_only"]["training"]
+    real_updates_per_epoch = (real_size + 127) // 128
+    real_report.update({
+        "selected_epoch_index": completed - 1,
+        "selected_validation_loss": 1.0,
+        "completed_epochs": completed,
+        "optimizer_updates": completed * real_updates_per_epoch,
+        "stopping_outcome": "maximum_epochs",
+        "history": [
+            {
+                "epoch_index": index,
+                "training_loss": 1.0,
+                "validation_loss": float(completed - index),
+                "training_examples": real_size,
+                "validation_examples": 5,
+                "optimizer_updates": (index + 1) * real_updates_per_epoch,
+            }
+            for index in range(completed)
+        ],
+    })
+    identity = training_identity(data, real_size=real_size)
+    record = {
+        "schema": "trustforge.paper01.augmented-pool-consumption.v1",
+        "dataset_id": "cicmaldroid2020", "evaluator_seed": 42,
+        "arm": "real_plus_synthetic",
+        "training_identity": identity,
+        "synthetic_examples_per_epoch": synthetic_size,
+        "classifier_recipe_sha256": report["recipe_sha256"],
+        "selected_weights_sha256": report["selected_weights_sha256"],
+        "selected_epoch_index": selected,
+        "completed_epochs": completed,
+        "selected_prefix": {
+            "optimizer_updates": report["history"][selected][
+                "optimizer_updates"
+            ],
+            "synthetic_examples": (selected + 1) * synthetic_size,
+            "stream_sha256": "a" * 64,
+        },
+        "final_prefix": {
+            "optimizer_updates": report["optimizer_updates"],
+            "synthetic_examples": completed * synthetic_size,
+            "stream_sha256": "b" * 64,
+        },
+    }
+    data["augmented_pool_consumption"] = record
+    refresh_paired_artifact(data)
+    return record
 
 
 def test_composition_verifies_groups_without_completion():
@@ -206,6 +312,99 @@ def test_matching_declaration_does_not_clear_consumption_blocker():
     assert result["declared_pool_linkage"] is not None
     assert result["lineage_blockers"] == [CONSUMPTION_BLOCKER]
     assert result["complete_evaluation"] is False
+
+
+def test_self_consistent_consumption_record_cannot_clear_blocker_alone():
+    data = fixture()
+    record = consumption(data)
+    assert record["selected_epoch_index"] < record["completed_epochs"]
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == set(REQUIRED_RESULTS)
+    assert result["verified_group_count"] == 7
+    assert result["required_status_blockers"] == []
+    assert len(result["lineage_blockers"]) == 1
+    blocker = result["lineage_blockers"][0]
+    assert blocker["evidence"] == "augmented_pool_consumption"
+    assert blocker["status"] == "BLOCKED"
+    assert "training identity" in blocker["reason"]
+    assert result["declared_pool_linkage"] is not None
+    assert result["pool_consumption_gap"] is not None
+    assert result["provenance_validation"] == "NOT_PERFORMED"
+    assert result["complete_evaluation"] is False
+
+
+def test_missing_consumption_record_preserves_verified_results():
+    data = fixture()
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == set(REQUIRED_RESULTS)
+    assert result["lineage_blockers"] == [CONSUMPTION_BLOCKER]
+    assert result["pool_consumption_gap"] is not None
+    assert result["complete_evaluation"] is False
+
+
+def test_missing_training_size_retains_explicit_identity_gap():
+    data = fixture()
+    consumption(data)
+    del data["downstream_arguments"]["arms"]["real_plus_synthetic"][
+        "training"
+    ]["history"]
+    refresh_paired_artifact(data)
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == set(REQUIRED_RESULTS)
+    assert len(result["lineage_blockers"]) == 1
+    blocker = result["lineage_blockers"][0]
+    assert blocker["evidence"] == "augmented_pool_consumption"
+    assert blocker["status"] == "BLOCKED"
+    assert "independent augmented training identity" in blocker["reason"]
+    assert result["pool_consumption_gap"] is not None
+    assert result["complete_evaluation"] is False
+
+
+@pytest.mark.parametrize("mutation,match", [
+    (
+        lambda record: record["training_identity"]["synthetic"].__setitem__(
+            "manifest_sha256", "f" * 64,
+        ),
+        "pool identity",
+    ),
+    (
+        lambda record: record.__setitem__("selected_weights_sha256", "0" * 64),
+        "selected weights",
+    ),
+    (
+        lambda record: record.__setitem__("selected_epoch_index", 16),
+        "selected epoch",
+    ),
+    (
+        lambda record: record["selected_prefix"].__setitem__(
+            "synthetic_examples", 1,
+        ),
+        "selected-epoch counts",
+    ),
+    (
+        lambda record: record["final_prefix"].__setitem__(
+            "optimizer_updates", 1,
+        ),
+        "final optimizer updates",
+    ),
+])
+def test_conflicting_consumption_record_rejected(mutation, match):
+    data = fixture()
+    record = consumption(data)
+    mutation(record)
+    with pytest.raises(ValueError, match=match):
+        verify_evaluation(**data)
+
+
+def test_conflicting_real_training_identity_rejected():
+    data = fixture()
+    record = consumption(data)
+    record["training_identity"]["real"]["size"] = 8
+    record["synthetic_examples_per_epoch"] = 10001
+    record["selected_prefix"]["synthetic_examples"] = 18 * 10001
+    record["final_prefix"]["synthetic_examples"] = 20 * 10001
+    with pytest.raises(ValueError, match="real training identity"):
+        verify_evaluation(**data)
 
 
 @pytest.mark.parametrize("field,value", [
@@ -277,6 +476,37 @@ def test_single_verified_arm_preserved_with_linkage():
     }
     assert result["lineage_blockers"] == [CONSUMPTION_BLOCKER]
     assert result["declared_pool_linkage"] is not None
+    assert result["complete_evaluation"] is False
+
+
+@pytest.mark.parametrize("status", ("PENDING", "FAILED"))
+def test_unverified_real_report_cannot_drive_consumption_count_conflict(status):
+    data = fixture()
+    consumption(data)
+    withdraw(data, "real_only_downstream", status)
+    withdraw(data, "paired_downstream")
+    real_report = data["downstream_arguments"]["arms"]["real_only"]["training"]
+    for row in real_report["history"]:
+        row["training_examples"] = 7
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == {
+        "real_plus_synthetic_downstream", *FIDELITY_GROUPS,
+    }
+    blockers = {
+        item["result_id"]: item["status"]
+        for item in result["required_status_blockers"]
+    }
+    assert blockers == {
+        "real_only_downstream": status, "paired_downstream": "PENDING",
+    }
+    assert len(result["lineage_blockers"]) == 1
+    assert result["lineage_blockers"][0]["evidence"] == (
+        "augmented_pool_consumption"
+    )
+    assert "independent augmented training identity" in (
+        result["lineage_blockers"][0]["reason"]
+    )
+    assert result["pool_consumption_gap"] is not None
     assert result["complete_evaluation"] is False
 
 

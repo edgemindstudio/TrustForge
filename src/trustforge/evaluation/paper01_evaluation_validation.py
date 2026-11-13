@@ -2,10 +2,12 @@
 
 Delegates semantic validation to the downstream and fidelity/diversity
 inventory verifiers, checks cross-input identities, reports declared
-augmented-arm pool linkage and retains an explicit consumption-evidence
-blocker when that arm is verified. Generator/source lineage,
-feature-extraction and image-score authentication, durable publication and
-completion authorization remain outer requirements.
+augmented-arm pool linkage, and validates an explicit consumption record
+against independently established augmented training evidence. Missing or
+unbindable records retain an explicit blocker; conflicting records are
+rejected. Generator/source lineage, feature-extraction and image-score
+authentication, durable publication and completion authorization remain outer
+requirements.
 """
 
 import re
@@ -90,10 +92,164 @@ def _validate_pool_linkage(
     }
 
 
+def _training_example_count(training_report):
+    """Return one consistent per-epoch training count, or None if unavailable."""
+    if type(training_report) is not dict:
+        return None
+    history = training_report.get("history")
+    if (
+        type(history) is not list or not history
+        or not all(type(row) is dict for row in history)
+    ):
+        return None
+    counts = {row.get("training_examples") for row in history}
+    if len(counts) != 1:
+        return None
+    count = next(iter(counts))
+    if type(count) is not int or count <= 0:
+        return None
+    return count
+
+
+def _check_pool_consumption_claims(
+    record, *, dataset_id, experimental_seed, manifest,
+    training_report, real_training_report=None, linkage=None,
+):
+    """Reject consumption-record claims conflicting with known evidence.
+
+    The record's own training identity is never accepted as an expected
+    identity. Its fields are checked as claims against evaluation identity,
+    declared linkage, verified training reports and independently available
+    training sizes.
+    """
+    if type(record) is not dict:
+        raise ValueError("exact augmented pool consumption record required")
+    report = training_report if type(training_report) is dict else {}
+    identity = record.get("training_identity")
+    claimed_real_size = None
+    if type(identity) is dict:
+        real = identity.get("real")
+        synthetic = identity.get("synthetic")
+        if type(real) is dict and type(synthetic) is dict:
+            for observed, expected in (
+                (identity.get("condition"), "real_plus_synthetic"),
+                (identity.get("position_order"), "real_then_synthetic"),
+                (real.get("dataset_id"), dataset_id),
+                (real.get("split"), "train"),
+                (real.get("class_count"), CLASS_COUNTS[dataset_id]),
+                (synthetic.get("dataset_id"), dataset_id),
+                (synthetic.get("experimental_seed"), experimental_seed),
+                (synthetic.get("manifest_sha256"), manifest),
+            ):
+                if observed is not None and observed != expected:
+                    raise ValueError(
+                        "consumption record conflicts with evaluation pool "
+                        "identity"
+                    )
+            if linkage is not None:
+                for observed, expected in (
+                    (synthetic.get("family"), linkage["family"]),
+                    (synthetic.get("checkpoint_sha256"),
+                     linkage["checkpoint_sha256"]),
+                ):
+                    if observed is not None and observed != expected:
+                        raise ValueError(
+                            "consumption record conflicts with declared pool "
+                            "linkage"
+                        )
+            if type(real.get("size")) is int and real["size"] > 0:
+                claimed_real_size = real["size"]
+
+    for record_key, report_key, message in (
+        ("selected_weights_sha256", "selected_weights_sha256",
+         "consumption record conflicts with selected weights"),
+        ("classifier_recipe_sha256", "recipe_sha256",
+         "consumption record conflicts with classifier recipe"),
+        ("evaluator_seed", "evaluator_seed",
+         "consumption record conflicts with training seed"),
+        ("selected_epoch_index", "selected_epoch_index",
+         "consumption record conflicts with selected epoch"),
+        ("completed_epochs", "completed_epochs",
+         "consumption record conflicts with completed epochs"),
+    ):
+        if report_key in report and record.get(record_key) != report[report_key]:
+            raise ValueError(message)
+
+    selected = report.get("selected_epoch_index")
+    completed = report.get("completed_epochs")
+    history = report.get("history")
+    selected_prefix = record.get("selected_prefix")
+    final_prefix = record.get("final_prefix")
+    if (
+        type(selected_prefix) is dict
+        and type(selected) is int and type(history) is list
+        and 0 <= selected < len(history)
+        and type(history[selected]) is dict
+    ):
+        updates = history[selected].get("optimizer_updates")
+        if (
+            updates is not None
+            and selected_prefix.get("optimizer_updates") != updates
+        ):
+            raise ValueError(
+                "consumption record conflicts with selected optimizer updates"
+            )
+    if (
+        type(final_prefix) is dict
+        and "optimizer_updates" in report
+        and final_prefix.get("optimizer_updates") != report["optimizer_updates"]
+    ):
+        raise ValueError(
+            "consumption record conflicts with final optimizer updates"
+        )
+
+    training_size = _training_example_count(training_report)
+    known_real_size = _training_example_count(real_training_report)
+    if claimed_real_size is not None and known_real_size is not None:
+        if claimed_real_size != known_real_size:
+            raise ValueError(
+                "consumption record conflicts with real training identity"
+            )
+    expected_per_epoch = None
+    if training_size is not None and known_real_size is not None:
+        expected_per_epoch = training_size - known_real_size
+        if expected_per_epoch <= 0:
+            raise ValueError(
+                "consumption record conflicts with training counts"
+            )
+        if record.get("synthetic_examples_per_epoch") != expected_per_epoch:
+            raise ValueError(
+                "consumption record conflicts with training counts"
+            )
+    else:
+        claimed = record.get("synthetic_examples_per_epoch")
+        if type(claimed) is int and claimed > 0:
+            expected_per_epoch = claimed
+    if expected_per_epoch is not None:
+        if (
+            type(selected_prefix) is dict and type(selected) is int
+            and selected >= 0
+            and selected_prefix.get("synthetic_examples")
+            != (selected + 1) * expected_per_epoch
+        ):
+            raise ValueError(
+                "consumption record conflicts with selected-epoch counts"
+            )
+        if (
+            type(final_prefix) is dict and type(completed) is int
+            and completed >= 0
+            and final_prefix.get("synthetic_examples")
+            != completed * expected_per_epoch
+        ):
+            raise ValueError(
+                "consumption record conflicts with final training counts"
+            )
+
+
 def verify_evaluation(
     *, dataset_id, experimental_seed, records, artifact_bytes,
     downstream_arguments, fidelity_arguments, augmented_pool_linkage=None,
-    optional_result_ids=(),
+    augmented_pool_consumption=None, optional_result_ids=(),
 ):
     inventory = validate_status_inventory(
         dataset_id=dataset_id, experimental_seed=experimental_seed,
@@ -168,14 +324,39 @@ def verify_evaluation(
                 "pool linkage conflicts with the verified augmented classifier"
             )
         declared_linkage = candidate
+    consumption_gap = None
     if augmented_weights is not None:
+        if augmented_pool_consumption is None:
+            consumption_gap = "augmented-arm consumption record unavailable"
+            reason = (
+                "augmented-arm consumption of the declared synthetic pool "
+                "remains unverified"
+            )
+        else:
+            augmented_training = downstream_arguments["arms"][
+                "real_plus_synthetic"
+            ]["training"]
+            real_training = None
+            if "real_only_downstream" in verified:
+                real_arm = downstream_arguments["arms"]["real_only"]
+                if type(real_arm) is dict:
+                    real_training = real_arm.get("training")
+            _check_pool_consumption_claims(
+                augmented_pool_consumption, dataset_id=dataset_id,
+                experimental_seed=experimental_seed, manifest=manifest,
+                training_report=augmented_training,
+                real_training_report=real_training,
+                linkage=declared_linkage,
+            )
+            consumption_gap = (
+                "independent augmented training identity unavailable from "
+                "verified training/evaluation evidence"
+            )
+            reason = consumption_gap
         lineage_blockers.append({
             "evidence": "augmented_pool_consumption",
             "status": "BLOCKED",
-            "reason": (
-                "augmented-arm consumption of the declared synthetic pool "
-                "remains unverified"
-            ),
+            "reason": reason,
         })
 
     return {
@@ -193,6 +374,7 @@ def verify_evaluation(
         "required_status_blockers": inventory["required_status_blockers"],
         "lineage_blockers": lineage_blockers,
         "declared_pool_linkage": declared_linkage,
+        "pool_consumption_gap": consumption_gap,
         "feature_extraction_authentication": "NOT_PERFORMED",
         "image_score_recomputation": "NOT_PERFORMED",
         "provenance_validation": "NOT_PERFORMED",
