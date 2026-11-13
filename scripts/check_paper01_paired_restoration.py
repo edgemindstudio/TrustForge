@@ -73,6 +73,7 @@ def main():
     )
     from trustforge.evaluation.paper01_classifier_bundle import publish_classifier_bundle
     from trustforge.evaluation.paper01_classifier_restoration import restore_selected_classifier
+    from trustforge.evaluation.paper01_evaluation_validation import verify_evaluation
     from trustforge.evaluation.paper01_paired_evidence import (
         write_paired_restoration_evidence,
     )
@@ -132,7 +133,7 @@ def main():
 
     if args.phase == "train":
         for name in ("checkpoints", "expectations.json", "train_report.json",
-                     "context_evidence.json"):
+                     "context_evidence.json", "pool_consumption.json"):
             require(not (run / name).exists() and not (run / name).is_symlink(),
                     "destination exists: " + name)
         pool_path = (
@@ -210,6 +211,14 @@ def main():
                 expected_context=expected["context"],
                 expected_selected_weights_sha256=expected["selected_weights_sha256"],
             )
+        require(
+            "pool_consumption" not in paired["arms"]["real_only"],
+            "real-only arm unexpectedly returned consumption evidence",
+        )
+        consumption = paired["arms"]["real_plus_synthetic"]["pool_consumption"]
+        require(type(consumption) is dict and bool(consumption),
+                "augmented consumption record unavailable")
+        write_json(run / "pool_consumption.json", consumption)
         write_json(run / "train_report.json", {
             "scope": "PAIRED_PUBLICATION_SYNTHETIC_FIXTURE",
             "source_commit": head, "job_id": os.environ["SLURM_JOB_ID"],
@@ -274,11 +283,170 @@ def main():
             expected_initial_weights_sha256=receipt["initial_weights_sha256"],
             classifier_recipe_raw=recipe, metric_recipe_raw=metric_recipe,
         )
+        context_raw = read(run / "context_evidence.json")
+        consumption_raw = read(run / "pool_consumption.json")
+        consumption = json.loads(consumption_raw)
+        identity = json.loads(context_raw)["augmented_training_identity"]
+        selected = receipt["arms"]["real_plus_synthetic"][
+            "selected_weights_sha256"
+        ]
+        require(
+            restorations["real_plus_synthetic"]["selected_weights_sha256"]
+            == selected,
+            "restored augmented checkpoint weights differ from receipt",
+        )
+        require(
+            linked["arms"]["real_plus_synthetic"]["prediction"][
+                "selected_weights_sha256"
+            ] == selected,
+            "verified augmented downstream weights differ from receipt",
+        )
+
+        records, artifacts = [], {}
+        test_size = receipt["test_identity"]["size"]
+        for name, result_id in (
+            ("real_only", "real_only_downstream"),
+            ("real_plus_synthetic", "real_plus_synthetic_downstream"),
+        ):
+            result_raw = canonical(
+                linked["arms"][name]["prediction"]["metrics"]
+            )
+            records.append({
+                "result_id": result_id, "status": "SUCCEEDED", "reason": None,
+                "result_file_sha256": sha(result_raw),
+                "configuration_sha256": sha(metric_recipe),
+                "coverage": {"expected": test_size, "computed": test_size},
+            })
+            artifacts[result_id] = {
+                "result_raw": result_raw,
+                "configuration_raw": metric_recipe,
+            }
+        paired_raw = canonical(linked)
+        paired_configuration = canonical({
+            "classifier_recipe_sha256": linked["classifier_recipe_sha256"],
+            "metric_recipe_sha256": linked["metric_recipe_sha256"],
+        })
+        records.append({
+            "result_id": "paired_downstream", "status": "SUCCEEDED",
+            "reason": None, "result_file_sha256": sha(paired_raw),
+            "configuration_sha256": sha(paired_configuration),
+            "coverage": {"expected": 2, "computed": 2},
+        })
+        artifacts["paired_downstream"] = {
+            "result_raw": paired_raw,
+            "configuration_raw": paired_configuration,
+        }
+        for result_id in (
+            "pooled_balanced_kid", "pooled_balanced_fid",
+            "class_fid", "intra_class_ms_ssim",
+        ):
+            records.append({
+                "result_id": result_id, "status": "PENDING",
+                "reason": "fidelity execution outside paired fixture",
+                "result_file_sha256": None, "configuration_sha256": None,
+                "coverage": None,
+            })
+        downstream_arguments = {
+            "arms": arms, "evaluator_seed": 42,
+            "expected_test_identity": receipt["test_identity"],
+            "expected_initial_weights_sha256": receipt["initial_weights_sha256"],
+            "classifier_recipe_raw": recipe, "metric_recipe_raw": metric_recipe,
+        }
+        fidelity_arguments = {
+            "expected_synthetic_manifest_sha256":
+                receipt["fixture_pool_manifest_sha256"],
+            "kid_inputs": None, "ms_ssim_inputs": None,
+        }
+        linkage = {
+            "arm": "real_plus_synthetic",
+            "dataset_id": identity["real"]["dataset_id"],
+            "experimental_seed": identity["synthetic"]["experimental_seed"],
+            "family": identity["synthetic"]["family"],
+            "manifest_sha256": identity["synthetic"]["manifest_sha256"],
+            "checkpoint_sha256": identity["synthetic"]["checkpoint_sha256"],
+            "selected_weights_sha256": selected,
+        }
+        checkpoint_evidence = {
+            "directory": run / "checkpoints/real_plus_synthetic",
+            "recipe_raw": recipe,
+            "expectations_raw": receipt_raw,
+            "expected_expectations_sha256": args.receipt_sha256,
+            "context_evidence_raw": context_raw,
+        }
+        evaluation = verify_evaluation(
+            dataset_id="cicmaldroid2020", experimental_seed=42,
+            records=records, artifact_bytes=artifacts,
+            downstream_arguments=downstream_arguments,
+            fidelity_arguments=fidelity_arguments,
+            augmented_pool_linkage=linkage,
+            augmented_pool_consumption=consumption,
+            augmented_checkpoint_evidence=checkpoint_evidence,
+        )
+        require(evaluation["lineage_blockers"] == [],
+                "pool-consumption blocker did not clear")
+        require(evaluation["verified_pool_consumption"] is not None,
+                "verified pool-consumption evidence missing")
+        require(
+            evaluation["verified_pool_consumption"]["selected_weights_sha256"]
+            == selected,
+            "verified pool-consumption selected weights mismatch",
+        )
+        omitted = verify_evaluation(
+            dataset_id="cicmaldroid2020", experimental_seed=42,
+            records=records, artifact_bytes=artifacts,
+            downstream_arguments=downstream_arguments,
+            fidelity_arguments=fidelity_arguments,
+            augmented_pool_linkage=linkage,
+            augmented_pool_consumption=None,
+            augmented_checkpoint_evidence=checkpoint_evidence,
+        )
+        require(
+            any(
+                blocker["evidence"] == "augmented_pool_consumption"
+                for blocker in omitted["lineage_blockers"]
+            ),
+            "omitted consumption record did not retain the blocker",
+        )
+        require(
+            omitted["verified_group_count"] == evaluation["verified_group_count"],
+            "omitted consumption record changed verified results",
+        )
+        write_json(run / "pool_consumption_verification.json", {
+            "scope": "PAIRED_RESTORED_POOL_CONSUMPTION_SYNTHETIC_FIXTURE",
+            "source_commit": head, "job_id": os.environ["SLURM_JOB_ID"],
+            "pid": os.getpid(), "train_pid": receipt["train_pid"],
+            "receipt_sha256": args.receipt_sha256,
+            "pool_consumption_file_sha256": sha(consumption_raw),
+            "context_evidence_sha256": receipt["context_evidence_sha256"],
+            "selected_weights_sha256": selected,
+            "restored_selected_weights_sha256":
+                restorations["real_plus_synthetic"]["selected_weights_sha256"],
+            "downstream_selected_weights_sha256":
+                linked["arms"]["real_plus_synthetic"]["prediction"][
+                    "selected_weights_sha256"
+                ],
+            "matching_record": {
+                "lineage_blockers": evaluation["lineage_blockers"],
+                "verified_group_count": evaluation["verified_group_count"],
+                "verified_pool_consumption":
+                    evaluation["verified_pool_consumption"],
+            },
+            "omitted_record": {
+                "lineage_blockers": omitted["lineage_blockers"],
+                "verified_group_count": omitted["verified_group_count"],
+            },
+            "real_data_used": False, "generator_lineage_authenticated": False,
+            "complete_evaluation": False, "full_benchmark_go": False,
+        })
         write_json(run / "restore_report.json", {
             "scope": "PAIRED_RESTORED_PREDICTION_SYNTHETIC_FIXTURE",
             "source_commit": head, "job_id": os.environ["SLURM_JOB_ID"],
             "pid": os.getpid(), "train_pid": receipt["train_pid"],
             "receipt_sha256": args.receipt_sha256,
+            "pool_consumption_verification_file_sha256": sha(
+                read(run / "pool_consumption_verification.json")
+            ),
+            "pool_consumption_blocker_cleared": True,
             "restorations": restorations, "paired_result": linked,
             "test_batch_sizes": adapter.test_batches,
             "prediction_file_sha256": {
