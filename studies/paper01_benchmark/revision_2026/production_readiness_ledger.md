@@ -1229,3 +1229,32 @@ Real-data validation and generator-lineage authentication remain open.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## CIC MAF seed-42 two-batch range acceptance — job 313819
+
+PASS for bounded CICMalDroid2020 MAF seed-42 range-worker acceptance at
+93d8224f5d470bf70b0da1f97d41b6b74b190a9b.
+
+Job 313819 completed on talon07 in 00:01:33 with exit code 0:0 and emitted
+CIC_MAF_RANGE_WORKER=PASS 0 0 2.
+
+The restored checkpoint reproduced validation NLL 83.87659391096837 over
+1,158 examples, and live preprocessing matched the training fitted state.
+
+MAF_CIC_TWO_BATCH_SAVED_EVIDENCE=PASS confirmed exact class-0 coverage for
+batches 0 and 1, eight samples each, with deterministic sampling seeds 35251
+and 35252. The saved image and class-ID contract also passed.
+
+Evidence directory:
+~/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-range-93d8224-cIenUSaK
+
+Archive SHA-256:
+batch-000  54569575c29433e7efb746aba546ccd196ccb9ed8252599c560f6f8721d14810
+batch-001  6617a966f8958f5ee662890cb1d0a74cc7b73cda76a5a08c3e4ea83b503683e9
+
+This accepts only the bounded two-batch MAF range-worker path. Full-pool
+acceptance remains open for all 1,250 batches across five classes.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
