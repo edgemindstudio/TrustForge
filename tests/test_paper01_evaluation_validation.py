@@ -7,9 +7,20 @@ import runpy
 import numpy as np
 import pytest
 
+from trustforge.evaluation.paper01_classifier_bundle import (
+    publish_classifier_bundle,
+)
+from trustforge.evaluation.paper01_classifier_manifest import (
+    prepare_classifier_manifest, canonical_manifest,
+)
+from trustforge.evaluation.paper01_classifier_state import decode_classifier_weights
+import trustforge.evaluation.paper01_classifier_restoration as classifier_restoration
 from trustforge.evaluation.paper01_evaluation_validation import verify_evaluation
 from trustforge.evaluation.paper01_fid import feature_fid, complete_class_fid
 from trustforge.evaluation.paper01_ms_ssim_pairs import select_ms_ssim_pairs
+from trustforge.evaluation.paper01_paired_evidence import (
+    write_paired_restoration_evidence,
+)
 from trustforge.evaluation.paper01_paired_results import link_paired_results
 from trustforge.evaluation.paper01_status_inventory import REQUIRED_RESULTS
 
@@ -21,6 +32,7 @@ def helpers(name):
 PAIRED = helpers("test_paper01_paired_results.py")
 KID = helpers("test_paper01_kid_result_validation.py")
 MS = helpers("test_paper01_ms_ssim_result_validation.py")
+MANIFEST = helpers("test_paper01_classifier_manifest.py")
 
 DOWNSTREAM_GROUPS = (
     "real_only_downstream", "real_plus_synthetic_downstream", "paired_downstream",
@@ -200,11 +212,12 @@ def training_identity(data, *, real_size=9):
     }
 
 
-def consumption(data, *, selected=17, completed=20):
+def consumption(
+    data, *, selected=17, completed=20, real_size=9, synthetic_size=10000,
+):
     """Attach a complete training history and matching consumption record."""
     arm = data["downstream_arguments"]["arms"]["real_plus_synthetic"]
     report = arm["training"]
-    real_size, synthetic_size = 9, 10000
     training_size = real_size + synthetic_size
     updates_per_epoch = (training_size + 127) // 128
     report.update({
@@ -217,7 +230,7 @@ def consumption(data, *, selected=17, completed=20):
             {
                 "epoch_index": index,
                 "training_loss": 1.0,
-                "validation_loss": float(completed - index),
+                "validation_loss": float(1 + abs(index - selected)),
                 "training_examples": training_size,
                 "validation_examples": 5,
                 "optimizer_updates": (index + 1) * updates_per_epoch,
@@ -227,8 +240,9 @@ def consumption(data, *, selected=17, completed=20):
     })
     real_report = data["downstream_arguments"]["arms"]["real_only"]["training"]
     real_updates_per_epoch = (real_size + 127) // 128
+    real_selected = completed - 1
     real_report.update({
-        "selected_epoch_index": completed - 1,
+        "selected_epoch_index": real_selected,
         "selected_validation_loss": 1.0,
         "completed_epochs": completed,
         "optimizer_updates": completed * real_updates_per_epoch,
@@ -237,7 +251,7 @@ def consumption(data, *, selected=17, completed=20):
             {
                 "epoch_index": index,
                 "training_loss": 1.0,
-                "validation_loss": float(completed - index),
+                "validation_loss": float(1 + abs(index - real_selected)),
                 "training_examples": real_size,
                 "validation_examples": 5,
                 "optimizer_updates": (index + 1) * real_updates_per_epoch,
@@ -272,6 +286,101 @@ def consumption(data, *, selected=17, completed=20):
     data["augmented_pool_consumption"] = record
     refresh_paired_artifact(data)
     return record
+
+
+class RestoredClassifierModel:
+    def __init__(self, weights):
+        self.weights = [np.zeros_like(value) for value in weights]
+
+    def get_weights(self):
+        return [value.copy() for value in self.weights]
+
+    def set_weights(self, values):
+        self.weights = [value.copy() for value in values]
+
+
+def checkpoint_evidence(data, tmp_path):
+    """Publish a checkpoint bundle and return its verified external evidence."""
+    identity = training_identity(data)
+    context, report, state = MANIFEST["fixture"]()
+    report["initial_weights_sha256"] = "a" * 64
+    arm = data["downstream_arguments"]["arms"]["real_plus_synthetic"]
+    arm["training"] = report
+    arm["predictions"]["report"]["selected_weights_sha256"] = report[
+        "selected_weights_sha256"
+    ]
+    data["augmented_pool_linkage"]["selected_weights_sha256"] = report[
+        "selected_weights_sha256"
+    ]
+    record = consumption(data, synthetic_size=129 - 9)
+    context = {
+        **context, "dataset_id": "cicmaldroid2020", "evaluator_seed": 42,
+        "arm": "real_plus_synthetic",
+        "training_sample_count": 129, "validation_sample_count": 5,
+        "training_identity_sha256": sha(raw(identity)),
+    }
+    manifest = prepare_classifier_manifest(
+        context=context, training_report=report,
+        state_raw=state, recipe_raw=PAIRED["CLASSIFIER"],
+    )
+    manifest_raw = canonical_manifest(manifest)
+    parent = tmp_path / "classifier-publications"
+    parent.mkdir(mode=0o700)
+    publish_classifier_bundle(
+        parent, "real_plus_synthetic", manifest_raw=manifest_raw,
+        state_raw=state, recipe_raw=PAIRED["CLASSIFIER"],
+        expected_manifest_sha256=sha(manifest_raw), expected_context=context,
+        expected_selected_weights_sha256=report["selected_weights_sha256"],
+    )
+    expected = {
+        "context": context,
+        "manifest_sha256": sha(manifest_raw),
+        "selected_weights_sha256": report["selected_weights_sha256"],
+    }
+    evidence_dir = tmp_path / "paired-evidence"
+    evidence_dir.mkdir(mode=0o700)
+    written = write_paired_restoration_evidence(
+        run_dir=evidence_dir,
+        shared={
+            "source_commit": "c" * 40,
+            "source_files_sha256": "d" * 64,
+            "environment_sha256": "e" * 64,
+        },
+        job_id="test-job", train_pid=1, evaluator_seed=42,
+        initial_weights_sha256="a" * 64,
+        classifier_recipe_sha256=sha(PAIRED["CLASSIFIER"]),
+        metric_recipe_sha256=sha(PAIRED["METRIC"]),
+        test_identity=deepcopy(PAIRED["TEST"]),
+        fixture_pool_manifest_sha256=data["fidelity_arguments"][
+            "expected_synthetic_manifest_sha256"
+        ],
+        real_identity=identity["real"],
+        augmented_identity=identity,
+        validation_identity={
+            "dataset_id": "cicmaldroid2020", "split": "validation",
+            "size": 5, "class_count": 5,
+            "declared_provenance_sha256": "b" * 64,
+        },
+        sources={"script.py": "a" * 64},
+        environment={"python": "test"},
+        arms={"real_plus_synthetic": expected},
+    )
+    evidence = {
+        "directory": parent / "real_plus_synthetic",
+        "recipe_raw": PAIRED["CLASSIFIER"],
+        "expectations_raw": written["receipt_raw"],
+        "expected_expectations_sha256": written["receipt_sha256"],
+        "context_evidence_raw": written["context_evidence_raw"],
+    }
+    return {
+        "evidence": evidence,
+        "record": record,
+        "report": report,
+        "context": context,
+        "manifest_raw": manifest_raw,
+        "state_raw": state,
+        "expected": expected,
+    }
 
 
 def test_composition_verifies_groups_without_completion():
@@ -326,10 +435,98 @@ def test_self_consistent_consumption_record_cannot_clear_blocker_alone():
     blocker = result["lineage_blockers"][0]
     assert blocker["evidence"] == "augmented_pool_consumption"
     assert blocker["status"] == "BLOCKED"
-    assert "training identity" in blocker["reason"]
+    assert "checkpoint evidence not supplied" in blocker["reason"]
     assert result["declared_pool_linkage"] is not None
+    assert result["verified_pool_consumption"] is None
     assert result["pool_consumption_gap"] is not None
     assert result["provenance_validation"] == "NOT_PERFORMED"
+    assert result["complete_evaluation"] is False
+
+
+def test_verified_checkpoint_round_trip_clears_consumption_blocker(
+    tmp_path, monkeypatch,
+):
+    data = fixture()
+    built = checkpoint_evidence(data, tmp_path)
+    expected = built["expected"]
+    weights = decode_classifier_weights(
+        raw=built["state_raw"], dataset_id="cicmaldroid2020",
+        recipe_raw=PAIRED["CLASSIFIER"],
+        expected_selected_weights_sha256=built["report"][
+            "selected_weights_sha256"
+        ],
+    )
+    model = RestoredClassifierModel(weights)
+    monkeypatch.setattr(
+        classifier_restoration, "require_compute_node", lambda: None,
+    )
+    monkeypatch.setattr(
+        classifier_restoration, "build_classifier_binding",
+        lambda **kwargs: {
+            "model": model, "controls": {"optimizer_updates": lambda: 0},
+        },
+    )
+    restored = classifier_restoration.restore_selected_classifier(
+        built["evidence"]["directory"],
+        recipe_raw=built["evidence"]["recipe_raw"],
+        expected_manifest_sha256=expected["manifest_sha256"],
+        expected_context=expected["context"],
+        expected_selected_weights_sha256=expected["selected_weights_sha256"],
+    )
+    assert restored["report"]["selected_weights_sha256"] == (
+        built["report"]["selected_weights_sha256"]
+    )
+    data["augmented_checkpoint_evidence"] = built["evidence"]
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == set(REQUIRED_RESULTS)
+    assert result["verified_group_count"] == 7
+    assert result["lineage_blockers"] == []
+    assert result["verified_pool_consumption"] is not None
+    assert result["verified_pool_consumption"]["selected_weights_sha256"] == (
+        restored["report"]["selected_weights_sha256"]
+    )
+    assert result["pool_consumption_gap"] is None
+    assert result["complete_evaluation"] is False
+
+
+def test_conflicting_checkpoint_identity_rejected(tmp_path):
+    data = fixture()
+    built = checkpoint_evidence(data, tmp_path)
+    built["record"]["training_identity"]["real"][
+        "declared_provenance_sha256"
+    ] = "c" * 64
+    data["augmented_checkpoint_evidence"] = built["evidence"]
+    with pytest.raises(ValueError, match="binding mismatch"):
+        verify_evaluation(**data)
+
+
+@pytest.mark.parametrize("legacy", ["receipt_schema", "context_identity"])
+def test_legacy_checkpoint_evidence_keeps_consumption_blocker(
+    tmp_path, legacy,
+):
+    data = fixture()
+    built = checkpoint_evidence(data, tmp_path)
+    evidence = dict(built["evidence"])
+    receipt = json.loads(evidence["expectations_raw"])
+    if legacy == "receipt_schema":
+        receipt["schema"] = "trustforge.paper01.legacy-expectations.v1"
+        expected_reason = "legacy or unsupported"
+    else:
+        legacy_context = raw({"legacy": True})
+        receipt["context_evidence_sha256"] = sha(legacy_context)
+        evidence["context_evidence_raw"] = legacy_context
+        expected_reason = "lacks augmented training identity"
+    evidence["expectations_raw"] = raw(receipt)
+    evidence["expected_expectations_sha256"] = sha(evidence["expectations_raw"])
+    data["augmented_checkpoint_evidence"] = evidence
+    result = verify_evaluation(**data)
+    assert set(result["verified_groups"]) == set(REQUIRED_RESULTS)
+    assert len(result["lineage_blockers"]) == 1
+    blocker = result["lineage_blockers"][0]
+    assert blocker["evidence"] == "augmented_pool_consumption"
+    assert blocker["status"] == "BLOCKED"
+    assert expected_reason in blocker["reason"]
+    assert result["verified_pool_consumption"] is None
     assert result["complete_evaluation"] is False
 
 

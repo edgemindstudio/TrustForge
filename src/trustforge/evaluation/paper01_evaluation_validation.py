@@ -3,11 +3,11 @@
 Delegates semantic validation to the downstream and fidelity/diversity
 inventory verifiers, checks cross-input identities, reports declared
 augmented-arm pool linkage, and validates an explicit consumption record
-against independently established augmented training evidence. Missing or
-unbindable records retain an explicit blocker; conflicting records are
-rejected. Generator/source lineage, feature-extraction and image-score
-authentication, durable publication and completion authorization remain outer
-requirements.
+against an augmented training identity carried through verified checkpoint
+publication and receipt evidence. Missing or unbindable records retain an
+explicit blocker; conflicting records are rejected. Generator/source lineage,
+feature-extraction and image-score authentication, durable publication and
+completion authorization remain outer requirements.
 """
 
 import re
@@ -16,6 +16,10 @@ from .paper01_inputs import CLASS_COUNTS
 from .paper01_status_inventory import validate_status_inventory
 from .paper01_downstream_inventory import verify_downstream_inventory
 from .paper01_fidelity_inventory import verify_fidelity_inventory
+from .paper01_augmented_checkpoint import (
+    verify_augmented_checkpoint_identity,
+)
+from .paper01_pool_consumption import validate_pool_consumption
 
 
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -25,6 +29,10 @@ DOWNSTREAM_GROUPS = (
 )
 FIDELITY_INPUT_FIELDS = {
     "expected_synthetic_manifest_sha256", "kid_inputs", "ms_ssim_inputs",
+}
+CHECKPOINT_EVIDENCE_FIELDS = {
+    "directory", "recipe_raw", "expectations_raw",
+    "expected_expectations_sha256", "context_evidence_raw",
 }
 
 
@@ -249,7 +257,8 @@ def _check_pool_consumption_claims(
 def verify_evaluation(
     *, dataset_id, experimental_seed, records, artifact_bytes,
     downstream_arguments, fidelity_arguments, augmented_pool_linkage=None,
-    augmented_pool_consumption=None, optional_result_ids=(),
+    augmented_pool_consumption=None, augmented_checkpoint_evidence=None,
+    optional_result_ids=(),
 ):
     inventory = validate_status_inventory(
         dataset_id=dataset_id, experimental_seed=experimental_seed,
@@ -324,6 +333,7 @@ def verify_evaluation(
                 "pool linkage conflicts with the verified augmented classifier"
             )
         declared_linkage = candidate
+    verified_consumption = None
     consumption_gap = None
     if augmented_weights is not None:
         if augmented_pool_consumption is None:
@@ -348,16 +358,54 @@ def verify_evaluation(
                 real_training_report=real_training,
                 linkage=declared_linkage,
             )
-            consumption_gap = (
-                "independent augmented training identity unavailable from "
-                "verified training/evaluation evidence"
-            )
-            reason = consumption_gap
-        lineage_blockers.append({
-            "evidence": "augmented_pool_consumption",
-            "status": "BLOCKED",
-            "reason": reason,
-        })
+            if augmented_checkpoint_evidence is None:
+                consumption_gap = (
+                    "independent augmented training identity unavailable: "
+                    "checkpoint evidence not supplied"
+                )
+            else:
+                if (
+                    type(augmented_checkpoint_evidence) is not dict
+                    or set(augmented_checkpoint_evidence)
+                    != CHECKPOINT_EVIDENCE_FIELDS
+                ):
+                    raise ValueError(
+                        "exact augmented checkpoint evidence required"
+                    )
+                verified_consumption, consumption_gap = (
+                    verify_augmented_checkpoint_identity(
+                        dataset_id=dataset_id,
+                        experimental_seed=experimental_seed,
+                        expected_synthetic_manifest_sha256=manifest,
+                        **augmented_checkpoint_evidence,
+                    )
+                )
+                if verified_consumption is not None:
+                    if (
+                        verified_consumption["selected_weights_sha256"]
+                        != augmented_weights
+                    ):
+                        raise ValueError(
+                            "checkpoint selected weights conflict with the "
+                            "verified augmented downstream result"
+                        )
+                    validate_pool_consumption(
+                        augmented_pool_consumption,
+                        training_identity=verified_consumption[
+                            "training_identity"
+                        ],
+                        training_size=verified_consumption["training_size"],
+                        training_report=augmented_training,
+                    )
+                    consumption_gap = None
+            if consumption_gap is not None:
+                reason = consumption_gap
+        if consumption_gap is not None:
+            lineage_blockers.append({
+                "evidence": "augmented_pool_consumption",
+                "status": "BLOCKED",
+                "reason": reason,
+            })
 
     return {
         "schema": "trustforge.paper01.evaluation-verification.v1",
@@ -374,6 +422,7 @@ def verify_evaluation(
         "required_status_blockers": inventory["required_status_blockers"],
         "lineage_blockers": lineage_blockers,
         "declared_pool_linkage": declared_linkage,
+        "verified_pool_consumption": verified_consumption,
         "pool_consumption_gap": consumption_gap,
         "feature_extraction_authentication": "NOT_PERFORMED",
         "image_score_recomputation": "NOT_PERFORMED",

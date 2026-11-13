@@ -73,6 +73,9 @@ def main():
     )
     from trustforge.evaluation.paper01_classifier_bundle import publish_classifier_bundle
     from trustforge.evaluation.paper01_classifier_restoration import restore_selected_classifier
+    from trustforge.evaluation.paper01_paired_evidence import (
+        write_paired_restoration_evidence,
+    )
     from trustforge.evaluation.paper01_predictions import collect_test_predictions
     from trustforge.evaluation.paper01_paired_results import link_paired_results
 
@@ -182,26 +185,20 @@ def main():
                 "context": context, "manifest_sha256": sha(manifest_raw),
                 "selected_weights_sha256": selected,
             }
-        write_json(run / "context_evidence.json", {
-            "source_files": sources, "environment": environment,
-            "real_training_identity": real.identity,
-            "augmented_training_identity": augmented.identity,
-            "validation_identity": validation.identity,
-        })
-        receipt = {
-            "schema": "trustforge.paper01.paired-restoration-expectations.v1",
-            **shared,
-            "job_id": os.environ["SLURM_JOB_ID"], "train_pid": os.getpid(),
-            "evaluator_seed": 42,
-            "initial_weights_sha256": paired["initial_weights_sha256"],
-            "classifier_recipe_sha256": sha(recipe),
-            "metric_recipe_sha256": sha(metric_recipe),
-            "test_identity": test.identity,
-            "fixture_pool_manifest_sha256": pool_sha,
-            "context_evidence_sha256": sha(read(run / "context_evidence.json")),
-            "arms": expectations,
-        }
-        write_json(run / "expectations.json", receipt)
+        write_paired_restoration_evidence(
+            run_dir=run, shared=shared,
+            job_id=os.environ["SLURM_JOB_ID"], train_pid=os.getpid(),
+            evaluator_seed=42,
+            initial_weights_sha256=paired["initial_weights_sha256"],
+            classifier_recipe_sha256=sha(recipe),
+            metric_recipe_sha256=sha(metric_recipe),
+            test_identity=test.identity,
+            fixture_pool_manifest_sha256=pool_sha,
+            real_identity=real.identity,
+            augmented_identity=augmented.identity,
+            validation_identity=validation.identity,
+            sources=sources, environment=environment, arms=expectations,
+        )
         parent = run / "checkpoints"
         parent.mkdir(mode=0o700)
         for name, (manifest_raw, state_raw) in prepared.items():
