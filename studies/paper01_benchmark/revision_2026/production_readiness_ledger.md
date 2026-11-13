@@ -1258,3 +1258,31 @@ acceptance remains open for all 1,250 batches across five classes.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## CIC MAF seed-42 full-pool acceptance — jobs 313821 / 313832
+
+PASS for full CICMalDroid2020 MAF seed-42 pool publication and streaming
+verification at 8c58c4e8967da1764e6d7c66397e78befcbcadac.
+
+Array job 313821 completed all five class tasks with exit code 0:0 and all
+five worker pass markers. Finalization job 313832 completed on talon06 in
+00:00:08 with exit code 0:0.
+
+CIC_MAF_POOL_FINALIZATION=PASS and CIC_MAF_POOL_PREFLIGHT=PASS confirmed
+1,250 batches and 10,000 images across five classes, with 2,000 images per
+class.
+
+Evidence directory:
+~/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-pool-8c58c4e-9Xeks8Mw
+Evidence files: finalization_report.json and pool/manifest.json
+
+Manifest SHA-256:
+db884e298ea324597bad2d488d03e2c86c205e7a53bbef2a11bd72f06da5651e
+
+This accepts pool publication and streaming verification only.
+Generator-lineage authentication and the real-split classifier and evaluator
+run remain open. complete_evaluation=false.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
