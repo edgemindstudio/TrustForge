@@ -1178,3 +1178,22 @@ remain open.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## Pool-consumption unified validator regression at c2cda79
+
+The 12-file Talon regression at c2cda7995fa23a59cbbcbd99495292cc423a4fe7
+passed 284 tests and 3 subtests in 13.22 seconds with
+TALON_POOL_CONSUMPTION_REGRESSION=PASS.
+
+The unified validator identifies verified downstream arms from the
+downstream-inventory receipt keys. A pending or failed real-only arm cannot
+supply the training size used to reject an otherwise verified augmented
+result, even when an unverified real-only training report is supplied.
+Conflict checks remain active when both training reports are verified.
+
+The pool-consumption blocker remains open pending independent binding of the
+augmented training identity to the selected checkpoint.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
