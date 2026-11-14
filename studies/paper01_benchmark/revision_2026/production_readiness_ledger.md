@@ -1379,3 +1379,91 @@ retries or full-benchmark execution.
 
 Stages 4 and 5 remain IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## CIC MAF seed-42 real-data bounded evaluation acceptance — jobs 314063 / 314068
+
+PASS for one bounded CICMalDroid2020 / MAF / seed-42 real-data evaluation at
+corrected source 2bee5d1056e074a49d266458df829ba5739a7347.
+
+CIC_MAF_SEED42_EVALUATION_TRAIN=PASS
+CIC_MAF_SEED42_EVALUATION_RESTORE=PASS
+CIC_MAF_SEED42_BOUNDED_EVALUATION=PASS
+
+Job 314068 completed on talon17 in 00:18:50 with exit code 0:0. Training and
+restoration ran as separate Python processes inside one allocation (train PID
+2165677, restore PID 2168262); restoration began only after the training
+receipt existed and its SHA-256 had been captured successfully.
+
+The predecessor job 314063 failed closed during unified validation because the
+driver hashed training_identity_sha256 without the trailing newline byte used
+by the accepted validator. Source 2bee5d1 corrects only that digest framing;
+the unified validator, recipes, splits, pool, checkpoints and metric
+definitions are unchanged. Job 314063 and its outputs are retained unchanged
+and are not retroactively accepted.
+
+### Accepted execution evidence
+
+- Dataset: cicmaldroid2020; generator: MAF; experimental seed: 42.
+- Classes: 5; real train 8,117; validation 1,158; held-out test 2,323.
+- Synthetic pool: 10,000 images, 2,000 per class, 1,250 batches.
+- Both classifier arms trained and published; selected states were restored in
+  a fresh process and their selected-weight assignments verified.
+- Each arm produced test predictions for all 2,323 held-out examples.
+- Augmented-arm consumption: 200,000 synthetic examples across 20 epochs,
+  stream SHA-256
+  105d595099f5659b28498f9acfae5f45f02844f201dcf44a799d78aed2ae26d2.
+
+Run directory:
+`~/trustforge_revision_2026_artifacts/paper01/maf/cicmaldroid2020/seed42/bounded_eval-2bee5d1-hni0NB`
+
+Slurm logs:
+`~/trustforge_revision_2026_artifacts/paper01/diagnostics/maf-cic-bounded-eval-2bee5d1-hni0NB`
+
+Evidence hashes:
+- expectations.json:
+  11c5a991c43d96a45cc4bf0774e436149d64f4c859b4acbb2835e7487c840101
+- evaluation.json:
+  4ce5fca7fb2f7439dcfd57db098a9c17a296823dda5422381a9657c63184d1ab
+- restore_report.json:
+  9e65a5293b255f2a07f59a4929e09c8372e349caa4729aa5ffb737132a1886b8
+
+### Unified validation scope
+
+- Required verified result groups: 7 of 7.
+- Required status blockers: 0; lineage blockers: 0.
+- Groups: real_only_downstream, real_plus_synthetic_downstream,
+  paired_downstream, pooled_balanced_kid, pooled_balanced_fid, class_fid,
+  intra_class_ms_ssim.
+- Metric replay and paired replay verified; augmented pool consumption is
+  bound to the accepted pool manifest
+  db884e298ea324597bad2d488d03e2c86c205e7a53bbef2a11bd72f06da5651e.
+- complete_evaluation=false.
+
+### Accepted performance evidence
+
+| Metric | Real-only | Real + synthetic |
+|---|---:|---:|
+| Macro-F1 | 0.6465410253 | 0.7010525344 |
+| Balanced accuracy | 0.6362720813 | 0.6884556007 |
+| Macro-AUPRC | 0.7401845206 | 0.8084883252 |
+| Brier | 0.4233299249 | 0.3550405532 |
+| ECE | 0.1416111567 | 0.0355021160 |
+
+Primary paired endpoint:
+augmented_minus_real_only_macro_f1 = 0.05451150907476743
+
+### Preserved boundaries
+
+- This applies only to the evaluated dataset, generator, seed and classifier
+  configuration; it does not establish generalization across seeds or cells.
+- Generator lineage is DRIVER_VERIFIED; semantic class fidelity remains
+  NOT_ESTABLISHED.
+- Unified validation records feature_extraction_authentication,
+  image_score_recomputation, provenance_validation and publication_validation
+  as NOT_PERFORMED. This is bounded evaluation, not exhaustive provenance or
+  generator semantic-fidelity authentication.
+- Other families, datasets, seeds and full-benchmark execution remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
