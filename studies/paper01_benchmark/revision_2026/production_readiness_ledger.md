@@ -1315,3 +1315,67 @@ override them.
 This reference does not change stage statuses, family methodology
 authorizations, budgets, runtime activation flags, or completion gates.
 complete_evaluation=false. FULL_BENCHMARK_GO=NO.
+
+
+## GMM CICMalDroid2020 class-0 seed-42 training and synthesis acceptance — jobs 313922 / 313927
+
+PASS for one governed CICMalDroid2020 GMM class-0 seed-42
+train -> publish -> independent restore -> sample -> publish-pool path at
+training source 6b56e92d906f2f0d6149b3e74ff40bb5277f45ab and synthesis
+source 9fe24e8f2adf76d74442d281790405df21d22a99.
+
+GMM_CIC_CLASS0_SEED42_TRAINING=ACCEPTED
+GMM_CIC_CLASS0_SEED42_SYNTHESIS=ACCEPTED
+GMM_CIC_CLASS0_SEED42_POOL_INTEGRITY=VERIFIED
+
+This entry records accepted execution evidence supplied after the runs. It
+reran no job, regenerated no sample, and recomputed no artifact hash. It
+supplements the GMM row of the family readiness matrix and P6 only within
+the scope stated here.
+
+### Training evidence
+
+- Dataset: cicmaldroid2020; generator: GMM; class: 0; seed: 42.
+- Training job 313922 completed with exit code 0:0.
+- Training source: 6b56e92d906f2f0d6149b3e74ff40bb5277f45ab.
+- Source-freeze SHA-256:
+  395751118f1549626841e3fe2167caefd672cf7d1740d0020f0425fc6c2f123a
+- Checkpoint metadata SHA-256:
+  e43011eccaaace1308c6e2b34fa151d8cdacc682ad832fc0e2eff632d0f5b58f
+- Checkpoint state SHA-256:
+  9452ebf1c780ceb65f39bebf9cca036cb21a3c88f6cff0eed634ddffdf897769
+- Independent governed checkpoint restoration: PASS.
+
+### Synthesis evidence
+
+- Synthesis job 313927 completed with exit code 0:0.
+- Synthesis source: 9fe24e8f2adf76d74442d281790405df21d22a99.
+- Publisher regressions on Talon: 101 passed.
+- Sampling identity SHA-256:
+  4d65bda5423e6ae4c6189198787122d2743085d6f6dddb0f0fbb51c41fac51fc
+- 2,000 canonical synthetic samples published as 250 ordered batches.
+- GMM_CLASS_POOL_PUBLICATION=PASS
+- INDEPENDENT_GMM_POOL_VERIFICATION=PASS
+- Manifest SHA-256:
+  68b72e975927b6d804749ceab821a52b9b8f5656d5ad776ace672fab9aea9291
+
+Pool location on Talon:
+
+`~/trustforge_revision_2026_artifacts/paper01/gmm/cicmaldroid2020/seed42/pools/class0_seed42_synthesis9fe24e8_attempt01/`
+
+### Accepted scope and preserved limitations
+
+- This covers one dataset/class/seed cell.
+- Other CICMalDroid2020 classes are not accepted by this evidence.
+- Statistical fidelity, diversity, and downstream utility are not established.
+- Complete GMM dataset-level evaluation remains pending.
+- FULL_BENCHMARK_GO=NO
+
+This entry accepts bounded GMM training, class-0 pool publication and
+independent pool verification for the stated cell only. It does not close
+benchmark-wide Stage 4 coverage, Stage 5 evaluation, reproduction or launch
+gates, and it does not authorize additional GMM classes, seeds, families,
+retries or full-benchmark execution.
+
+Stages 4 and 5 remain IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
