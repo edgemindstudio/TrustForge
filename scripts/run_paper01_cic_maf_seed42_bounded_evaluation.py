@@ -816,7 +816,7 @@ def _run_train(args):
             "training_sample_count": training_view.size,
             "validation_sample_count": validation.size,
             "training_identity_sha256": _sha(
-                _canonical(training_view.identity)
+                _canonical(training_view.identity) + b"\n"
             ),
             "validation_identity_sha256": _sha(_canonical(validation.identity)),
         }

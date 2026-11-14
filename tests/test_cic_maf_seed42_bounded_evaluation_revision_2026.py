@@ -14,6 +14,7 @@ from scripts import (
     run_paper01_cic_maf_seed42_bounded_evaluation as driver,
 )
 from trustforge.evaluation import (
+    paper01_augmented_checkpoint,
     paper01_classifier_bundle,
     paper01_classifier_manifest,
     paper01_classifier_restoration,
@@ -29,7 +30,9 @@ from trustforge.evaluation import (
     paper01_predictions,
 )
 from trustforge.evaluation.paper01_status_inventory import REQUIRED_RESULTS
-from trustforge.evaluation.paper01_classifier_control import state_digest
+from trustforge.evaluation.paper01_classifier_control import (
+    selected_recipe, state_digest,
+)
 from trustforge.evaluation.paper01_inputs import RealSplitView
 from trustforge.models.paper01_revision_2026.ar_maf_execution_inputs import (
     synthesis_batch_seed,
@@ -1022,6 +1025,212 @@ def test_training_receipt_is_withheld_when_train_report_fails(
     assert (run / "context_evidence.json").is_file()
     assert not (run / "train_report.json").exists()
     assert not (run / "expectations.json").exists()
+
+
+# ---------------------------------------------------------------------------
+# Regression: accepted validator identity-digest contract
+# ---------------------------------------------------------------------------
+
+
+def _canonical_document(value):
+    return (
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        + "\n"
+    ).encode("utf-8")
+
+
+def _real_paired_training():
+    """Pair of training arms whose reports and weights satisfy the real codec."""
+    recipe_raw = driver._load_recipes(Path.cwd())["classifier"]
+    recipe = selected_recipe(recipe_raw)
+    specification = paper01_classifier_state.classifier_specification(
+        dataset_id=driver.DATASET_ID, recipe_raw=recipe_raw,
+    )
+    epochs = recipe["training"]["maximum_epochs"]
+    batch_size = recipe["training"]["batch_size"]
+    recipe_sha256 = hashlib.sha256(recipe_raw).hexdigest()
+    arms = {}
+    for arm_index, (name, training_count) in enumerate((
+        ("real_only", driver.TRAIN_SIZE),
+        ("real_plus_synthetic", driver.TRAIN_SIZE + driver.POOL_SAMPLES),
+    )):
+        weights = [
+            np.full(
+                entry["shape"],
+                (arm_index + 1) * 0.01 + index / 100.0,
+                dtype=np.float32,
+            )
+            for index, entry in enumerate(specification)
+        ]
+        updates_per_epoch = -(-training_count // batch_size)
+        losses = [float(epochs - index) for index in range(epochs)]
+        report = {
+            "recipe_sha256": recipe_sha256,
+            "evaluator_seed": driver.EXPERIMENTAL_SEED,
+            "initial_weights_sha256": "c" * 64,
+            "selected_weights_sha256": state_digest(weights),
+            "selected_epoch_index": epochs - 1,
+            "selected_validation_loss": losses[-1],
+            "completed_epochs": epochs,
+            "optimizer_updates": epochs * updates_per_epoch,
+            "stopping_outcome": "maximum_epochs",
+            "history": [
+                {
+                    "epoch_index": index,
+                    "training_loss": 1.0,
+                    "validation_loss": losses[index],
+                    "training_examples": training_count,
+                    "validation_examples": driver.VALIDATION_SIZE,
+                    "optimizer_updates": (index + 1) * updates_per_epoch,
+                }
+                for index in range(epochs)
+            ],
+        }
+        arms[name] = {"report": report, "selected_weights": weights}
+    arms["real_plus_synthetic"]["pool_consumption"] = {
+        "schema": "trustforge.paper01.augmented-pool-consumption.v1",
+    }
+    return {
+        "status": "REAL_EVIDENCE_PAIRED",
+        "initial_weights_sha256": "c" * 64,
+        "test_evaluated": False,
+        "complete_evaluation": False,
+        "arms": arms,
+    }
+
+
+def _run_real_bundle_train(tmp_path, monkeypatch):
+    """Run the real train entry point with real manifest/state/publication code."""
+    session = _fake_session({})
+    run = tmp_path / "run"
+    paired = _real_paired_training()
+    monkeypatch.setattr(
+        driver, "_prepare_inputs",
+        lambda args, *, include_test_identity: session,
+    )
+    monkeypatch.setattr(
+        driver, "_environment",
+        lambda: {"python": "test", "tensorflow": "test"},
+    )
+    monkeypatch.setattr(driver, "_verify_imports", lambda root, sources: 1)
+    monkeypatch.setattr(
+        driver, "_verify_source",
+        lambda root, head: (session["head"], session["sources"]),
+    )
+    monkeypatch.setenv("SLURM_JOB_ID", "1234")
+    monkeypatch.setattr(driver.os, "getpid", lambda: 777)
+    monkeypatch.setattr(
+        paper01_classifier_tensorflow, "require_compute_node", lambda: None,
+    )
+    monkeypatch.setattr(
+        paper01_classifier_tensorflow, "prepare_paired_classifiers",
+        lambda **kwargs: paired,
+    )
+    driver._run_train(SimpleNamespace(
+        run_dir=str(run), expected_head=session["head"], weights="/fake",
+    ))
+    return session, run
+
+
+def _augmented_checkpoint_evidence(session, run):
+    receipt_raw = (run / "expectations.json").read_bytes()
+    return {
+        "dataset_id": driver.DATASET_ID,
+        "experimental_seed": driver.EXPERIMENTAL_SEED,
+        "expected_synthetic_manifest_sha256": driver.POOL_MANIFEST_SHA256,
+        "directory": run / "checkpoints" / "real_plus_synthetic",
+        "recipe_raw": session["recipes"]["classifier"],
+        "expectations_raw": receipt_raw,
+        "expected_expectations_sha256": _sha(receipt_raw),
+        "context_evidence_raw": (run / "context_evidence.json").read_bytes(),
+    }
+
+
+def test_training_identity_digest_uses_validator_contract(
+    tmp_path, monkeypatch, capsys,
+):
+    session, run = _run_real_bundle_train(tmp_path, monkeypatch)
+    capsys.readouterr()
+    evidence = _augmented_checkpoint_evidence(session, run)
+    receipt = json.loads(evidence["expectations_raw"])
+    context = json.loads(evidence["context_evidence_raw"])
+
+    summary, gap = (
+        paper01_augmented_checkpoint.verify_augmented_checkpoint_identity(
+            **evidence
+        )
+    )
+    assert gap is None
+
+    # Both arms use the validator's newline-terminated canonical digest domain.
+    for arm, key in (
+        ("real_only", "real_training_identity"),
+        ("real_plus_synthetic", "augmented_training_identity"),
+    ):
+        accepted = paper01_augmented_checkpoint._sha(
+            paper01_augmented_checkpoint._canonical(context[key])
+        )
+        assert receipt["arms"][arm]["context"][
+            "training_identity_sha256"
+        ] == accepted
+    assert summary["bundle_verified"] is True
+    assert summary["training_identity_sha256"] == receipt["arms"][
+        "real_plus_synthetic"
+    ]["context"]["training_identity_sha256"]
+    assert summary["training_size"] == (
+        driver.TRAIN_SIZE + driver.POOL_SAMPLES
+    )
+    assert summary["complete_evaluation"] is False
+
+
+def test_training_identity_digest_mismatch_is_rejected(
+    tmp_path, monkeypatch, capsys,
+):
+    session, run = _run_real_bundle_train(tmp_path, monkeypatch)
+    capsys.readouterr()
+    evidence = _augmented_checkpoint_evidence(session, run)
+    receipt = json.loads(evidence["expectations_raw"])
+    receipt["arms"]["real_plus_synthetic"]["context"][
+        "training_identity_sha256"
+    ] = "0" * 64
+    receipt_raw = _canonical_document(receipt)
+    evidence["expectations_raw"] = receipt_raw
+    evidence["expected_expectations_sha256"] = _sha(receipt_raw)
+
+    with pytest.raises(
+        ValueError,
+        match="context evidence conflicts with expectation receipt",
+    ):
+        paper01_augmented_checkpoint.verify_augmented_checkpoint_identity(
+            **evidence
+        )
+
+
+def test_conflicting_augmented_training_identity_is_rejected(
+    tmp_path, monkeypatch, capsys,
+):
+    session, run = _run_real_bundle_train(tmp_path, monkeypatch)
+    capsys.readouterr()
+    evidence = _augmented_checkpoint_evidence(session, run)
+    context = json.loads(evidence["context_evidence_raw"])
+    context["augmented_training_identity"]["synthetic"]["manifest_sha256"] = (
+        "9" * 64
+    )
+    context_raw = _canonical_document(context)
+    receipt = json.loads(evidence["expectations_raw"])
+    receipt["context_evidence_sha256"] = _sha(context_raw)
+    receipt_raw = _canonical_document(receipt)
+    evidence["context_evidence_raw"] = context_raw
+    evidence["expectations_raw"] = receipt_raw
+    evidence["expected_expectations_sha256"] = _sha(receipt_raw)
+
+    with pytest.raises(
+        ValueError,
+        match="augmented training identity conflicts with evaluation",
+    ):
+        paper01_augmented_checkpoint.verify_augmented_checkpoint_identity(
+            **evidence
+        )
 
 
 def test_actual_restore_entry_point_authenticates_before_test_and_composes(
