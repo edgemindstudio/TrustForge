@@ -119,6 +119,84 @@ def _training_result() -> GMMClassTrainingResult:
     )
 
 
+def _execution_evidence() -> dict:
+    return {
+        "schema": "trustforge.paper01.gmm.execution-binding.v1",
+        "source_freeze_sha256": "a" * 64,
+        "expected_source_commit": "b" * 40,
+        "historical_git_baseline": "c" * 40,
+        "implementation_parent_revision": "d" * 40,
+        "source_files_sha256": {
+            "scripts/train_paper01_gmm_revision_production.py": "e" * 64,
+        },
+        "governed_experimental_seeds": list(range(42, 49)),
+        "dataset_adapter": "CICMalDroidRevision2026",
+        "dataset_source_paths": {"cic_source_csv": "/source.csv"},
+    }
+
+
+def test_legacy_checkpoint_without_execution_evidence_loads(
+    tmp_path: Path,
+):
+    persist_gmm_checkpoint(
+        tmp_path,
+        dataset_id=DATASET_ID,
+        class_id=CLASS_ID,
+        experimental_seed=SEED,
+        training_result=_training_result(),
+        validation_class_count=2,
+    )
+    loaded = load_gmm_checkpoint(
+        tmp_path,
+        requested_dataset_id=DATASET_ID,
+        requested_class_id=CLASS_ID,
+        requested_experimental_seed=SEED,
+    )
+    assert "execution_evidence" not in loaded.metadata
+
+
+def test_checkpoint_records_execution_evidence(
+    tmp_path: Path,
+):
+    evidence = _execution_evidence()
+    persisted = persist_gmm_checkpoint(
+        tmp_path,
+        dataset_id=DATASET_ID,
+        class_id=CLASS_ID,
+        experimental_seed=SEED,
+        training_result=_training_result(),
+        validation_class_count=2,
+        execution_evidence=evidence,
+    )
+    assert persisted.metadata["execution_evidence"] == evidence
+    loaded = load_gmm_checkpoint(
+        tmp_path,
+        requested_dataset_id=DATASET_ID,
+        requested_class_id=CLASS_ID,
+        requested_experimental_seed=SEED,
+    )
+    assert loaded.metadata["execution_evidence"] == evidence
+
+
+def test_invalid_execution_evidence_rejected(
+    tmp_path: Path,
+):
+    evidence = _execution_evidence()
+    evidence["governed_experimental_seeds"] = [41, 42]
+    with pytest.raises(ValueError, match="seed policy"):
+        persist_gmm_checkpoint(
+            tmp_path,
+            dataset_id=DATASET_ID,
+            class_id=CLASS_ID,
+            experimental_seed=SEED,
+            training_result=_training_result(),
+            validation_class_count=2,
+            execution_evidence=evidence,
+        )
+    assert not (tmp_path / STATE_FILENAME).exists()
+    assert not (tmp_path / METADATA_FILENAME).exists()
+
+
 def test_checkpoint_roundtrip(
     tmp_path: Path,
 ):

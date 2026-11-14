@@ -15,72 +15,48 @@ set -euo pipefail
 # Submission requires separate operational authorization.
 # One job trains exactly one dataset/class/seed checkpoint.
 
-cd "$HOME/TrustForge"
-
-EXPECTED_HEAD=42ac1fa794b6a2aeb7894881cc0cdb61ff77fa38
-
-# Validate the new source freeze before accessing production data.
-"$HOME/miniforge3/envs/gcs_py310/bin/python" -B - <<'PYATTEST'
-from pathlib import Path
-import hashlib
-import json
-import subprocess
-
-manifest_path = Path(
-    "studies/paper01_benchmark/revision_2026/"
-    "gmm_production_source_freeze_v3.json"
-)
-
-if not manifest_path.is_file() or manifest_path.is_symlink():
-    raise SystemExit("FAIL: GMM v2 source freeze missing")
-
-manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-
-if manifest.get("schema") != "trustforge.paper01.gmm.source-freeze.v3":
-    raise SystemExit("FAIL: invalid source-freeze schema")
-
-head = subprocess.check_output(
-    ["git", "rev-parse", "HEAD"], text=True
-).strip()
-
-if manifest.get("git_baseline") != head:
-    raise SystemExit("FAIL: source-freeze Git baseline mismatch")
-
-expected = {
-    "scripts/train_paper01_gmm_revision_production.py",
-    "slurm/paper01_revision_2026/gmm_revision_production.slurm",
-    "studies/paper01_benchmark/revision_2026/"
-    "operational_integration_contract.md",
-}
-
-files = manifest.get("files")
-if not isinstance(files, dict) or set(files) != expected:
-    raise SystemExit("FAIL: incomplete source attestation")
-
-for name, details in files.items():
-    path = Path(name)
-    if not path.is_file() or path.is_symlink():
-        raise SystemExit(f"FAIL: source unavailable: {name}")
-    raw = path.read_bytes()
-    if (
-        hashlib.sha256(raw).hexdigest() != details.get("sha256")
-        or len(raw) != details.get("bytes")
-    ):
-        raise SystemExit(f"FAIL: source changed: {name}")
-
-print("GMM_RUNTIME_SOURCE_ATTESTATION: PASS", flush=True)
-PYATTEST
-
-if [[ "$(git rev-parse HEAD)" != "$EXPECTED_HEAD" ]]; then
-    echo "FAIL: unexpected source revision" >&2
-    exit 1
-fi
-
 : "${SLURM_JOB_ID:?Slurm allocation required}"
+: "${GMM_EXECUTION_CHECKOUT:?Explicit clean execution checkout required}"
+: "${GMM_EXPECTED_SOURCE_COMMIT:?Explicit accepted source revision required}"
 : "${GMM_DATASET_ID:?Dataset ID required}"
 : "${GMM_CLASS_ID:?Class ID required}"
 : "${GMM_EXPERIMENTAL_SEED:?Experimental seed required}"
 : "${GMM_CHECKPOINT_DIR:?Checkpoint directory required}"
+
+[[ -d "$GMM_EXECUTION_CHECKOUT" && ! -L "$GMM_EXECUTION_CHECKOUT" ]]
+checkout="$(
+    cd "$GMM_EXECUTION_CHECKOUT"
+    pwd -P
+)"
+[[ "$(git -C "$checkout" rev-parse --show-toplevel)" == "$checkout" ]]
+cd "$checkout"
+
+GMM_SOURCE_FREEZE="$checkout/studies/paper01_benchmark/revision_2026/gmm_production_source_freeze_v4.json"
+[[ -f "$GMM_SOURCE_FREEZE" && ! -L "$GMM_SOURCE_FREEZE" ]]
+
+PYTHON="$HOME/miniforge3/envs/gcs_py310/bin/python"
+[[ -x "$PYTHON" ]]
+
+"$PYTHON" -B - "$GMM_SOURCE_FREEZE" "$GMM_EXPECTED_SOURCE_COMMIT" <<'PYATTEST'
+from pathlib import Path
+import sys
+
+from trustforge.models.paper01_revision_2026.gaussian_mixture_source_binding import (
+    verify_gmm_source_binding,
+)
+
+evidence = verify_gmm_source_binding(
+    repository_root=Path.cwd(),
+    source_freeze_path=sys.argv[1],
+    expected_source_commit=sys.argv[2],
+)
+print(
+    "GMM_RUNTIME_SOURCE_ATTESTATION: PASS",
+    evidence["expected_source_commit"],
+    evidence["source_freeze_sha256"],
+    flush=True,
+)
+PYATTEST
 
 case "$GMM_DATASET_ID" in
     ustc_tfc2016|cicmaldroid2020|malnet_image|malex)
@@ -106,13 +82,6 @@ if [[ -e "$GMM_CHECKPOINT_DIR" || -L "$GMM_CHECKPOINT_DIR" ]]; then
     exit 1
 fi
 
-PYTHON="$HOME/miniforge3/envs/gcs_py310/bin/python"
-
-if [[ ! -x "$PYTHON" ]]; then
-    echo "FAIL: expected Python environment unavailable" >&2
-    exit 1
-fi
-
 export PYTHONPATH="$PWD/src:$PWD${PYTHONPATH:+:$PYTHONPATH}"
 export CUDA_VISIBLE_DEVICES=-1
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-8}"
@@ -125,6 +94,8 @@ ARGS=(
     --class-id "$GMM_CLASS_ID"
     --experimental-seed "$GMM_EXPERIMENTAL_SEED"
     --checkpoint-dir "$GMM_CHECKPOINT_DIR"
+    --source-freeze "$GMM_SOURCE_FREEZE"
+    --expected-source-commit "$GMM_EXPECTED_SOURCE_COMMIT"
 )
 
 case "$GMM_DATASET_ID" in
@@ -239,7 +210,7 @@ esac
 # Only the validated identity namespace may receive a parent directory.
 EXPECTED_PARENT="$HOME/trustforge_revision_2026_artifacts/paper01/gmm/$GMM_DATASET_ID/seed$GMM_EXPERIMENTAL_SEED/production"
 
-EXPECTED_PREFIX="class${GMM_CLASS_ID}_seed${GMM_EXPERIMENTAL_SEED}_commit${EXPECTED_HEAD:0:7}_attempt"
+EXPECTED_PREFIX="class${GMM_CLASS_ID}_seed${GMM_EXPERIMENTAL_SEED}_commit${GMM_EXPECTED_SOURCE_COMMIT:0:7}_attempt"
 
 if [[ "$GMM_CHECKPOINT_DIR" != "$EXPECTED_PARENT/$EXPECTED_PREFIX"* ]]; then
     echo "FAIL: checkpoint namespace mismatch" >&2
@@ -279,7 +250,9 @@ echo "DATASET_ID=$GMM_DATASET_ID"
 echo "CLASS_ID=$GMM_CLASS_ID"
 echo "EXPERIMENTAL_SEED=$GMM_EXPERIMENTAL_SEED"
 echo "CHECKPOINT_DIR=$GMM_CHECKPOINT_DIR"
-echo "SOURCE_HEAD=$EXPECTED_HEAD"
+echo "EXECUTION_CHECKOUT=$checkout"
+echo "SOURCE_HEAD=$GMM_EXPECTED_SOURCE_COMMIT"
+echo "SOURCE_FREEZE=$GMM_SOURCE_FREEZE"
 echo "SLURM_JOB_ID=$SLURM_JOB_ID"
 
 "${ARGS[@]}"

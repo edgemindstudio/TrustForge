@@ -58,6 +58,21 @@ STATE_KEYS = (
 SHA256_RE = re.compile(
     r"^[0-9a-f]{64}$"
 )
+GIT_COMMIT_RE = re.compile(
+    r"^[0-9a-f]{40}$"
+)
+EXECUTION_EVIDENCE_KEYS = {
+    "schema",
+    "source_freeze_sha256",
+    "expected_source_commit",
+    "historical_git_baseline",
+    "implementation_parent_revision",
+    "source_files_sha256",
+    "governed_experimental_seeds",
+    "dataset_adapter",
+    "dataset_source_paths",
+}
+GOVERNED_SEEDS = list(range(42, 49))
 
 
 @dataclass(frozen=True)
@@ -377,6 +392,70 @@ def _validation_history_json(
     return history
 
 
+def _validate_execution_evidence(
+    evidence: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Validate optional source/config evidence for future GMM artifacts."""
+    if evidence is None:
+        return None
+    if (
+        not isinstance(evidence, Mapping)
+        or set(evidence) != EXECUTION_EVIDENCE_KEYS
+    ):
+        raise ValueError("invalid GMM execution evidence schema")
+    if (
+        not isinstance(evidence["schema"], str)
+        or not evidence["schema"].startswith(
+            "trustforge.paper01.gmm.execution-binding."
+        )
+    ):
+        raise ValueError("invalid GMM execution evidence binding schema")
+    freeze_digest = evidence["source_freeze_sha256"]
+    if (
+        not isinstance(freeze_digest, str)
+        or SHA256_RE.fullmatch(freeze_digest) is None
+    ):
+        raise ValueError("invalid GMM execution evidence digest")
+    for key in (
+        "expected_source_commit",
+        "historical_git_baseline",
+        "implementation_parent_revision",
+    ):
+        value = evidence[key]
+        if not isinstance(value, str) or GIT_COMMIT_RE.fullmatch(value) is None:
+            raise ValueError("invalid GMM execution evidence commit")
+    files = evidence["source_files_sha256"]
+    if not isinstance(files, Mapping) or not files:
+        raise ValueError("invalid GMM execution source-file evidence")
+    for name, value in files.items():
+        if (
+            not isinstance(name, str)
+            or not name.strip()
+            or not isinstance(value, str)
+            or SHA256_RE.fullmatch(value) is None
+        ):
+            raise ValueError("invalid GMM execution source-file evidence")
+    if evidence["governed_experimental_seeds"] != GOVERNED_SEEDS:
+        raise ValueError("GMM execution evidence seed policy mismatch")
+    if (
+        not isinstance(evidence["dataset_adapter"], str)
+        or not evidence["dataset_adapter"].strip()
+    ):
+        raise ValueError("invalid GMM execution dataset adapter")
+    paths = evidence["dataset_source_paths"]
+    if not isinstance(paths, Mapping) or not paths:
+        raise ValueError("invalid GMM execution dataset source evidence")
+    for name, value in paths.items():
+        if (
+            not isinstance(name, str)
+            or not name.strip()
+            or not isinstance(value, str)
+            or not value.strip()
+        ):
+            raise ValueError("invalid GMM execution dataset source evidence")
+    return dict(evidence)
+
+
 def _build_metadata(
     *,
     dataset_id: str,
@@ -385,6 +464,7 @@ def _build_metadata(
     state_sha256: str,
     training_result: GMMClassTrainingResult,
     validation_class_count: int,
+    execution_evidence: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Construct canonical class-model metadata."""
 
@@ -464,6 +544,9 @@ def _build_metadata(
         ),
         "validation_history": history,
     }
+    validated_evidence = _validate_execution_evidence(execution_evidence)
+    if validated_evidence is not None:
+        metadata["execution_evidence"] = validated_evidence
 
     # Canonical serialization itself is also a validation gate:
     # NaN, Infinity, and non-JSON values fail here.
@@ -733,12 +816,15 @@ def _validate_loaded_metadata(
         "validation_history",
     }
 
-    if set(
-        metadata
-    ) != required_keys:
+    if set(metadata) not in (
+        required_keys,
+        required_keys | {"execution_evidence"},
+    ):
         raise ValueError(
             "GMM metadata keys do not exactly match governed schema"
         )
+    if "execution_evidence" in metadata:
+        _validate_execution_evidence(metadata["execution_evidence"])
 
     if metadata[
         "schema_version"
@@ -1163,6 +1249,7 @@ def persist_gmm_checkpoint(
     experimental_seed: int,
     training_result: GMMClassTrainingResult,
     validation_class_count: int,
+    execution_evidence: Mapping[str, Any] | None = None,
 ) -> GMMPersistedCheckpoint:
     """Persist one selected authoritative class-model checkpoint pair.
 
@@ -1228,6 +1315,7 @@ def persist_gmm_checkpoint(
             state_sha256=state_hash,
             training_result=training_result,
             validation_class_count=validation_class_count,
+            execution_evidence=execution_evidence,
         )
 
         metadata_temp = _write_metadata_temp(

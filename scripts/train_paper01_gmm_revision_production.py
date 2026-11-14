@@ -2,8 +2,10 @@
 """Governed Paper 1 Revision-2026 class-specific GMM training.
 
 One invocation trains one dataset/class/experimental-seed checkpoint.
-Compute-node only. Never replaces an existing checkpoint directory.
-This runner does not authorize Slurm submission or production scale-out.
+Compute-node only. Requires an explicit clean committed source revision and
+the matching current source-freeze file. Never replaces an existing
+checkpoint directory. This runner does not authorize Slurm submission or
+production scale-out.
 """
 
 from __future__ import annotations
@@ -12,11 +14,13 @@ import argparse
 import json
 import os
 from pathlib import Path
-import subprocess
 
 import numpy as np
 
-EXPECTED_HEAD = "42ac1fa794b6a2aeb7894881cc0cdb61ff77fa38"
+from trustforge.models.paper01_revision_2026.gaussian_mixture_source_binding import (
+    require_governed_experimental_seed,
+    verify_gmm_source_binding,
+)
 
 CLASS_COUNTS = {
     "ustc_tfc2016": 9,
@@ -26,14 +30,14 @@ CLASS_COUNTS = {
 }
 
 
-def require_environment() -> None:
+def require_environment(args):
     if not os.environ.get("SLURM_JOB_ID", "").strip():
         raise RuntimeError("GMM production training requires a Slurm job")
-    head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], text=True
-    ).strip()
-    if head != EXPECTED_HEAD:
-        raise RuntimeError("unexpected repository source revision")
+    return verify_gmm_source_binding(
+        repository_root=Path.cwd(),
+        source_freeze_path=args.source_freeze,
+        expected_source_commit=args.expected_source_commit,
+    )
 
 
 def make_parser() -> argparse.ArgumentParser:
@@ -43,6 +47,8 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--class-id", required=True, type=int)
     parser.add_argument("--experimental-seed", required=True, type=int)
     parser.add_argument("--checkpoint-dir", required=True, type=Path)
+    parser.add_argument("--source-freeze", required=True, type=Path)
+    parser.add_argument("--expected-source-commit", required=True)
     parser.add_argument("--ustc-source-dir", type=Path)
     parser.add_argument("--cic-source-csv", type=Path)
     parser.add_argument("--cic-feature-columns", type=Path)
@@ -192,7 +198,7 @@ def class_positions(adapter, split: str, class_id: int) -> np.ndarray:
     return positions
 
 
-def require_fresh_destination(args) -> Path:
+def require_fresh_destination(args, expected_source_commit) -> Path:
     """Require an unused, identity-bound production checkpoint directory."""
     root = (
         Path.home()
@@ -225,7 +231,7 @@ def require_fresh_destination(args) -> Path:
 
     prefix = (
         f"class{args.class_id}_seed{args.experimental_seed}_"
-        f"commit{EXPECTED_HEAD[:7]}_attempt"
+        f"commit{expected_source_commit[:7]}_attempt"
     )
 
     if not requested.name.startswith(prefix):
@@ -252,20 +258,35 @@ def require_fresh_destination(args) -> Path:
 
 
 def run(args) -> None:
-    require_environment()
+    source_binding = require_environment(args)
 
     if type(args.class_id) is not int or not (
         0 <= args.class_id < CLASS_COUNTS[args.dataset_id]
     ):
         raise ValueError("invalid class ID for dataset")
 
-    if type(args.experimental_seed) is not int or not (
-        0 <= args.experimental_seed < 2**31
-    ):
-        raise ValueError("invalid experimental seed")
+    seed = require_governed_experimental_seed(args.experimental_seed)
 
-    destination = require_fresh_destination(args)
+    destination = require_fresh_destination(
+        args, source_binding["expected_source_commit"],
+    )
     adapter = build_adapter(args)
+
+    source_paths = {
+        name: str(getattr(args, name).expanduser().resolve())
+        for name in (
+            "ustc_source_dir", "cic_source_csv", "cic_feature_columns",
+            "malnet_image_root", "malnet_preparation_dir",
+            "malnet_mapping_path", "malex_label_archive",
+            "malex_benign_root", "malex_malware_root",
+        )
+        if getattr(args, name) is not None
+    }
+    execution_evidence = {
+        **source_binding,
+        "dataset_adapter": type(adapter).__name__,
+        "dataset_source_paths": source_paths,
+    }
 
     train_positions = class_positions(adapter, "train", args.class_id)
     validation_positions = class_positions(
@@ -275,11 +296,12 @@ def run(args) -> None:
     print("GMM_PRODUCTION_PREFLIGHT", json.dumps({
         "dataset_id": args.dataset_id,
         "class_id": args.class_id,
-        "experimental_seed": args.experimental_seed,
+        "experimental_seed": seed,
         "train_class_count": int(train_positions.size),
         "validation_class_count": int(validation_positions.size),
         "checkpoint_directory": str(destination),
-        "source_head": EXPECTED_HEAD,
+        "source_head": source_binding["expected_source_commit"],
+        "source_freeze_sha256": source_binding["source_freeze_sha256"],
     }), flush=True)
 
     from trustforge.models.paper01_revision_2026.gaussian_mixture_training import (
@@ -296,7 +318,7 @@ def run(args) -> None:
     training_result = train_class_model(
         adapter=adapter,
         class_id=args.class_id,
-        experimental_seed=args.experimental_seed,
+        experimental_seed=seed,
         train_class_positions=train_positions,
         validation_class_positions=validation_positions,
     )
@@ -305,9 +327,10 @@ def run(args) -> None:
         destination,
         dataset_id=args.dataset_id,
         class_id=args.class_id,
-        experimental_seed=args.experimental_seed,
+        experimental_seed=seed,
         training_result=training_result,
         validation_class_count=int(validation_positions.size),
+        execution_evidence=execution_evidence,
     )
 
     # Independent read from the newly published artifact pair.
@@ -315,7 +338,7 @@ def run(args) -> None:
         destination,
         requested_dataset_id=args.dataset_id,
         requested_class_id=args.class_id,
-        requested_experimental_seed=args.experimental_seed,
+        requested_experimental_seed=seed,
     )
     if restored is None:
         raise RuntimeError("GMM checkpoint restoration returned no result")
@@ -323,7 +346,9 @@ def run(args) -> None:
     print("GMM_PRODUCTION_COMPLETE", json.dumps({
         "dataset_id": args.dataset_id,
         "class_id": args.class_id,
-        "experimental_seed": args.experimental_seed,
+        "experimental_seed": seed,
+        "source_head": source_binding["expected_source_commit"],
+        "source_freeze_sha256": source_binding["source_freeze_sha256"],
         "selected_step": int(training_result.selected_step),
         "selected_validation_nll": float(
             training_result.selected_validation_nll

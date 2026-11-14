@@ -1,0 +1,58 @@
+{
+  "execution_authorization": {
+    "final_execution_authorized_revision": null,
+    "mode": "external_expected_source_commit_required"
+  },
+  "family": "gmm",
+  "files": {
+    "scripts/train_paper01_gmm_revision_production.py": {
+      "bytes": 11569,
+      "sha256": "31f44c743c97f28a24c0095d60e5311b10bec551f907cb50fdfffea90b181676"
+    },
+    "slurm/paper01_revision_2026/gmm_revision_production.slurm": {
+      "bytes": 7976,
+      "sha256": "2ffe46880159fcaf10cb709dd762e06d2d74d553e98645212671c6b68b17d0d2"
+    },
+    "src/trustforge/models/paper01_revision_2026/gaussian_mixture_checkpoint.py": {
+      "bytes": 32630,
+      "sha256": "b643ce3912a35331a9841d53c5b75302c582f3cf6e952ef17bfebc1b8946053c"
+    },
+    "src/trustforge/models/paper01_revision_2026/gaussian_mixture_source_binding.py": {
+      "bytes": 6786,
+      "sha256": "e9bfc80948b19df85d255657bd254a63da857e158ca1b6266ee1089f511115b9"
+    },
+    "src/trustforge/models/paper01_revision_2026/gaussian_mixture_training.py": {
+      "bytes": 12640,
+      "sha256": "da6b2718e01fa93834c3a7ade79bfe9077aa7e089a0438fb6626c53d187c2a0f"
+    },
+    "src/trustforge/models/paper01_revision_2026/gaussian_mixture_training_budget.py": {
+      "bytes": 4075,
+      "sha256": "7e6e1eb4e891f92c0a2f5989dde964205f932f34ef53b84f0402c5f95fc93a9f"
+    },
+    "studies/paper01_benchmark/revision_2026/operational_integration_contract.md": {
+      "bytes": 4242,
+      "sha256": "042d7774f211312e5836d13f481a33ecd1a736479a23aca674820b539f401ee6"
+    }
+  },
+  "historical_git_baseline": "42ac1fa794b6a2aeb7894881cc0cdb61ff77fa38",
+  "implementation_parent_revision": "4bdcc20fb4a1886062239d416629f173b3522245",
+  "limitations": [
+    "This manifest does not embed the final implementation commit because a commit cannot contain its own hash.",
+    "Execution remains disabled until a clean committed revision is supplied explicitly as the expected source commit.",
+    "The historical source baseline is retained for provenance only and is not current execution authority.",
+    "This manifest does not authorize training, publication, synthesis, or full benchmark launch."
+  ],
+  "schema": "trustforge.paper01.gmm.source-freeze.v4",
+  "seed_policy": {
+    "experimental_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ]
+  },
+  "status": "IMPLEMENTATION_PREPARED_EXECUTION_REQUIRES_EXPLICIT_POST_COMMIT_SOURCE"
+}
