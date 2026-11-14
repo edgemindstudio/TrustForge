@@ -92,7 +92,7 @@ def test_default_authorization_stays_disabled(monkeypatch):
 
 
 def test_bounded_scope_not_expanded():
-    with pytest.raises(RuntimeError, match="bounded CIC seed42"):
+    with pytest.raises(RuntimeError, match="bounded CIC execution scope"):
         execution.prepare_cic_execution(
             repository_root="fixture", family="ar",
             experimental_seed=43, adapter=object(),

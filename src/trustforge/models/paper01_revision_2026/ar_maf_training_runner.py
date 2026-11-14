@@ -54,6 +54,22 @@ def capture_source_identity(repository_root):
     return head, records
 
 
+BOUNDED_CIC_SCOPE = frozenset({
+    ("ar", 42),
+    ("maf", 42),
+    ("maf", 43),
+})
+
+
+def bounded_cic_request_allowed(*, family, dataset_id, experimental_seed):
+    """Return whether a generator request is inside the bounded CIC scope."""
+    return (
+        dataset_id == "cicmaldroid2020"
+        and type(experimental_seed) is int
+        and (family, experimental_seed) in BOUNDED_CIC_SCOPE
+    )
+
+
 def run_training_and_prepare_checkpoint(
     *, repository_root, family, dataset_id, experimental_seed, adapter,
     bounded_integration=False,
@@ -62,13 +78,11 @@ def run_training_and_prepare_checkpoint(
     if type(bounded_integration) is not bool:
         raise TypeError("bounded_integration must be boolean")
     if bounded_integration:
-        if not (
-            family in ("ar", "maf")
-            and dataset_id == "cicmaldroid2020"
-            and type(experimental_seed) is int
-            and experimental_seed == 42
+        if not bounded_cic_request_allowed(
+            family=family, dataset_id=dataset_id,
+            experimental_seed=experimental_seed,
         ):
-            raise RuntimeError("request outside bounded CIC seed42 scope")
+            raise RuntimeError("request outside bounded CIC execution scope")
     elif TRAINING_EXECUTION_ENABLED is not True:
         raise RuntimeError("AR/MAF training execution remains disabled")
 

@@ -90,12 +90,11 @@ def prepare_cic_execution(
     if type(bounded_integration) is not bool:
         raise TypeError("bounded_integration must be boolean")
     if bounded_integration:
-        if not (
-            family in ("ar", "maf")
-            and type(experimental_seed) is int
-            and experimental_seed == 42
+        if not runner.bounded_cic_request_allowed(
+            family=family, dataset_id="cicmaldroid2020",
+            experimental_seed=experimental_seed,
         ):
-            raise RuntimeError("request outside bounded CIC seed42 scope")
+            raise RuntimeError("request outside bounded CIC execution scope")
     elif runner.TRAINING_EXECUTION_ENABLED is not True:
         raise RuntimeError("AR/MAF training execution remains disabled")
 

@@ -1,4 +1,4 @@
-"""Bounded CIC seed42 MAF execution-envelope acceptance; no scale-out."""
+"""Bounded CICMalDroid2020 MAF generator execution for seeds 42/43; no scale-out."""
 
 import argparse
 import hashlib
@@ -7,6 +7,29 @@ import os
 from pathlib import Path
 import socket
 import sys
+
+
+BOUNDED_SEEDS = (42, 43)
+
+
+def execution_generation(experimental_seed):
+    """Return the seed-bound checkpoint generation name."""
+    return "maf_cic_seed" + str(experimental_seed) + "_execution"
+
+
+def _parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--phase", choices=("train", "restore"), required=True)
+    parser.add_argument(
+        "--experimental-seed", type=int, choices=BOUNDED_SEEDS, default=42,
+    )
+    parser.add_argument("--repository-root", required=True)
+    parser.add_argument("--expected-head", required=True)
+    parser.add_argument("--dataset-config", required=True)
+    parser.add_argument("--config-sha256", required=True)
+    parser.add_argument("--run-dir", required=True)
+    parser.add_argument("--receipt-sha256")
+    return parser
 
 
 def sha(raw):
@@ -20,15 +43,7 @@ def write_json(path, value):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--phase", choices=("train", "restore"), required=True)
-    parser.add_argument("--repository-root", required=True)
-    parser.add_argument("--expected-head", required=True)
-    parser.add_argument("--dataset-config", required=True)
-    parser.add_argument("--config-sha256", required=True)
-    parser.add_argument("--run-dir", required=True)
-    parser.add_argument("--receipt-sha256")
-    args = parser.parse_args()
+    args = _parser().parse_args()
 
     if (
         not os.environ.get("SLURM_JOB_ID")
@@ -125,7 +140,7 @@ def main():
         validate_hashes=True,
     )
     parent = run / "checkpoints"
-    generation = "maf_cic_seed42_execution"
+    generation = execution_generation(args.experimental_seed)
     receipt_path = run / "expectations.json"
     recipe_raw = (root / runner.RECIPE_PATH).read_bytes()
     verify_source()
@@ -135,7 +150,8 @@ def main():
         if receipt_path.exists() or parent.exists():
             raise FileExistsError("run already contains execution output")
         prepared = prepare_cic_execution(
-            repository_root=root, family="maf", experimental_seed=42,
+            repository_root=root, family="maf",
+            experimental_seed=args.experimental_seed,
             adapter=adapter, dataset_config_raw=config_raw,
             bounded_integration=True,
         )
@@ -196,7 +212,8 @@ def main():
             raise RuntimeError("fresh adapter preprocessing differs from training")
         setup = prepare_training_setup(
             family="maf", dataset_id="cicmaldroid2020",
-            experimental_seed=42, adapter=adapter, recipe_raw=recipe_raw,
+            experimental_seed=args.experimental_seed, adapter=adapter,
+            recipe_raw=recipe_raw,
         )
         requested = {
             "recipe_raw": recipe_raw,
@@ -264,7 +281,7 @@ def main():
         "source_commit": head,
         "family": "maf",
         "dataset_id": "cicmaldroid2020",
-        "experimental_seed": 42,
+        "experimental_seed": args.experimental_seed,
         "pid": os.getpid(),
         "job_id": os.environ["SLURM_JOB_ID"],
         "host": socket.gethostname(),

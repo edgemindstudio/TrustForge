@@ -190,6 +190,8 @@ def test_source_change_blocks_manifest(execution, monkeypatch):
     ("ar", "malex", 42),
     ("maf", "ustc_tfc2016", 42),
     ("ar", "cicmaldroid2020", 43),
+    ("maf", "malex", 43),
+    ("maf", "cicmaldroid2020", 44),
     ("maf", "cicmaldroid2020", True),
     ("ar", "cicmaldroid2020", 42.0),
 ])
@@ -201,7 +203,7 @@ def test_bounded_allowance_rejects_other_scope_before_source_access(
 
     monkeypatch.setattr(runner, "TRAINING_EXECUTION_ENABLED", False)
     monkeypatch.setattr(runner, "capture_source_identity", forbidden)
-    with pytest.raises(RuntimeError, match="bounded CIC seed42 scope"):
+    with pytest.raises(RuntimeError, match="bounded CIC execution scope"):
         runner.run_training_and_prepare_checkpoint(
             repository_root="unused", family=family, dataset_id=dataset,
             experimental_seed=seed, adapter=object(),
@@ -209,9 +211,11 @@ def test_bounded_allowance_rejects_other_scope_before_source_access(
         )
 
 
-@pytest.mark.parametrize("family", ["ar", "maf"])
+@pytest.mark.parametrize("family,seed", [
+    ("ar", 42), ("maf", 42), ("maf", 43),
+])
 def test_bounded_allowance_reaches_source_check_with_general_gate_disabled(
-    monkeypatch, family,
+    monkeypatch, family, seed,
 ):
     def stop_at_source(*args, **kwargs):
         raise ValueError("source boundary reached")
@@ -221,7 +225,7 @@ def test_bounded_allowance_reaches_source_check_with_general_gate_disabled(
     with pytest.raises(ValueError, match="source boundary reached"):
         runner.run_training_and_prepare_checkpoint(
             repository_root="unused", family=family,
-            dataset_id="cicmaldroid2020", experimental_seed=42,
+            dataset_id="cicmaldroid2020", experimental_seed=seed,
             adapter=object(), bounded_integration=True,
         )
 
