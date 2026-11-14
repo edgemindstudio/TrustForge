@@ -10,8 +10,8 @@
       "sha256": "31f44c743c97f28a24c0095d60e5311b10bec551f907cb50fdfffea90b181676"
     },
     "slurm/paper01_revision_2026/gmm_revision_production.slurm": {
-      "bytes": 7976,
-      "sha256": "2ffe46880159fcaf10cb709dd762e06d2d74d553e98645212671c6b68b17d0d2"
+      "bytes": 8065,
+      "sha256": "19b3ef0b960adaacd887f04e1d1cc3af389dbc5a5b41c5140a3d975d6f4923d8"
     },
     "src/trustforge/models/paper01_revision_2026/gaussian_mixture_checkpoint.py": {
       "bytes": 32630,

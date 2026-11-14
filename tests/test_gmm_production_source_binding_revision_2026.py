@@ -183,6 +183,29 @@ def test_historical_source_freezes_remain_intact(name, digest):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
 
 
+def test_launcher_initializes_pythonpath_before_attestation():
+    root = Path(__file__).resolve().parents[1]
+    lines = (
+        root
+        / "slurm/paper01_revision_2026/gmm_revision_production.slurm"
+    ).read_text(encoding="utf-8").splitlines()
+    pythonpath_lines = [
+        index for index, line in enumerate(lines)
+        if line.strip().startswith("export PYTHONPATH=")
+    ]
+    assert len(pythonpath_lines) == 1
+    assert (
+        'export PYTHONPATH="$checkout/src:$checkout'
+        in lines[pythonpath_lines[0]]
+    )
+    attestation_lines = [
+        index for index, line in enumerate(lines)
+        if '"$PYTHON" -B - "$GMM_SOURCE_FREEZE"' in line
+    ]
+    assert len(attestation_lines) == 1
+    assert pythonpath_lines[0] < attestation_lines[0]
+
+
 def test_current_v4_freeze_matches_working_tree():
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads(

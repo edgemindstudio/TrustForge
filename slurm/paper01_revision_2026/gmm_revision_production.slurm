@@ -37,6 +37,9 @@ GMM_SOURCE_FREEZE="$checkout/studies/paper01_benchmark/revision_2026/gmm_product
 PYTHON="$HOME/miniforge3/envs/gcs_py310/bin/python"
 [[ -x "$PYTHON" ]]
 
+# Initialize imports from the selected execution checkout before attestation.
+export PYTHONPATH="$checkout/src:$checkout${PYTHONPATH:+:$PYTHONPATH}"
+
 "$PYTHON" -B - "$GMM_SOURCE_FREEZE" "$GMM_EXPECTED_SOURCE_COMMIT" <<'PYATTEST'
 from pathlib import Path
 import sys
@@ -82,7 +85,6 @@ if [[ -e "$GMM_CHECKPOINT_DIR" || -L "$GMM_CHECKPOINT_DIR" ]]; then
     exit 1
 fi
 
-export PYTHONPATH="$PWD/src:$PWD${PYTHONPATH:+:$PYTHONPATH}"
 export CUDA_VISIBLE_DEVICES=-1
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-8}"
 
