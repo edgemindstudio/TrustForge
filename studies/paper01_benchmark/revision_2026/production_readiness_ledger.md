@@ -1467,3 +1467,93 @@ augmented_minus_real_only_macro_f1 = 0.05451150907476743
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+
+## CIC MAF seed-43 real-data bounded evaluation acceptance — job 314240
+
+PASS for one bounded CICMalDroid2020 / MAF / experimental seed-43 real-data
+paired evaluation at evaluation source
+826e56970141907b34fcab3c9f8a3ad2a7735e81 and generator source
+58f965c39aad103dc056f7ac690de90578ed2932.
+
+CIC_MAF_SEED43_EVALUATION_TRAIN=PASS
+CIC_MAF_SEED43_EVALUATION_RESTORE=PASS
+CIC_MAF_SEED43_BOUNDED_EVALUATION=PASS
+
+Job 314240 completed on talon17 in 00:18:25 with exit code 0:0. Training and
+restoration ran in separate processes (PIDs 2265209 and 2267754) inside one
+allocation. The restore phase authenticated the training receipt by SHA-256
+before evaluating the held-out test split.
+
+### Accepted execution evidence
+
+- Dataset: cicmaldroid2020; family: maf; experimental seed: 43.
+- Generator checkpoint:
+  57e378c44c870af58e4b8eff38cf1cc976516b0dade249194bb5962c28a724f7
+- Synthetic pool manifest:
+  95b1d78e90cb8794573b88a195bb1e89fbbfcfcfc7d9562a5210a9971527354f
+  (10,000 images, 2,000 per class, 1,250 batches).
+- Training receipt, job 314240:
+  d040a97aa6a76c5ba6a8a4ed7bbb6b274f2837add91c4dee029a0942af27e7f5
+- Shared initial classifier weights; both arms restored and their
+  selected-weight assignments verified.
+- Test predictions: 2,323 examples per arm with five-class coverage.
+
+Run directory:
+`~/trustforge_revision_2026_artifacts/paper01/maf/cicmaldroid2020/seed43/bounded_eval-826e569-2voNVy`
+
+Evidence hashes:
+- evaluation.json:
+  8d6ac23cd3fb2439295a91682610092fb3d86693b27e3d6786b3889b731c7159
+- restore_report.json:
+  b5e9dbc243cdd2097d76ae6f9c03e3bde490fd92a0046fa7a4669b2ab0ba8468
+
+### Accepted performance evidence
+
+| Metric | Real-only | Real + synthetic |
+|---|---:|---:|
+| Macro-F1 | 0.6409108572 | 0.7336864693 |
+| Balanced accuracy | 0.6381505545 | 0.7205606907 |
+| Macro-AUPRC | 0.7489316286 | 0.8063041171 |
+| Brier | 0.4016823170 | 0.3424291324 |
+| ECE | 0.0869643200 | 0.0615410572 |
+
+Primary paired endpoint:
+augmented_minus_real_only_macro_f1 = 0.09277561208032425
+
+Supporting fidelity/diversity results: pooled class-balanced KID
+1.0244120854 (10 draws, 125 per class); pooled balanced FID 598.1498252;
+macro class FID 607.4465315; three-scale intra-class MS-SSIM 0.0204661978
+(1,000 selected pairs).
+
+### Unified validation scope
+
+- Required verified result groups: 7 of 7.
+- Required status blockers: 0; lineage blockers: 0.
+- Groups: real_only_downstream, real_plus_synthetic_downstream,
+  paired_downstream, pooled_balanced_kid, pooled_balanced_fid, class_fid,
+  intra_class_ms_ssim.
+- Augmented pool consumption was verified against the seed-43 manifest.
+- complete_evaluation=false.
+
+### Cross-seed context
+
+The two accepted bounded seed cells both show a positive paired macro-F1
+difference under the unchanged protocol: seed 42 = 0.05451150907476743;
+seed 43 = 0.09277561208032425. Two seeds do not complete the seven-seed
+study and support no cross-seed statistical-significance claim.
+
+### Preserved boundaries
+
+- Generator lineage is DRIVER_VERIFIED; generator_lineage_authenticated
+  remains false in the accepted pool-finalization evidence, and semantic
+  class fidelity remains NOT_ESTABLISHED.
+- Unified validation records feature_extraction_authentication,
+  image_score_recomputation, provenance_validation and publication_validation
+  as NOT_PERFORMED.
+- This applies only to the evaluated dataset, family, seed and classifier
+  configuration. Other families, datasets, seeds and full-benchmark execution
+  remain open.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
