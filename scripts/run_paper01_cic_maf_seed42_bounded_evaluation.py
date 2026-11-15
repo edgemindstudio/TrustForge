@@ -74,6 +74,25 @@ SEED_BINDINGS = {
         "lineage_schema":
             "trustforge.paper01.cic-maf.seed43.lineage-evidence.v1",
     },
+    44: {
+        "experimental_seed": 44,
+        "pool_manifest_sha256":
+            "c5fc5cb6aa7732b356b2bb57bfbd28d58f05b771ef50f278456111673fed0cb5",
+        "pool_checkpoint_sha256":
+            "cc58fe65abaa0656e4f09d6d17d83e586f048f50a6a858d01e1f1d7b9191055a",
+        "checkpoint_source_commit":
+            "8d4a281e04ed2232a134a6da10ff20c56d67316e",
+        "checkpoint_generation": "maf_cic_seed44_execution",
+        "checkpoint_fitted_state_sha256":
+            "92ac512bbfd38283c060dbbb163d22a724928282342be6fe41154adaa2178e3e",
+        "checkpoint_execution_manifest_sha256":
+            "fe57e16527e8420e2a79626adede156fc8eb214e8b028b5d4b990040ebe9d448",
+        "checkpoint_expectations_sha256":
+            "8e81b888ea0e93b5ae4f420064f10bdc54446a81c564ef90ababc23be192e5f3",
+        "checkpoint_training_job": "314269",
+        "lineage_schema":
+            "trustforge.paper01.cic-maf.seed44.lineage-evidence.v1",
+    },
 }
 
 EXPERIMENTAL_SEED = SEED_BINDINGS[42]["experimental_seed"]
@@ -1412,13 +1431,13 @@ def _run_restore(args):
 
 def _parser():
     parser = argparse.ArgumentParser(
-        description="Bounded CIC MAF seeds 42/43 real-data evaluation driver",
+        description="Bounded CIC MAF seeds 42/43/44 real-data evaluation driver",
     )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--preflight-only", action="store_true")
     mode.add_argument("--phase", choices=("train", "restore"))
     parser.add_argument(
-        "--experimental-seed", type=int, choices=(42, 43), default=42,
+        "--experimental-seed", type=int, choices=(42, 43, 44), default=42,
     )
     parser.add_argument("--repository-root", required=True)
     parser.add_argument("--expected-head", required=True)
