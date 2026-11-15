@@ -34,7 +34,49 @@ import numpy as np
 
 DATASET_ID = "cicmaldroid2020"
 FAMILY = "maf"
-EXPERIMENTAL_SEED = 42
+
+SEED_BINDINGS = {
+    42: {
+        "experimental_seed": 42,
+        "pool_manifest_sha256":
+            "db884e298ea324597bad2d488d03e2c86c205e7a53bbef2a11bd72f06da5651e",
+        "pool_checkpoint_sha256":
+            "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d",
+        "checkpoint_source_commit":
+            "913d86f9c64e6a3a1a0d009f112bcfa889a02ec8",
+        "checkpoint_generation": "maf_cic_seed42_execution",
+        "checkpoint_fitted_state_sha256":
+            "c177c31e8602e94b06dc965e14dafe8ec3374fd07816b93107df3f5c1fc7f5cf",
+        "checkpoint_execution_manifest_sha256":
+            "d82709d879a173e3b0ada30d7e3db1b5f9dbfba823db64a5bc3ad41d52b3240f",
+        "checkpoint_expectations_sha256":
+            "2e8f64a58b8900c9d6c6fd5580794c8374353abc14e51fab49e8155d675526ec",
+        "checkpoint_training_job": "311675",
+        "lineage_schema":
+            "trustforge.paper01.cic-maf.seed42.lineage-evidence.v1",
+    },
+    43: {
+        "experimental_seed": 43,
+        "pool_manifest_sha256":
+            "95b1d78e90cb8794573b88a195bb1e89fbbfcfcfc7d9562a5210a9971527354f",
+        "pool_checkpoint_sha256":
+            "57e378c44c870af58e4b8eff38cf1cc976516b0dade249194bb5962c28a724f7",
+        "checkpoint_source_commit":
+            "58f965c39aad103dc056f7ac690de90578ed2932",
+        "checkpoint_generation": "maf_cic_seed43_execution",
+        "checkpoint_fitted_state_sha256":
+            "d1b2c34f9354fb7cd57b595d55825d17d6c6401f05fb9ab337b0f3931163d7ab",
+        "checkpoint_execution_manifest_sha256":
+            "cfd37e07a58d1acdd07344288b9d899026f5c18921cbe63fe69ed86783bd3711",
+        "checkpoint_expectations_sha256":
+            "aabb7ccf389000565f923e2ddc80eb5d40dc4a2fcedcc4c23daffd829916607e",
+        "checkpoint_training_job": "314075",
+        "lineage_schema":
+            "trustforge.paper01.cic-maf.seed43.lineage-evidence.v1",
+    },
+}
+
+EXPERIMENTAL_SEED = SEED_BINDINGS[42]["experimental_seed"]
 CLASS_COUNT = 5
 POOL_SAMPLES = 10_000
 POOL_BATCHES = 1_250
@@ -51,12 +93,8 @@ SPLIT_CLASS_COUNTS = {
     "test": (251, 420, 782, 510, 360),
 }
 
-POOL_MANIFEST_SHA256 = (
-    "db884e298ea324597bad2d488d03e2c86c205e7a53bbef2a11bd72f06da5651e"
-)
-POOL_CHECKPOINT_SHA256 = (
-    "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d"
-)
+POOL_MANIFEST_SHA256 = SEED_BINDINGS[42]["pool_manifest_sha256"]
+POOL_CHECKPOINT_SHA256 = SEED_BINDINGS[42]["pool_checkpoint_sha256"]
 GENERATOR_RECIPE_SHA256 = (
     "202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478"
 )
@@ -69,19 +107,19 @@ METRIC_RECIPE_SHA256 = (
 DATASET_CONFIG_SHA256 = (
     "ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b"
 )
-CHECKPOINT_SOURCE_COMMIT = (
-    "913d86f9c64e6a3a1a0d009f112bcfa889a02ec8"
-)
-CHECKPOINT_GENERATION = "maf_cic_seed42_execution"
+CHECKPOINT_SOURCE_COMMIT = SEED_BINDINGS[42]["checkpoint_source_commit"]
+CHECKPOINT_GENERATION = SEED_BINDINGS[42]["checkpoint_generation"]
 CHECKPOINT_FITTED_STATE_SHA256 = (
-    "c177c31e8602e94b06dc965e14dafe8ec3374fd07816b93107df3f5c1fc7f5cf"
+    SEED_BINDINGS[42]["checkpoint_fitted_state_sha256"]
 )
 CHECKPOINT_EXECUTION_MANIFEST_SHA256 = (
-    "d82709d879a173e3b0ada30d7e3db1b5f9dbfba823db64a5bc3ad41d52b3240f"
+    SEED_BINDINGS[42]["checkpoint_execution_manifest_sha256"]
 )
 CHECKPOINT_EXPECTATIONS_SHA256 = (
-    "2e8f64a58b8900c9d6c6fd5580794c8374353abc14e51fab49e8155d675526ec"
+    SEED_BINDINGS[42]["checkpoint_expectations_sha256"]
 )
+CHECKPOINT_TRAINING_JOB = SEED_BINDINGS[42]["checkpoint_training_job"]
+LINEAGE_SCHEMA = SEED_BINDINGS[42]["lineage_schema"]
 CHECKPOINT_COMPLETED_STEPS = 254
 INCEPTION_WEIGHTS_SHA256 = (
     "9617109a16463f250180008f9818336b767bdf5164315e8cd5761a8c34caa62a"
@@ -105,6 +143,44 @@ CHECKPOINT_EXPECTATIONS_SCHEMA = (
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 MAX_JSON_BYTES = 2 * 1024 * 1024
+
+
+def evaluation_binding(experimental_seed):
+    """Return the accepted cell binding for one experimental seed."""
+    if type(experimental_seed) is not int:
+        raise ValueError("unsupported experimental seed")
+    binding = SEED_BINDINGS.get(experimental_seed)
+    if binding is None:
+        raise ValueError("unsupported experimental seed")
+    return dict(binding)
+
+
+def _apply_binding(experimental_seed):
+    """Bind all seed-dependent module identities before artifact access."""
+    binding = evaluation_binding(experimental_seed)
+    global EXPERIMENTAL_SEED, POOL_MANIFEST_SHA256, POOL_CHECKPOINT_SHA256
+    global CHECKPOINT_SOURCE_COMMIT, CHECKPOINT_GENERATION
+    global CHECKPOINT_FITTED_STATE_SHA256
+    global CHECKPOINT_EXECUTION_MANIFEST_SHA256
+    global CHECKPOINT_EXPECTATIONS_SHA256, CHECKPOINT_TRAINING_JOB
+    global LINEAGE_SCHEMA
+    EXPERIMENTAL_SEED = binding["experimental_seed"]
+    POOL_MANIFEST_SHA256 = binding["pool_manifest_sha256"]
+    POOL_CHECKPOINT_SHA256 = binding["pool_checkpoint_sha256"]
+    CHECKPOINT_SOURCE_COMMIT = binding["checkpoint_source_commit"]
+    CHECKPOINT_GENERATION = binding["checkpoint_generation"]
+    CHECKPOINT_FITTED_STATE_SHA256 = binding[
+        "checkpoint_fitted_state_sha256"
+    ]
+    CHECKPOINT_EXECUTION_MANIFEST_SHA256 = binding[
+        "checkpoint_execution_manifest_sha256"
+    ]
+    CHECKPOINT_EXPECTATIONS_SHA256 = binding[
+        "checkpoint_expectations_sha256"
+    ]
+    CHECKPOINT_TRAINING_JOB = binding["checkpoint_training_job"]
+    LINEAGE_SCHEMA = binding["lineage_schema"]
+    return binding
 
 
 # ---------------------------------------------------------------------------
@@ -418,7 +494,7 @@ def _authenticate_expectations(raw, expected_sha, config_sha):
         or receipt.get("schema") != CHECKPOINT_EXPECTATIONS_SCHEMA
         or receipt.get("source_commit") != CHECKPOINT_SOURCE_COMMIT
         or receipt.get("generation_name") != CHECKPOINT_GENERATION
-        or receipt.get("job_id") != "311675"
+        or receipt.get("job_id") != CHECKPOINT_TRAINING_JOB
         or receipt.get("fitted_state_sha256")
         != CHECKPOINT_FITTED_STATE_SHA256
         or receipt.get("execution_manifest_file_sha256")
@@ -465,7 +541,7 @@ def _lineage_summary(
     ):
         raise ValueError("generator checkpoint lineage mismatch")
     summary = {
-        "schema": "trustforge.paper01.cic-maf.seed42.lineage-evidence.v1",
+        "schema": LINEAGE_SCHEMA,
         "dataset_id": DATASET_ID,
         "family": FAMILY,
         "experimental_seed": EXPERIMENTAL_SEED,
@@ -736,7 +812,7 @@ def _run_preflight(args):
     ):
         raise RuntimeError("accepted pool preflight did not cover the pool")
     summary = {
-        "scope": "CIC_MAF_SEED42_EVALUATION_PREFLIGHT",
+        "scope": "CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_EVALUATION_PREFLIGHT",
         "source_commit": session["head"],
         "dataset_config_sha256": _sha(session["config_raw"]),
         "split_identity": session["split_evidence"],
@@ -761,7 +837,7 @@ def _run_preflight(args):
         "full_benchmark_go": False,
     }
     _assert_incomplete_report(summary)
-    print("CIC_MAF_SEED42_EVALUATION_PREFLIGHT=PASS")
+    print("CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_EVALUATION_PREFLIGHT=PASS")
     print(_canonical(summary).decode("utf-8"), flush=True)
     return summary
 
@@ -865,7 +941,7 @@ def _run_train(args):
 
     test_identity = _test_identity(session["provenance_sha256"])
     train_report = {
-        "scope": "CIC_MAF_SEED42_BOUNDED_REAL_DATA_TRAIN",
+        "scope": "CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_BOUNDED_REAL_DATA_TRAIN",
         "source_commit": session["head"],
         "job_id": os.environ["SLURM_JOB_ID"],
         "pid": os.getpid(),
@@ -904,7 +980,7 @@ def _run_train(args):
 
     _verify_imports(session["root"], session["sources"])
     _verify_source(session["root"], args.expected_head)
-    print("CIC_MAF_SEED42_EVALUATION_TRAIN=PASS")
+    print("CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_EVALUATION_TRAIN=PASS")
     print("EXPECTATIONS_SHA256=" + _sha(receipt_raw), flush=True)
     return train_report
 
@@ -1297,7 +1373,7 @@ def _run_restore(args):
     _write_exclusive_json(run / "evaluation.json", evaluation)
 
     restore_report = {
-        "scope": "CIC_MAF_SEED42_BOUNDED_REAL_DATA_EVALUATION",
+        "scope": "CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_BOUNDED_REAL_DATA_EVALUATION",
         "source_commit": session["head"],
         "job_id": os.environ["SLURM_JOB_ID"],
         "pid": os.getpid(),
@@ -1322,8 +1398,8 @@ def _run_restore(args):
 
     _verify_imports(session["root"], session["sources"])
     _verify_source(session["root"], args.expected_head)
-    print("CIC_MAF_SEED42_EVALUATION_RESTORE=PASS")
-    print("CIC_MAF_SEED42_BOUNDED_EVALUATION=PASS")
+    print("CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_EVALUATION_RESTORE=PASS")
+    print("CIC_MAF_SEED" + str(EXPERIMENTAL_SEED) + "_BOUNDED_EVALUATION=PASS")
     print("COMPLETE_EVALUATION=False")
     print("FULL_BENCHMARK_GO=NO", flush=True)
     return restore_report
@@ -1336,11 +1412,14 @@ def _run_restore(args):
 
 def _parser():
     parser = argparse.ArgumentParser(
-        description="Bounded CIC MAF seed-42 real-data evaluation driver",
+        description="Bounded CIC MAF seeds 42/43 real-data evaluation driver",
     )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--preflight-only", action="store_true")
     mode.add_argument("--phase", choices=("train", "restore"))
+    parser.add_argument(
+        "--experimental-seed", type=int, choices=(42, 43), default=42,
+    )
     parser.add_argument("--repository-root", required=True)
     parser.add_argument("--expected-head", required=True)
     parser.add_argument("--dataset-config", required=True)
@@ -1359,6 +1438,7 @@ def _parser():
 
 def main(argv=None):
     args = _parser().parse_args(argv)
+    _apply_binding(args.experimental_seed)
     if args.preflight_only:
         if args.run_dir is not None or args.receipt_sha256 is not None:
             raise SystemExit("preflight does not accept run or receipt arguments")
