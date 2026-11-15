@@ -1763,3 +1763,68 @@ Stages remain at their previously recorded statuses. No gate is closed by this
 entry.
 
 FULL_BENCHMARK_GO=NO
+
+## S2-02 bounded synthesis-linkage implementation — 2026-11-15
+
+Local implementation record for independent review. This entry records a
+bounded Stage 2 documentation/configuration/linkage package. It ran no
+training, synthesis, Slurm job, checkpoint publication or synthetic-pool
+publication. It does not declare S2-02 or Stage 2 complete.
+
+### Researcher-approved controls transcribed
+
+- GAN: terminal checkpoint; conditional DCGAN; 100-dimensional standard-normal
+  latents; class-conditioned generation; existing canonical converter.
+- VAE: validation-best checkpoint; standard-normal prior; class-conditioned
+  decoder mean; deterministic canonical conversion; no Gaussian observation
+  noise; last checkpoint retained for provenance.
+- Diffusion: validation-best checkpoint; accepted 1,000-step DDPM and
+  reverse-posterior mathematics; existing per-sample noise identity;
+  model-call batch size one; last checkpoint retained for provenance.
+- GAN/VAE latent identity: `trustforge.paper01.synthesis-latent-stream.v1`
+  with explicit `SeedSequence`, `PCG64`, `Generator` and domain/identity
+  entropy ordering.
+- Initial synthesis batch settings: GAN 16, VAE 32, Diffusion 1. GAN/VAE values
+  are provisional; no measured optimum is claimed. Resource verification remains
+  Stage 3.
+
+### Bounded implementation evidence
+
+- Recipe:
+  `studies/paper01_benchmark/revision_2026/synthesis_linkage_recipe.json`
+- Linkage module:
+  `src/trustforge/models/paper01_revision_2026/synthesis_linkage.py`
+- Focused local tests:
+  `tests/test_paper01_synthesis_linkage_revision_2026.py`
+
+The module validates recipe controls, derives the approved GAN/VAE latent
+identities before model-call batching, wraps the existing terminal GAN loader
+and VAE best-checkpoint loader, reuses the existing Diffusion sampler and
+canonical converters, validates generated batches, and validates complete-pool
+metadata without generating or publishing a pool.
+
+### Verification boundary
+
+Focused local tests cover configuration, RNG identity, request/checkpoint-role
+validation, GAN fixture generation, Diffusion fixture generation, output
+validation and complete-pool metadata rejection. Local result:
+`60 passed, 1 skipped`. The skipped case is VAE decoder execution, locally
+BLOCKED because TensorFlow is unavailable in the local test environment.
+The local golden-vector regression passed under NumPy 2.4.2; the recorded
+NumPy 2.2.6 baseline is unavailable locally, so pinned-version golden replay
+remains UNVERIFIED. No production checkpoint was loaded.
+
+Diffusion durable checkpoint publication/loading remains a Stage 4 dependency.
+The current Diffusion checkpoint state remains unpublished and in-memory.
+
+### Status
+
+`S2_02_SCIENTIFIC_POLICY=ACCEPTED`
+
+`S2_02_EXECUTABLE_LINKAGE=LOCAL_IMPLEMENTATION_PENDING_INDEPENDENT_REVIEW`
+
+`S2_02_SYNTHESIS_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Stage 2 remains IN_PROGRESS.

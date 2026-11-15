@@ -1,0 +1,115 @@
+{
+  "schema": "trustforge.paper01.synthesis-linkage-recipe.v1",
+  "status": "APPROVED_STAGE2_LINKAGE",
+  "decision_date": "2026-11-15",
+  "datasets": [
+    "ustc_tfc2016",
+    "cicmaldroid2020",
+    "malnet_image",
+    "malex"
+  ],
+  "experimental_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "primary_synthetic_samples_per_class": 2000,
+  "canonical_output": {
+    "shape": [
+      40,
+      40,
+      3
+    ],
+    "layout": "NHWC",
+    "dtype": "float32",
+    "range": [
+      0.0,
+      1.0
+    ]
+  },
+  "families": {
+    "gan": {
+      "datasets": [
+        "ustc_tfc2016",
+        "cicmaldroid2020",
+        "malnet_image",
+        "malex"
+      ],
+      "checkpoint_role": "terminal",
+      "generation": "conditional_dcgan_terminal",
+      "stream_contract": "trustforge.paper01.synthesis-latent-stream.v1",
+      "stream_contract_version": 1,
+      "rng_baseline": "numpy==2.2.6",
+      "bit_generator": "PCG64",
+      "latent_dimension": 100,
+      "latent_distribution": "standard_normal",
+      "model_call_batch_size": 16,
+      "quota_per_class": 2000,
+      "class_conditioning": "one_hot_requested_class",
+      "canonical_conversion": "gan_to_canonical",
+      "production_execution_authorized": false
+    },
+    "vae": {
+      "datasets": [
+        "ustc_tfc2016",
+        "cicmaldroid2020",
+        "malnet_image",
+        "malex"
+      ],
+      "checkpoint_role": "best",
+      "generation": "conditional_vae_decoder_mean",
+      "stream_contract": "trustforge.paper01.synthesis-latent-stream.v1",
+      "stream_contract_version": 1,
+      "rng_baseline": "numpy==2.2.6",
+      "bit_generator": "PCG64",
+      "latent_dimension": 100,
+      "prior": "standard_normal",
+      "observation_noise": false,
+      "model_call_batch_size": 32,
+      "quota_per_class": 2000,
+      "class_conditioning": "one_hot_requested_class",
+      "canonical_conversion": "internal_to_canonical",
+      "production_execution_authorized": false
+    },
+    "diffusion": {
+      "datasets": [
+        "ustc_tfc2016",
+        "cicmaldroid2020",
+        "malnet_image",
+        "malex"
+      ],
+      "checkpoint_role": "best",
+      "generation": "conditional_ddpm_reverse",
+      "stream_contract": "trustforge.paper01.diffusion-governed-sampling.v1",
+      "stream_contract_version": 1,
+      "rng_baseline": "numpy==2.2.6",
+      "bit_generator": "numpy_default_rng",
+      "timesteps": 1000,
+      "beta_start": 0.0001,
+      "beta_end": 0.02,
+      "noise_identity": [
+        "experimental_seed",
+        "class_id",
+        "sample_index",
+        "step",
+        "stream"
+      ],
+      "reverse_variance": "ddpm_posterior_variance",
+      "model_call_batch_size": 1,
+      "quota_per_class": 2000,
+      "class_conditioning": "one_hot_requested_class",
+      "canonical_conversion": "sampler_canonical_output",
+      "production_execution_authorized": false
+    }
+  },
+  "authorization": {
+    "full_benchmark_go": false,
+    "synthesis_execution_authorized": false,
+    "production_artifact_publication_authorized": false,
+    "slurm_submission_authorized": false
+  }
+}

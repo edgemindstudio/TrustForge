@@ -510,3 +510,126 @@ across generated batches.
 
 No AR/MAF recipe is selected by this recovery record.
 Stage 2 remains IN_PROGRESS.
+
+## 15. S2-02 synthesis-linkage decisions — 2026-11-15
+
+Status: researcher-approved decisions recorded for bounded execution review.
+This section does not authorize synthesis, runtime activation, Slurm jobs,
+checkpoint publication or synthetic-pool publication.
+
+### Checkpoint roles
+
+- GAN primary synthesis uses the predeclared terminal checkpoint. FID, KID,
+  downstream accuracy and held-out test results do not select checkpoints.
+- VAE primary synthesis uses the validation-best checkpoint. Best means the
+  earliest completed epoch attaining minimum validation total loss. The last
+  checkpoint is retained for provenance.
+- Diffusion primary synthesis uses the validation-best checkpoint. Best means
+  the earliest completed epoch attaining minimum real-validation MSE. The last
+  checkpoint is retained for provenance. FID, KID, downstream accuracy and
+  held-out test results do not select checkpoints.
+
+### Generation semantics
+
+- GAN preserves the accepted conditional DCGAN, the 100-dimensional latent
+  distribution and standard-normal latent draws. The requested class is passed
+  as the generator condition. Existing GAN image-domain conversion is retained.
+- VAE draws `z` from the standard-normal prior, decodes with the requested
+  authoritative class condition and uses the decoder mean as the primary
+  synthetic image. The decoder mean is converted deterministically to canonical
+  `[0,1]`. No Gaussian observation noise is added. This is not described as a
+  full stochastic Gaussian observation draw.
+- Diffusion preserves the accepted conditional 1,000-step DDPM, governed
+  reverse-posterior mathematics, existing timestep and per-sample noise
+  identities, and the existing sampler. Model-call batch size is one.
+
+### GAN/VAE latent-stream contract
+
+Contract identifier:
+
+`trustforge.paper01.synthesis-latent-stream.v1`
+
+Baseline: NumPy 2.2.6. Seed derivation uses
+`numpy.random.SeedSequence`, explicit `numpy.random.PCG64`, and
+`numpy.random.Generator`. Domain identifier: `0x54534631`.
+
+Dataset numeric codes:
+
+- `ustc_tfc2016` = 1
+- `cicmaldroid2020` = 2
+- `malnet_image` = 3
+- `malex` = 4
+
+Family numeric codes: `gan` = 1; `vae` = 2. Purpose numeric code:
+`production_latent` = 1.
+
+Exact entropy order:
+
+```
+[0x54534631, dataset_code, family_code, experimental_seed,
+ class_id, sample_index, purpose_code]
+```
+
+One independently derived latent vector is produced per sample identity:
+
+```
+z = Generator(PCG64(SeedSequence(entropy))).standard_normal(100)
+```
+
+No global RNG mutation, training/diagnostic stream reuse, Python `hash()`,
+dictionary-order dependence or implicit default bit generator is permitted.
+Production seeds are 42-48; sample indices are 0-1999; class IDs are validated
+against the authoritative dataset mapping.
+
+### Synthesis batch configuration
+
+These are approved initial operational settings, not measured optima:
+
+- GAN model-call synthesis batch size: 16 (provisional).
+- VAE model-call synthesis batch size: 32 (provisional).
+- Diffusion model-call synthesis batch size: 1 (preserves existing sampler).
+
+A later batch-size change requires recorded operational verification and must
+not silently alter an existing experiment or artifact identity. Resource
+verification belongs to Stage 3. Full-size synthesis remains unauthorized.
+
+### Fixed quota and output contract
+
+- Primary synthesis quota: 2,000 samples per authoritative class per
+  experimental seed.
+- Canonical output: finite float32 NHWC `40 x 40 x 3` in `[0,1]`.
+- Requested class and recorded class condition must agree.
+- Complete-pool claims require every authoritative class and all 2,000 sample
+  identities per class.
+- Missing, contradictory or unknown mandatory configuration fails closed.
+
+### Configuration and executable linkage
+
+The machine-readable approved controls are recorded in:
+
+`studies/paper01_benchmark/revision_2026/synthesis_linkage_recipe.json`
+
+The bounded Stage 2 linkage implementation is:
+
+`src/trustforge/models/paper01_revision_2026/synthesis_linkage.py`
+
+It reuses the existing GAN v3 terminal loader, VAE governed loader,
+GAN/VAE canonical converters and Diffusion governed sampler. It does not
+publish checkpoints or synthetic pools, and it does not activate runtime
+execution.
+
+Stage 3 retains runtime activation, compute-node provenance and resource
+verification. Stage 4 retains durable Diffusion checkpoint publication and
+restoration plus authentic production synthetic-pool production and
+independent verification.
+
+`S2_02_SCIENTIFIC_POLICY=ACCEPTED`
+
+`S2_02_EXECUTABLE_LINKAGE=LOCAL_IMPLEMENTATION_PENDING_INDEPENDENT_REVIEW`
+
+`S2_02_SYNTHESIS_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Stage 2 remains IN_PROGRESS. This section does not declare S2-02 or Stage 2
+complete.
