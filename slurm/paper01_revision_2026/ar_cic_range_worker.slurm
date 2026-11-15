@@ -29,6 +29,7 @@ case "$TF_SYNTH_FAMILY:$experimental_seed" in
     ar:42) generation=ar_cic_seed42 ;;
     maf:42) generation=maf_cic_seed42_execution ;;
     maf:43) generation=maf_cic_seed43_execution ;;
+    maf:44) generation=maf_cic_seed44_execution ;;
     *) echo "Unsupported synthesis family or experimental seed" >&2; exit 1 ;;
 esac
 

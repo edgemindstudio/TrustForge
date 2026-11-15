@@ -32,6 +32,13 @@ BINDINGS = {
         "generation": "maf_cic_seed43_execution",
         "training_job": "314075",
     },
+    ("maf", 44): {
+        "training_commit": "8d4a281e04ed2232a134a6da10ff20c56d67316e",
+        "best_sha256":
+            "cc58fe65abaa0656e4f09d6d17d83e586f048f50a6a858d01e1f1d7b9191055a",
+        "generation": "maf_cic_seed44_execution",
+        "training_job": "314269",
+    },
 }
 
 
@@ -49,7 +56,7 @@ def _parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--family", choices=("ar", "maf"), required=True)
     parser.add_argument(
-        "--experimental-seed", type=int, choices=(42, 43), default=42,
+        "--experimental-seed", type=int, choices=(42, 43, 44), default=42,
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--class-id", type=int, choices=range(5), required=True)
