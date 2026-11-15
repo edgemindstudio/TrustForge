@@ -1698,3 +1698,68 @@ significance claim.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+## Research-direction governance clarification — 2026-11-15
+
+Append-only governance entry. It records a direction-control clarification and
+introduces no new scientific requirement, mandatory gate, experiment, or
+acceptance criterion. No earlier entry is rewritten and no stage is
+retroactively closed.
+
+### Recorded continuity failure
+
+The governing documents already existed, but successive execution results
+caused the next technically possible experiment to be authorized as if it were
+the next required one; each successful MAF seed was followed by authorizing the
+numerically next seed. Technical possibility and numerical adjacency were
+mistaken for authority. The researcher identified this as a continuity failure
+that must be corrected in the durable record.
+
+### Direction control
+
+- Research direction must follow the existing research continuity charter, the
+  live benchmark specification, accepted reviewer-driven decisions, and the
+  original nine-stage readiness plan with its original exit conditions.
+- After each execution result, the applicable requirement or gate must be
+  identified before any further action is proposed (charter Section
+  "Research-direction control and prevention of execution-driven drift").
+- OpenCode remains an implementation executor; execution output does not create
+  new scientific direction.
+
+### Accepted bounded evidence
+
+- MAF seeds 42, 43 and 44 are accepted bounded cells under their recorded
+  entries.
+- Seed 44: generator job 314269; diagnostic 314347; synthesis array 314349;
+  finalizer 314354; paired evaluation 314355; evaluation report
+  6cf1c1995cd3ae396765631b9029576d141865830b451e5883572904359940cc;
+  paired macro-F1 difference 0.06108291546148226; shared initial weights
+  3862840721ffcecf79d3433ef58fb55bb822425104bc93c2f3ae8d4560404749.
+- Three accepted MAF cells are evidence for those cells only. They do not
+  establish cross-seed significance, benchmark-wide readiness, or readiness of
+  other generator families or datasets.
+
+### Direction consequence
+
+- Continuation to MAF seed 45 is not automatically justified or authorized.
+  It is neither mandated nor forbidden by this entry; it requires a governing
+  requirement and explicit researcher authorization like any other execution.
+- The next conversation must reconcile actual readiness status and mandatory
+  blockers against the original stage exit criteria rather than continuing the
+  seed sequence.
+- Full benchmark launch remains unauthorized.
+
+### Reference
+
+The research continuity charter was extended on 2026-11-15 with the
+direction-control section above; updated charter SHA-256
+5399545df1707f075e0381069eea73e2fae97378597330b29e5d73c659f63418
+(228 lines). The earlier ledger reference recorded the 2026-11-13 charter
+revision and remains historical. A new-conversation navigation aid is provided
+at studies/paper01_benchmark/revision_2026/next_conversation_handoff_2026-11-15.md;
+it is not a substitute for this ledger or the specification.
+
+Stages remain at their previously recorded statuses. No gate is closed by this
+entry.
+
+FULL_BENCHMARK_GO=NO

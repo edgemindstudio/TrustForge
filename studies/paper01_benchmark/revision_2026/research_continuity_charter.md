@@ -107,3 +107,122 @@ The GitHub-only read-only comparison in the new conversation found central `c9ba
 7. Update the **central ledger** after material milestones, preserving original criteria, accepted evidence, gaps, and scope; stop when the gate closes.
 
 **Governing test:** Can another researcher prove what scientific experiment was intended, what truly executed, what artifacts were produced, and how each paper's findings remain reproducible and isolated as the wider dissertation evolves?
+
+## Research-direction control and prevention of execution-driven drift — 2026-11-15
+
+**Status:** Governance clarification, recorded after a continuity failure. It adds no experimental requirement, changes no accepted result, and authorizes no execution.
+
+**Observed failure:** Although this charter, the benchmark specification and the
+ledger already existed, successive execution results caused the next technically
+possible experiment to be authorized as if it were the next required one. In
+particular, each successful MAF seed was followed by authorizing the numerically
+next seed. Technical possibility and numerical adjacency are not authority.
+
+### A. Why Revision-2026 exists
+
+Paper 1 was submitted and received substantive reviewer criticism. The revision
+must address accepted reviewer concerns, strengthen experimental coverage and
+statistical reporting, improve methodological transparency, and establish a
+reproducible unified benchmark.
+
+The subsequent engineering audit was initiated because hardcoded paths, stale
+imports, configuration precedence, historical defaults, outdated files, artifact
+ambiguity, and cross-paper modifications could cause apparently correct commands
+to execute the wrong scientific protocol.
+
+Engineering correctness is necessary to support the scientific research; it is
+not the research objective itself. A passing job, a clean test run, or a tidy
+repository does not by itself advance the science.
+
+### B. Central Paper 1 contribution
+
+The principal methodological contribution is a unified and reproducible
+
+TRAIN → CHECKPOINT → RESTORE → SYNTHESIZE → EVALUATE → AGGREGATE
+
+framework for comparing synthetic malware-image generators under controlled
+conditions. The accepted design is:
+
+- Four datasets.
+- Seven generator families.
+- Seven experimental seeds, 42–48.
+- Fixed primary budget of 2,000 synthetic images per class per experimental seed.
+- Governed preprocessing and label mappings.
+- Leakage-safe real-data partitions.
+- Paired real-only and augmented classifier comparisons.
+- Held-out real testing.
+- Seed-aware statistical aggregation.
+- Reproducible execution and artifact provenance.
+
+Generator checkpoints, pool production, and successful individual seeds are
+supporting evidence, not substitutes for the unified benchmark. A bounded cell
+result is not a benchmark result.
+
+### C. Governance hierarchy
+
+The existing authority rules in this charter apply unchanged. In particular:
+
+- Reviewer feedback and accepted researcher decisions establish the motivation
+  and scientific revision objectives.
+- The live accepted benchmark specification governs intended experiments.
+- The readiness ledger governs completed evidence, outstanding requirements, and
+  gate status.
+- Verified repository, runtime, and artifact evidence establishes actual
+  execution state.
+- OpenCode is an implementation executor, not an independent source of
+  scientific direction.
+
+Do not give a newly generated summary greater authority than the original
+governing documents. A chat-generated report, however detailed, is evidence
+about a moment, not a replacement for the charter, specification or ledger.
+
+### D. Mandatory next-action rule
+
+Whenever OpenCode returns a result, ChatGPT must first determine:
+
+1. Which existing requirement or gate authorized the work?
+2. What evidence was actually produced?
+3. Whether the original acceptance condition has been satisfied.
+4. Which agreed requirement genuinely remains unresolved.
+5. Whether the next action is mandatory for the research mission or merely
+   technically possible.
+6. Whether the current gate should now be closed.
+7. What smallest authorized action follows from the governing plan.
+
+Do not select the next experimental seed merely because the previous seed
+succeeded. Do not create new readiness stages, repeat accepted validations, or
+introduce speculative hardening without an identified scientific or operational
+blocker. When no governing requirement calls for further execution, the correct
+action is to reconcile evidence and stop.
+
+### E. Readiness versus production
+
+Keep these categories explicitly distinct:
+
+- Engineering defect correction.
+- Production-readiness verification.
+- Individual bounded experimental execution.
+- Full benchmark launch authorization.
+- Post-run aggregation and manuscript release.
+
+A representative bounded run may help establish readiness, but the evidence
+required for each distinct generator/dataset path must be judged according to the
+existing readiness criteria.
+
+Do not assume that all 196 planned experiment cells require individually
+negotiated scientific approval. Equally, do not assume that three completed MAF
+cells prove full benchmark readiness. The ledger's readiness matrix and finite
+acceptance sequence define what evidence each path needs.
+
+### F. Continuity enforcement
+
+Each new ChatGPT conversation must read this charter, the readiness ledger, the
+benchmark specification, and current branch evidence before suggesting execution.
+It must explicitly state the original mission, current governing stage,
+applicable original exit conditions, accepted evidence, outstanding mandatory
+blockers, and the next justified action.
+
+If the documents and observed execution evidence disagree, report the
+disagreement rather than inventing a resolution. Preserve accepted evidence at
+the scope it actually proves, and treat every historical status heading as a
+time-stamped snapshot rather than current authority.
