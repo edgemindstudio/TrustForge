@@ -1557,3 +1557,144 @@ study and support no cross-seed statistical-significance claim.
 
 S2-04 / Stage 5 remains IN_PROGRESS.
 FULL_BENCHMARK_GO=NO
+
+## CIC MAF seed-44 generator, pool and real-data bounded evaluation acceptance — jobs 314269 / 314347 / 314349 / 314354 / 314355
+
+PASS for one bounded CICMalDroid2020 / MAF / experimental seed-44 cell spanning
+generator training, a two-batch synthesis diagnostic, full-pool production and
+real-data paired evaluation. Generator source
+8d4a281e04ed2232a134a6da10ff20c56d67316e; synthesis source
+8198dc4d42fdb05bc3ebb6fd055b9951ab3d897f; evaluation source
+c56a02d627d5506e2ed39badc79c28215ee5849f.
+
+SEED44_GENERATOR_RESTORE=PASS
+SEED44_TWO_BATCH_DIAGNOSTIC=PASS
+CIC_MAF_POOL_FINALIZATION=PASS
+CIC_MAF_SEED44_EVALUATION_TRAIN=PASS
+CIC_MAF_SEED44_EVALUATION_RESTORE=PASS
+CIC_MAF_SEED44_BOUNDED_EVALUATION=PASS
+
+### Generator identity and restoration
+
+- Job 314269 completed on talon07 in 00:13:26 with exit code 0:0.
+- Generation: maf_cic_seed44_execution; selected checkpoint state
+  cc58fe65abaa0656e4f09d6d17d83e586f048f50a6a858d01e1f1d7b9191055a.
+- Training receipt:
+  8e81b888ea0e93b5ae4f420064f10bdc54446a81c564ef90ababc23be192e5f3.
+- 254 optimizer updates over two epochs; best validation NLL
+  68.69400057356181; fresh-process checkpoint restoration passed inside the
+  same allocation.
+
+### Two-batch synthesis diagnostic
+
+- Job 314347 completed on talon17 in 00:01:00 with exit code 0:0.
+- Class 0, batches 0 and 1, deterministic sampling seeds 223251 and 223252;
+  sixteen images (eight per batch) at canonical 40x40x3 float32 in [0, 1].
+- Batch archives:
+  94ae65e8c2f4ebc3fb46daf9298649c02d1b34c94a1836b8806ec7595d7f00e4 and
+  4c5337ca55b793c022f122408db3abd92d0ef272f84bd391462df6a09a7c0486.
+
+### Full synthetic pool
+
+- Synthesis array 314349 (five class tasks; 00:16:26 to 00:23:46 per task) and
+  its afterok finalizer 314354 completed with exit codes 0:0.
+- Pool: five classes, 1,250 batches, 10,000 images, 2,000 per class; sampling
+  seeds 223251-224500 with no collisions; streaming preflight verified 1,250
+  batches and 10,000 images.
+- Pool manifest:
+  c5fc5cb6aa7732b356b2bb57bfbd28d58f05b771ef50f278456111673fed0cb5.
+- Finalization report:
+  23463ca4e13bf660ae9550d9f432568f1fd26720f60e3b9172c7cd1d6cadd36c.
+
+Pool root:
+`~/trustforge_revision_2026_artifacts/paper01/maf/cicmaldroid2020/seed44/pool_8198dc4-Qm4Rt7`
+
+### Paired evaluation
+
+- Job 314355 completed on talon07 in 00:18:09 with exit code 0:0.
+- Training and restoration ran in separate processes (PIDs 1387829 and
+  1390171) inside one allocation; the restore phase authenticated the training
+  receipt by SHA-256 before evaluating the held-out test split.
+- Training receipt, job 314355:
+  502785727e350da509787da5dd6d8f2e904750cd9ac0fdd52481ca3fa4765c25.
+- Both arms started from shared initial weights
+  3862840721ffcecf79d3433ef58fb55bb822425104bc93c2f3ae8d4560404749.
+- Both arms trained 20 epochs (stopping outcome maximum_epochs) and selected
+  epoch 19: 1,280 optimizer updates real-only, 2,840 augmented; selected
+  validation NLL 0.8362294495208688 and 0.6761579209864654.
+- Selected classifier states:
+  5f8666a570cdabd86dfe3a13bdd040c32900f582ea9adbe6aee2c68cdf09895a and
+  017796057ca88ef7e4866004571e36053ab6999eff97bd1a652ec069582e9b6c;
+  both restorations verified their selected-weight assignments.
+- Augmented consumption: 200,000 synthetic examples across 20 epochs
+  (10,000 per epoch) against the accepted seed-44 pool.
+- Test predictions: 2,323 held-out examples per arm with five-class coverage.
+- The previously reported augmented initial-weight prefix 38628472 was a
+  summary transcription error, not an artifact difference; the persisted
+  digest equals the real-only digest exactly, and the pairing is enforced by
+  three independent accepted checks.
+
+Run directory:
+`~/trustforge_revision_2026_artifacts/paper01/maf/cicmaldroid2020/seed44/bounded_eval-c56a02d-Tq7Md4`
+
+Evidence hashes:
+- evaluation.json:
+  6cf1c1995cd3ae396765631b9029576d141865830b451e5883572904359940cc
+- train_report.json:
+  757c4a88a844c5a5cd4d5596b84fd297e919c91e08339e6e91b5281dc7883d67
+- restore_report.json:
+  a68d6f34940c58b08c522aa80bf37efc9b60a53278f08ff6f25ebfee17708deb
+
+### Accepted performance evidence
+
+| Metric | Real-only | Real + synthetic |
+|---|---:|---:|
+| Macro-F1 | 0.6769984997 | 0.7380814152 |
+| Balanced accuracy | 0.6673093749 | 0.7295561666 |
+| Macro-AUPRC | 0.7602651263 | 0.8212323940 |
+| Brier | 0.4007243583 | 0.3231987426 |
+| ECE | 0.1088318296 | 0.0746388359 |
+
+Primary paired endpoint:
+augmented_minus_real_only_macro_f1 = 0.06108291546148226
+
+Supporting fidelity/diversity results: pooled class-balanced KID
+1.0182850786 (10 draws, 125 per class); pooled balanced FID 594.9966250;
+macro class FID 604.2904967; three-scale intra-class MS-SSIM 0.0200221144
+(1,000 selected pairs).
+
+### Unified validation scope
+
+- Required verified result groups: 7 of 7.
+- Required status blockers: 0; lineage blockers: 0.
+- Groups: real_only_downstream, real_plus_synthetic_downstream,
+  paired_downstream, pooled_balanced_kid, pooled_balanced_fid, class_fid,
+  intra_class_ms_ssim.
+- Augmented pool consumption was verified against the seed-44 manifest.
+- complete_evaluation=false.
+
+### Cross-seed context
+
+The three accepted bounded seed cells all show a positive paired macro-F1
+difference under the unchanged protocol: seed 42 = 0.05451150907476743;
+seed 43 = 0.09277561208032425; seed 44 = 0.06108291546148226. Three seeds do
+not complete the seven-seed study and support no cross-seed statistical-
+significance claim.
+
+### Preserved boundaries
+
+- Generator lineage is DRIVER_VERIFIED; generator_lineage_authenticated
+  remains false, semantic class fidelity remains NOT_ESTABLISHED, and
+  complete_evaluation and full_benchmark_go remain false.
+- Unified validation records feature_extraction_authentication,
+  image_score_recomputation, provenance_validation and publication_validation
+  as NOT_PERFORMED; successful pool finalization is not independent semantic
+  validation.
+- This applies only to the evaluated dataset, family, seed and classifier
+  configuration. Other families, datasets, seeds and full-benchmark execution
+  remain open.
+- The accepted seed-42 and seed-43 acceptance entries above are preserved
+  unchanged.
+
+S2-04 / Stage 5 remains IN_PROGRESS.
+FULL_BENCHMARK_GO=NO
