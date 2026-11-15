@@ -10,9 +10,47 @@ import subprocess
 import sys
 
 
-def main():
+BINDINGS = {
+    ("ar", 42): {
+        "training_commit": "e4473abcdbc53f0de3a01ebe48858f2f3c7b841a",
+        "best_sha256":
+            "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0",
+        "generation": "ar_cic_seed42",
+        "training_job": None,
+    },
+    ("maf", 42): {
+        "training_commit": "913d86f9c64e6a3a1a0d009f112bcfa889a02ec8",
+        "best_sha256":
+            "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d",
+        "generation": "maf_cic_seed42_execution",
+        "training_job": "311675",
+    },
+    ("maf", 43): {
+        "training_commit": "58f965c39aad103dc056f7ac690de90578ed2932",
+        "best_sha256":
+            "57e378c44c870af58e4b8eff38cf1cc976516b0dade249194bb5962c28a724f7",
+        "generation": "maf_cic_seed43_execution",
+        "training_job": "314075",
+    },
+}
+
+
+def execution_binding(family, experimental_seed):
+    """Return the accepted checkpoint binding for one family/seed cell."""
+    if type(experimental_seed) is not int:
+        raise ValueError("unsupported synthesis family or experimental seed")
+    binding = BINDINGS.get((family, experimental_seed))
+    if binding is None:
+        raise ValueError("unsupported synthesis family or experimental seed")
+    return binding
+
+
+def _parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--family", choices=("ar", "maf"), required=True)
+    parser.add_argument(
+        "--experimental-seed", type=int, choices=(42, 43), default=42,
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--class-id", type=int, choices=range(5), required=True)
     parser.add_argument("--batch-start", type=int, required=True)
@@ -25,7 +63,13 @@ def main():
     parser.add_argument("--generation-name", required=True)
     parser.add_argument("--expectations", type=Path)
     parser.add_argument("--expectations-sha256")
+    return parser
+
+
+def main():
+    parser = _parser()
     args = parser.parse_args()
+    binding = execution_binding(args.family, args.experimental_seed)
     if not 0 <= args.batch_start < args.batch_stop <= 250:
         parser.error("require 0 <= batch-start < batch-stop <= 250")
     if args.family == "maf" and (
@@ -128,18 +172,9 @@ def main():
 
     import numpy as np
 
-    training_commit, best_sha, generation = {
-        "ar": (
-            "e4473abcdbc53f0de3a01ebe48858f2f3c7b841a",
-            "d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0",
-            "ar_cic_seed42",
-        ),
-        "maf": (
-            "913d86f9c64e6a3a1a0d009f112bcfa889a02ec8",
-            "3604bd4009e2199400665b28ef156d5db8e6d2e75094e5eb1d193b090d89264d",
-            "maf_cic_seed42_execution",
-        ),
-    }[args.family]
+    training_commit = binding["training_commit"]
+    best_sha = binding["best_sha256"]
+    generation = binding["generation"]
     if args.generation_name != generation:
         raise ValueError("unexpected checkpoint generation")
     receipt = None
@@ -157,7 +192,7 @@ def main():
             or receipt["configuration_sha256"] != args.config_sha256
             or receipt["generation_name"] != generation
             or receipt["source_commit"] != training_commit
-            or receipt["job_id"] != "311675"
+            or receipt["job_id"] != binding["training_job"]
         ):
             raise ValueError("unexpected accepted MAF execution receipt")
         expected_fitted_state_sha256 = receipt["fitted_state_sha256"]
@@ -178,7 +213,8 @@ def main():
 
     setup = prepare_training_setup(
         family=args.family, dataset_id="cicmaldroid2020",
-        experimental_seed=42, adapter=adapter, recipe_raw=recipe_raw,
+        experimental_seed=args.experimental_seed, adapter=adapter,
+        recipe_raw=recipe_raw,
     )
     identity = setup["evidence"]["identity"]
     if identity["class_mapping"] != ["0", "1", "2", "3", "4"]:
@@ -284,7 +320,7 @@ def main():
         sampling_seed = synthesis_batch_seed(
             dataset_id="cicmaldroid2020",
             family=args.family,
-            experimental_seed=42,
+            experimental_seed=args.experimental_seed,
             class_id=class_id,
             batch_index=batch_index,
         )
@@ -333,7 +369,7 @@ def main():
             ),
             "family": args.family,
             "dataset_id": "cicmaldroid2020",
-            "experimental_seed": 42,
+            "experimental_seed": args.experimental_seed,
             "class_id": class_id,
             "batch_index": batch_index,
             "sampling_seed": sampling_seed,

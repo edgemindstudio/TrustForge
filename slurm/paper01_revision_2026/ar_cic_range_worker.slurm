@@ -24,10 +24,12 @@ umask 077
 : "${TF_SYNTH_BATCH_START:?Batch start required}"
 : "${TF_SYNTH_BATCH_STOP:?Exclusive batch stop required}"
 
-case "$TF_SYNTH_FAMILY" in
-    ar) generation=ar_cic_seed42 ;;
-    maf) generation=maf_cic_seed42_execution ;;
-    *) echo "Unsupported synthesis family" >&2; exit 1 ;;
+experimental_seed="${TF_SYNTH_EXPERIMENTAL_SEED:-42}"
+case "$TF_SYNTH_FAMILY:$experimental_seed" in
+    ar:42) generation=ar_cic_seed42 ;;
+    maf:42) generation=maf_cic_seed42_execution ;;
+    maf:43) generation=maf_cic_seed43_execution ;;
+    *) echo "Unsupported synthesis family or experimental seed" >&2; exit 1 ;;
 esac
 
 cd "$TRUSTFORGE_REPO_ROOT"
@@ -73,13 +75,14 @@ export OMP_NUM_THREADS="$SLURM_CPUS_PER_TASK"
 export OPENBLAS_NUM_THREADS="$SLURM_CPUS_PER_TASK"
 export MKL_NUM_THREADS="$SLURM_CPUS_PER_TASK"
 
-printf 'PURPOSE=CIC_SEED42_CHECKPOINT_BACKED_AR_RANGE_WORKER\n'
-printf 'SYNTHESIS_HEAD=%s\nFAMILY=%s\nSLURM_JOB_ID=%s\n' \
-    "$TF_SYNTH_EXPECTED_HEAD" "$TF_SYNTH_FAMILY" "$SLURM_JOB_ID"
+printf 'PURPOSE=CIC_SEED%s_CHECKPOINT_BACKED_AR_RANGE_WORKER\n' "$experimental_seed"
+printf 'SYNTHESIS_HEAD=%s\nFAMILY=%s\nEXPERIMENTAL_SEED=%s\nSLURM_JOB_ID=%s\n' \
+    "$TF_SYNTH_EXPECTED_HEAD" "$TF_SYNTH_FAMILY" "$experimental_seed" "$SLURM_JOB_ID"
 hostname
 
 "$python_executable" -B -u "$driver" \
     --family "$TF_SYNTH_FAMILY" \
+    --experimental-seed "$experimental_seed" \
     --repository-root "$PWD" \
     --expected-head "$TF_SYNTH_EXPECTED_HEAD" \
     --dataset-config "$TF_SYNTH_DATASET_CONFIG" \
