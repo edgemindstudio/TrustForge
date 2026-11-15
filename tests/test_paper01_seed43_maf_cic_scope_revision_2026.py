@@ -37,8 +37,10 @@ def _manifest(*, seed):
     ("ar", "cicmaldroid2020", 42, True),
     ("maf", "cicmaldroid2020", 42, True),
     ("maf", "cicmaldroid2020", 43, True),
+    ("maf", "cicmaldroid2020", 44, True),
     ("ar", "cicmaldroid2020", 43, False),
-    ("maf", "cicmaldroid2020", 44, False),
+    ("ar", "cicmaldroid2020", 44, False),
+    ("maf", "cicmaldroid2020", 45, False),
     ("maf", "malex", 43, False),
     ("gan", "cicmaldroid2020", 42, False),
     ("maf", "cicmaldroid2020", True, False),
@@ -52,11 +54,12 @@ def test_bounded_scope_matrix(family, dataset, seed, allowed):
 
 def test_seed42_scope_is_preserved():
     assert runner.BOUNDED_CIC_SCOPE == {
-        ("ar", 42), ("maf", 42), ("maf", 43),
+        ("ar", 42), ("maf", 42), ("maf", 43), ("maf", 44),
     }
 
 
-def test_runner_reaches_source_for_maf_seed43(monkeypatch):
+@pytest.mark.parametrize("seed", [43, 44])
+def test_runner_reaches_source_for_maf_seeds(monkeypatch, seed):
     def stop_at_source(*args, **kwargs):
         raise ValueError("source boundary reached")
 
@@ -65,7 +68,7 @@ def test_runner_reaches_source_for_maf_seed43(monkeypatch):
     with pytest.raises(ValueError, match="source boundary reached"):
         runner.run_training_and_prepare_checkpoint(
             repository_root="unused", family="maf",
-            dataset_id="cicmaldroid2020", experimental_seed=43,
+            dataset_id="cicmaldroid2020", experimental_seed=seed,
             adapter=object(), bounded_integration=True,
         )
 
@@ -93,20 +96,21 @@ def _patch_execution(monkeypatch, *, identity_seed, observed):
     )
 
 
-def test_execution_forwards_seed43_into_request(monkeypatch):
+@pytest.mark.parametrize("seed", [43, 44])
+def test_execution_forwards_seed_into_request(monkeypatch, seed):
     observed = {}
-    _patch_execution(monkeypatch, identity_seed=43, observed=observed)
+    _patch_execution(monkeypatch, identity_seed=seed, observed=observed)
     prepared = execution.prepare_cic_execution(
-        repository_root="fixture", family="maf", experimental_seed=43,
+        repository_root="fixture", family="maf", experimental_seed=seed,
         adapter=object(), dataset_config_raw=b"fixture",
         bounded_integration=True,
     )
     assert observed["family"] == "maf"
-    assert observed["experimental_seed"] == 43
+    assert observed["experimental_seed"] == seed
     assert observed["bounded_integration"] is True
     assert prepared["requested"]["expected_identity"][
         "experimental_seed"
-    ] == 43
+    ] == seed
 
 
 def test_execution_rejects_mismatched_checkpoint_seed(monkeypatch):
@@ -150,14 +154,15 @@ def test_caller_defaults_to_seed42():
     assert arguments.experimental_seed == 42
 
 
-def test_caller_accepts_seed43():
+@pytest.mark.parametrize("seed", [43, 44])
+def test_caller_accepts_supported_seeds(seed):
     arguments = caller._parser().parse_args(
-        BASE_ARGUMENTS + ("--experimental-seed", "43")
+        BASE_ARGUMENTS + ("--experimental-seed", str(seed))
     )
-    assert arguments.experimental_seed == 43
+    assert arguments.experimental_seed == seed
 
 
-@pytest.mark.parametrize("seed", ["41", "44", "48"])
+@pytest.mark.parametrize("seed", ["41", "45", "48"])
 def test_caller_rejects_other_seeds(seed):
     with pytest.raises(SystemExit):
         caller._parser().parse_args(
@@ -168,7 +173,8 @@ def test_caller_rejects_other_seeds(seed):
 def test_generation_names_are_seed_bound():
     assert caller.execution_generation(42) == "maf_cic_seed42_execution"
     assert caller.execution_generation(43) == "maf_cic_seed43_execution"
-    assert caller.execution_generation(42) != caller.execution_generation(43)
+    assert caller.execution_generation(44) == "maf_cic_seed44_execution"
+    assert len({caller.execution_generation(seed) for seed in (42, 43, 44)}) == 3
 
 
 def test_accepted_recipe_and_permutation_seeds_are_unchanged():
@@ -206,7 +212,7 @@ def test_checkpoint_identity_binds_seed43():
         dataset_id="cicmaldroid2020", verified_preflight=preflight,
     )
     identity = {}
-    for seed in (42, 43):
+    for seed in (42, 43, 44):
         identity[seed] = build_checkpoint_identity(
             family="maf", dataset_id="cicmaldroid2020",
             experimental_seed=seed,
@@ -215,7 +221,11 @@ def test_checkpoint_identity_binds_seed43():
         )
     assert identity[42]["experimental_seed"] == 42
     assert identity[43]["experimental_seed"] == 43
+    assert identity[44]["experimental_seed"] == 44
     assert canonical_json_bytes(identity[42]) != canonical_json_bytes(
         identity[43]
+    )
+    assert canonical_json_bytes(identity[43]) != canonical_json_bytes(
+        identity[44]
     )
     assert identity[42]["recipe_sha256"] == identity[43]["recipe_sha256"]

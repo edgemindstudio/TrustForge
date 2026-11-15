@@ -9,7 +9,7 @@ import socket
 import sys
 
 
-BOUNDED_SEEDS = (42, 43)
+BOUNDED_SEEDS = (42, 43, 44)
 
 
 def execution_generation(experimental_seed):

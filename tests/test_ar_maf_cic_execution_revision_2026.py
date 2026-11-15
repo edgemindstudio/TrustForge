@@ -91,11 +91,27 @@ def test_default_authorization_stays_disabled(monkeypatch):
         )
 
 
-def test_bounded_scope_not_expanded():
+@pytest.mark.parametrize("family,seed", [
+    ("ar", 43), ("ar", 44), ("maf", 45),
+])
+def test_bounded_scope_rejects_unauthorized_seeds(family, seed):
     with pytest.raises(RuntimeError, match="bounded CIC execution scope"):
         execution.prepare_cic_execution(
-            repository_root="fixture", family="ar",
-            experimental_seed=43, adapter=object(),
+            repository_root="fixture", family=family,
+            experimental_seed=seed, adapter=object(),
+            dataset_config_raw=b"fixture", bounded_integration=True,
+        )
+
+
+def test_bounded_scope_admits_maf_seed44(monkeypatch):
+    def stop_at_capture(**kwargs):
+        raise ValueError("capture boundary reached")
+
+    monkeypatch.setattr(execution, "_capture", stop_at_capture)
+    with pytest.raises(ValueError, match="capture boundary reached"):
+        execution.prepare_cic_execution(
+            repository_root="fixture", family="maf",
+            experimental_seed=44, adapter=object(),
             dataset_config_raw=b"fixture", bounded_integration=True,
         )
 

@@ -58,6 +58,7 @@ BOUNDED_CIC_SCOPE = frozenset({
     ("ar", 42),
     ("maf", 42),
     ("maf", 43),
+    ("maf", 44),
 })
 
 
