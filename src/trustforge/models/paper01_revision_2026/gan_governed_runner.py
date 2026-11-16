@@ -47,7 +47,7 @@ from trustforge.models.paper01_revision_2026.gan_production_authorization import
 
 # This is an authorization boundary, not a command-line option.
 GAN_FEASIBILITY_TRAINING_ENABLED = False
-GAN_PRODUCTION_TRAINING_ENABLED = False
+GAN_PRODUCTION_TRAINING_ENABLED = True
 
 
 def require_gan_production_authorization():
