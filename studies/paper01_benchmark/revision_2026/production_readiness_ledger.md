@@ -1828,3 +1828,131 @@ The current Diffusion checkpoint state remains unpublished and in-memory.
 `FULL_BENCHMARK_GO=NO`
 
 Stage 2 remains IN_PROGRESS.
+
+## Stage 2 S2-03/S2-04 researcher acceptance and closure — 2026-11-15
+
+Status: RESEARCHER ACCEPTANCE RECORD. This entry records the researcher's
+explicit decision to accept and close S2-03 and S2-04 at their original Stage 2
+conditions. The preceding S2-03/S2-04 closure reconciliation was PROPOSED at the
+time; this later decision is what formally accepts and closes both requirements.
+Earlier entries, statuses and proposal wording are preserved unchanged.
+
+### A. Original Stage 2 closure conditions
+
+- S2-03 — CIC fitted preprocessing identity: "Record fitted scaler state bound
+  to source, ordered features, training membership, implementation and
+  environment."
+- S2-04 — Shared evaluator configuration: "Map accepted classifier, metrics and
+  statistical settings to production evaluator consumers."
+
+These are the acceptance conditions assessed as satisfied in the read-only
+reconciliation. No additional scientific requirement is introduced here.
+
+### B. S2-03 — researcher acceptance
+
+Disposition: ACCEPTED_AND_CLOSED.
+
+The accepted evidence establishes a recorded StandardScaler fitted state bound
+to source and configuration, 139 ordered features, 8,117 ordered real-training
+indices, implementation/source provenance, environment identity, independent
+fitted-state restoration, and bounded CIC/MAF consumer linkage.
+
+Evidence paths:
+
+- src/trustforge/data/paper01_revision_2026/cic_fitted_state.py
+- scripts/check_paper01_cic_fitted_state.py
+- src/trustforge/models/paper01_revision_2026/ar_maf_cic_execution_manifest.py
+- studies/paper01_benchmark/audits/revision_2026/cic_fitted_state_311667
+- studies/paper01_benchmark/audits/revision_2026/maf_cic_execution_311675
+- studies/paper01_benchmark/audits/revision_2026/maf_cic_envelope_synthesis_311680
+
+Recorded evidence identities (distinct, not interchangeable):
+
+- Fitted-state capture payload SHA-256:
+  fd4ccde26974243f469ad569978fce181a126ae01795957b95a9447220c32fbd.
+- MAF execution fitted-state payload SHA-256:
+  c177c31e8602e94b06dc965e14dafe8ec3374fd07816b93107df3f5c1fc7f5cf.
+- Dataset configuration SHA-256:
+  ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b.
+- Capture source identity: e81323282a2662d775f1cee7ea7bd2730ab1184b.
+
+The complete historical artifacts were not re-executed during this ledger
+update. The original fitted-state provenance condition is satisfied. This
+acceptance does not claim that every generator consumes the fitted state or that
+all production runs are complete.
+
+### C. S2-04 — researcher acceptance
+
+Disposition: ACCEPTED_AND_CLOSED.
+
+Classifier configuration:
+
+- studies/paper01_benchmark/revision_2026/classifier_recipe.json
+- SHA-256 1d989ec3b9f2c1cf33ff4a765dc4618ec114b826080033bf4be02276fdf77982
+- Consumers: src/trustforge/evaluation/paper01_classifier_control.py;
+  src/trustforge/evaluation/paper01_classifier_tensorflow.py
+
+Metric configuration:
+
+- studies/paper01_benchmark/revision_2026/downstream_metric_recipe.json
+- SHA-256 d6fca7bf2421f34bafc43621595d7c2c218b17d2e0df891bd78d298549eb3a85
+- Consumers: src/trustforge/evaluation/paper01_downstream_metrics.py;
+  src/trustforge/evaluation/paper01_paired_results.py
+
+Statistical reporting:
+
+- src/trustforge/evaluation/paper01_seed_reporting.py
+- Accepted rules include experimental seeds 42-48, paired real-only versus
+  real-plus-synthetic comparison, held-out real-test evaluation, explicit
+  missing/incomplete-run statuses, seven-pair statistical reporting conditions,
+  and no inference from incomplete seven-seed results.
+
+Accepted bounded evaluator consumption:
+
+- CIC/MAF seed 42 — job 314068.
+- CIC/MAF seed 43 — job 314240.
+- CIC/MAF seed 44 — job 314355.
+
+These records demonstrate bounded paired evaluator consumption. They do not
+establish full benchmark completion, Stage 5 completion or publication-ready
+statistical results.
+
+Known limitation preserved: cross-seed aggregation is implemented and
+acceptance-tested but is not yet invoked by a production runner. This is a
+later-stage execution/integration concern, not an unresolved original S2-04
+linkage condition.
+
+### D. Boundaries
+
+Proven: the original S2-03 provenance record and the original S2-04
+configuration-to-consumer mapping, with bounded execution support.
+
+Not proven or not claimed: complete benchmark execution, seven-seed statistical
+results, all-family or all-dataset consumer adoption, production provenance
+integration for every checkpoint entry point, publication readiness, or any
+Stage 3/4/5 completion.
+
+### E. Current five-item Stage 2 register
+
+- S2-01 — RBM production Gibbs depth: BLOCKED. The prospective Gibbs-depth
+  scientific decision remains unresolved.
+- S2-02 — GAN/VAE/Diffusion synthesis recipes: ACCEPTED_AND_CLOSED; preserved at
+  01ab459307c5314d31acbbefdea4676892134560.
+- S2-03 — CIC fitted preprocessing identity: ACCEPTED_AND_CLOSED; researcher
+  closure decision recorded in this entry.
+- S2-04 — Shared evaluator configuration: ACCEPTED_AND_CLOSED; researcher
+  closure decision recorded in this entry.
+- S2-05 — Complete benchmark configuration linkage: ACCEPTED_AND_CLOSED;
+  preserved at 1025f2ec52d9f8350145c40d6d3433b550758388.
+
+S2-01 is the only unresolved requirement in the original five-item Stage 2
+register. Stage 3, Stage 4 and Stage 5 statuses remain unchanged. Closure of
+configuration requirements does not establish execution readiness.
+
+### F. Stage status
+
+STAGE_2_OVERALL=IN_PROGRESS
+
+FULL_BENCHMARK_GO=NO
+
+SEED45_EXECUTION_AUTHORIZED=NO
