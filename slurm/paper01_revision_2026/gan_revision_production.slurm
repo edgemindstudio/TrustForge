@@ -6,6 +6,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=12:00:00
+#SBATCH --no-requeue
 #SBATCH --output=p1r1-gan-prod.%j.out
 #SBATCH --error=p1r1-gan-prod.%j.err
 

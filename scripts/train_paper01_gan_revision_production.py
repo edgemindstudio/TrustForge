@@ -33,6 +33,10 @@ from trustforge.models.paper01_revision_2026.gan_governed_runner import (
 from trustforge.models.paper01_revision_2026.gan_production_binding import (
     build_gan_run_identity,
     create_gan_production_checkpoint_directory,
+    resolve_gan_production_checkpoint_directory,
+)
+from trustforge.models.paper01_revision_2026.gan_production_authorization import (
+    require_gan_production_scope,
 )
 from trustforge.models.paper01_revision_2026.experimental_seed_policy import (
     require_governed_experimental_seed,
@@ -180,6 +184,20 @@ def run(args) -> dict:
 
     # Authorization is checked before any destination directory is created.
     gan_governed_runner.require_gan_production_authorization()
+
+    checkpoint_directory = resolve_gan_production_checkpoint_directory(
+        dataset_id=args.dataset_id,
+        experimental_seed=args.experimental_seed,
+        run_identity=run_identity,
+        expected_source_commit=state.commit,
+    )
+
+    require_gan_production_scope(
+        dataset_id=args.dataset_id,
+        experimental_seed=args.experimental_seed,
+        checkpoint_directory=checkpoint_directory,
+        repository_root=args.repository_root,
+    )
 
     dataset = build_adapter(args)
 

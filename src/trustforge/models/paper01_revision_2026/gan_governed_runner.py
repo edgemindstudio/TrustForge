@@ -40,6 +40,9 @@ from trustforge.models.paper01_revision_2026.gan_dataset_provenance import (
 from trustforge.models.paper01_revision_2026.experimental_seed_policy import (
     require_governed_experimental_seed,
 )
+from trustforge.models.paper01_revision_2026.gan_production_authorization import (
+    require_gan_production_scope,
+)
 
 
 # This is an authorization boundary, not a command-line option.
@@ -135,6 +138,14 @@ def _execute_gan_authorized_run(
 
     if not isinstance(preparation, GANRunPreparation):
         raise TypeError("invalid governed GAN preparation")
+
+    if mode == "production":
+        require_gan_production_scope(
+            dataset_id=preparation.plan.dataset_id,
+            experimental_seed=preparation.plan.experimental_seed,
+            checkpoint_directory=preparation.checkpoint_directory,
+            repository_root=Path(__file__).resolve().parent,
+        )
 
     plan = preparation.plan
 

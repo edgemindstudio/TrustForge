@@ -235,6 +235,11 @@ def test_authorized_run_creates_destination_before_prepare(
         True,
     )
     monkeypatch.setattr(
+        WRAPPER,
+        "require_gan_production_scope",
+        lambda **kwargs: object(),
+    )
+    monkeypatch.setattr(
         WRAPPER, "build_adapter", lambda args: object(),
     )
     monkeypatch.setattr(
@@ -339,6 +344,7 @@ def test_wrapper_uses_existing_runner_only():
     assert "prepare_gan_run" in text
     assert "execute_gan_production_run" in text
     assert "require_gan_production_authorization" in text
+    assert "require_gan_production_scope" in text
     assert "create_gan_production_checkpoint_directory" in text
     assert "--checkpoint-dir" not in text
     assert "app.main" not in text
