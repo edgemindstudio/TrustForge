@@ -189,7 +189,6 @@ def test_source_order_preserves_all_execution_boundaries():
         ("execute_gan_production_run", "production"),
     ):
         wrapper = functions[name]
-        assert len(wrapper.body) == 2
         statement = wrapper.body[-1]
         assert isinstance(statement, ast.Return)
         call = statement.value
@@ -205,6 +204,59 @@ def test_source_order_preserves_all_execution_boundaries():
         assert len(modes) == 1
         assert isinstance(modes[0], ast.Constant)
         assert modes[0].value == expected_mode
+
+        # The shared guarded execution is invoked exactly once, from the
+        # final return statement.
+        execution_calls = [
+            node
+            for node in ast.walk(wrapper)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_execute_gan_authorized_run"
+        ]
+        assert execution_calls == [call]
+
+        if expected_mode == "production":
+            # Production preparation validation must precede execution.
+            guards = [
+                node for node in wrapper.body
+                if isinstance(node, ast.If)
+            ]
+            assert len(guards) == 1
+            guard = guards[0]
+            assert guard.lineno < statement.lineno
+            assert isinstance(guard.test, ast.UnaryOp)
+            assert isinstance(guard.test.op, ast.Not)
+            assert isinstance(guard.test.operand, ast.Call)
+            assert isinstance(guard.test.operand.func, ast.Name)
+            assert guard.test.operand.func.id == "isinstance"
+            assert [
+                ast.unparse(argument)
+                for argument in guard.test.operand.args
+            ] == ["preparation", "GANRunPreparation"]
+            assert len(guard.body) == 1
+            assert isinstance(guard.body[0], ast.Raise)
+            assert isinstance(guard.body[0].exc, ast.Call)
+            assert isinstance(guard.body[0].exc.func, ast.Name)
+            assert guard.body[0].exc.func.id == "TypeError"
+
+            # Governed experimental-seed validation must precede execution.
+            seed_calls = [
+                node
+                for node in wrapper.body
+                if isinstance(node, ast.Expr)
+                and isinstance(node.value, ast.Call)
+                and isinstance(node.value.func, ast.Name)
+                and node.value.func.id
+                == "require_governed_experimental_seed"
+            ]
+            assert len(seed_calls) == 1
+            seed_call = seed_calls[0].value
+            assert seed_call.lineno < statement.lineno
+            assert [
+                ast.unparse(argument)
+                for argument in seed_call.args
+            ] == ["preparation.plan.experimental_seed"]
 
 
 def test_original_authorization_flags_remain_disabled():

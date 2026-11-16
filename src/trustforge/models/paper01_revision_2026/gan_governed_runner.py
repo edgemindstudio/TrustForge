@@ -47,6 +47,14 @@ GAN_FEASIBILITY_TRAINING_ENABLED = False
 GAN_PRODUCTION_TRAINING_ENABLED = False
 
 
+def require_gan_production_authorization():
+    """Fail closed unless the production authorization boundary is enabled."""
+    if not GAN_PRODUCTION_TRAINING_ENABLED:
+        raise PermissionError(
+            "GAN production training is not authorized"
+        )
+
+
 @dataclass(frozen=True)
 class GANRunPreparation:
     plan: GANRunPlan
