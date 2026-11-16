@@ -30,6 +30,10 @@ from .gan_checkpoint_v3_restoration import (
     load_terminal_gan_checkpoint_v3,
 )
 from .gan_class_mapping import resolve_gan_class_mapping
+from .gan_synthesis_authorization import (
+    require_gan_synthesis_authorization,
+    verify_checkpoint_metadata_digest,
+)
 from .synthesis_linkage import (
     CANONICAL_OUTPUT,
     LATENT_STREAM_CONTRACT,
@@ -154,6 +158,19 @@ def publish_gan_cic_pool(
     The checkpoint is always loaded through the strict v3 restoration path;
     no generator or checkpoint digest may be supplied by the caller.
     """
+    grant = require_gan_synthesis_authorization(
+        destination=destination,
+        checkpoint_directory=checkpoint_directory,
+        dataset_id=dataset_id,
+        experimental_seed=experimental_seed,
+        repository_root=repository_root,
+    )
+
+    verify_checkpoint_metadata_digest(
+        checkpoint_directory,
+        grant.checkpoint_sha256,
+    )
+
     if dataset_id != GAN_POOL_DATASET:
         raise ValueError("unsupported GAN pool dataset")
 
@@ -192,6 +209,11 @@ def publish_gan_cic_pool(
         "checkpoint_sha256": checkpoint["checkpoint_sha256"],
     }
 
+    if checkpoint["checkpoint_sha256"] != grant.checkpoint_sha256:
+        raise PermissionError(
+            "checkpoint digest does not match synthesis authorization"
+        )
+
     state = capture_git_state(repository_root)
 
     if (
@@ -206,6 +228,11 @@ def publish_gan_cic_pool(
 
     if state.dirty:
         raise RuntimeError("publication source checkout is dirty")
+
+    if state.commit != grant.source_commit:
+        raise PermissionError(
+            "publication source does not match synthesis authorization"
+        )
 
     executable_source_commit = state.commit
 

@@ -105,6 +105,41 @@ def install_loader(monkeypatch, *, meta, generator):
             "generator": generator,
         },
     )
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        lambda **kwargs: SimpleNamespace(
+            checkpoint_sha256=hashlib.sha256(
+                canonical_json_bytes(meta)
+            ).hexdigest(),
+            source_commit=EXECUTABLE,
+        ),
+    )
+    monkeypatch.setattr(
+        publication,
+        "verify_checkpoint_metadata_digest",
+        lambda checkpoint, digest: digest,
+    )
+
+
+@pytest.fixture(autouse=True)
+def stub_synthesis_authorization(monkeypatch):
+    meta = metadata()
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        lambda **kwargs: SimpleNamespace(
+            checkpoint_sha256=hashlib.sha256(
+                canonical_json_bytes(meta)
+            ).hexdigest(),
+            source_commit=EXECUTABLE,
+        ),
+    )
+    monkeypatch.setattr(
+        publication,
+        "verify_checkpoint_metadata_digest",
+        lambda checkpoint, digest: digest,
+    )
 
 
 def checkpoint_dir(tmp_path):
@@ -121,6 +156,7 @@ def published(tmp_path_factory):
     meta = metadata()
     generator = RecordingGenerator()
     loader_calls = []
+    guard_calls = []
 
     monkeypatch = pytest.MonkeyPatch()
 
@@ -131,10 +167,29 @@ def published(tmp_path_factory):
             "generator": generator,
         }
 
+    def guard(**kwargs):
+        guard_calls.append(kwargs)
+        return SimpleNamespace(
+            checkpoint_sha256=hashlib.sha256(
+                canonical_json_bytes(meta)
+            ).hexdigest(),
+            source_commit=EXECUTABLE,
+        )
+
     monkeypatch.setattr(
         publication,
         "capture_git_state",
         lambda root: SimpleNamespace(commit=EXECUTABLE, dirty=False),
+    )
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        guard,
+    )
+    monkeypatch.setattr(
+        publication,
+        "verify_checkpoint_metadata_digest",
+        lambda checkpoint, digest: digest,
     )
     monkeypatch.setattr(
         publication,
@@ -165,6 +220,7 @@ def published(tmp_path_factory):
         metadata=meta,
         generator=generator,
         loader_calls=loader_calls,
+        guard_calls=guard_calls,
         recipe=load_synthesis_recipe(REPOSITORY_ROOT),
     )
 
@@ -239,7 +295,9 @@ def test_complete_pool_manifest_and_batches(published):
 
 def test_publisher_uses_strict_loader(published):
     assert len(published.loader_calls) == 1
+    assert len(published.guard_calls) == 1
     args, kwargs = published.loader_calls[0]
+    guard = published.guard_calls[0]
 
     assert Path(args[0]) == published.checkpoint
     assert kwargs == {
@@ -247,6 +305,146 @@ def test_publisher_uses_strict_loader(published):
         "requested_experimental_seed": 42,
         "requested_class_mapping": ["0", "1", "2", "3", "4"],
     }
+    assert guard["destination"] == published.manifest_path.parent
+    assert guard["checkpoint_directory"] == published.checkpoint
+    assert guard["dataset_id"] == "cicmaldroid2020"
+    assert guard["experimental_seed"] == 42
+
+
+def test_publisher_requires_authorization_before_loading(
+    tmp_path, monkeypatch,
+):
+    destination = tmp_path / "pool"
+    calls = []
+
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        lambda **kwargs: (_ for _ in ()).throw(
+            PermissionError("denied")
+        ),
+    )
+    monkeypatch.setattr(
+        publication,
+        "load_terminal_gan_checkpoint_v3",
+        lambda *args, **kwargs: calls.append("loader"),
+    )
+
+    with pytest.raises(PermissionError, match="denied"):
+        publication.publish_gan_cic_pool(
+            destination,
+            checkpoint_directory=tmp_path / "checkpoint",
+            dataset_id="cicmaldroid2020",
+            experimental_seed=42,
+            repository_root=REPOSITORY_ROOT,
+        )
+
+    assert calls == []
+    assert not destination.exists()
+
+
+def test_publisher_rejects_checkpoint_digest_mismatch(
+    tmp_path, monkeypatch,
+):
+    checkpoint = checkpoint_dir(tmp_path)
+    destination = tmp_path / "pool"
+
+    install_loader(
+        monkeypatch,
+        meta=metadata(),
+        generator=RecordingGenerator(),
+    )
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        lambda **kwargs: SimpleNamespace(
+            checkpoint_sha256="0" * 64,
+            source_commit=EXECUTABLE,
+        ),
+    )
+
+    with pytest.raises(PermissionError, match="digest"):
+        publication.publish_gan_cic_pool(
+            destination,
+            checkpoint_directory=checkpoint,
+            dataset_id="cicmaldroid2020",
+            experimental_seed=42,
+            repository_root=REPOSITORY_ROOT,
+        )
+
+    assert not destination.exists()
+
+
+def test_publisher_rejects_source_mismatch(tmp_path, monkeypatch):
+    checkpoint = checkpoint_dir(tmp_path)
+    destination = tmp_path / "pool"
+
+    install_loader(
+        monkeypatch,
+        meta=metadata(),
+        generator=RecordingGenerator(),
+    )
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        lambda **kwargs: SimpleNamespace(
+            checkpoint_sha256=hashlib.sha256(
+                canonical_json_bytes(metadata())
+            ).hexdigest(),
+            source_commit="b" * 40,
+        ),
+    )
+
+    with pytest.raises(PermissionError, match="source"):
+        publication.publish_gan_cic_pool(
+            destination,
+            checkpoint_directory=checkpoint,
+            dataset_id="cicmaldroid2020",
+            experimental_seed=42,
+            repository_root=REPOSITORY_ROOT,
+        )
+
+    assert not destination.exists()
+
+
+def test_publisher_real_missing_authorization(tmp_path, monkeypatch):
+    from trustforge.models.paper01_revision_2026 import (
+        gan_synthesis_authorization as authorization,
+    )
+
+    loader_calls = []
+    destination = tmp_path / "pool"
+
+    monkeypatch.setattr(
+        publication,
+        "require_gan_synthesis_authorization",
+        authorization.require_gan_synthesis_authorization,
+    )
+    monkeypatch.setattr(
+        authorization,
+        "AUTHORIZATION_PATH",
+        tmp_path / "missing-authorization.json",
+    )
+    monkeypatch.setattr(
+        publication,
+        "load_terminal_gan_checkpoint_v3",
+        lambda *args, **kwargs: loader_calls.append("loader"),
+    )
+
+    with pytest.raises(
+        authorization.GANSynthesisAuthorizationError,
+        match="absent",
+    ):
+        publication.publish_gan_cic_pool(
+            destination,
+            checkpoint_directory=tmp_path / "checkpoint",
+            dataset_id="cicmaldroid2020",
+            experimental_seed=42,
+            repository_root=REPOSITORY_ROOT,
+        )
+
+    assert loader_calls == []
+    assert not destination.exists()
 
 
 def test_invalid_checkpoint_rejected(tmp_path, monkeypatch):
