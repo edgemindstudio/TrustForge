@@ -13,6 +13,9 @@ from .gan_adapter_identity import require_gan_adapter_identity
 from .gan_dataset_provenance import require_gan_dataset_provenance
 from .gan_v3_provenance_adapter import build_gan_v3_provenance
 from .gan_checkpoint_manifest import DATASET_CLASS_COUNTS
+from .experimental_seed_policy import (
+    require_governed_experimental_seed,
+)
 from .variational_autoencoder_training_runner import (
     _run_vae_training_core,
 )
@@ -39,6 +42,7 @@ def run_governed_vae_training(
     The returned provenance is candidate checkpoint evidence;
     its presence does not authorize checkpoint publication.
     """
+    require_governed_experimental_seed(experimental_seed)
     if VAE_REAL_DATASET_TRAINING_ENABLED is not True:
         raise PermissionError(
             "VAE real-dataset training is not authorized"

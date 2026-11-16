@@ -16,6 +16,9 @@ from .gan_adapter_identity import require_gan_adapter_identity
 from .gan_dataset_provenance import require_gan_dataset_provenance
 from .gan_v3_provenance_adapter import build_gan_v3_provenance
 from .gan_checkpoint_manifest import DATASET_CLASS_COUNTS
+from .experimental_seed_policy import (
+    require_governed_experimental_seed,
+)
 from .diffusion_ddpm_math import linear_ddpm_schedule
 from .diffusion_training_runner import run_diffusion_training_core
 
@@ -39,6 +42,7 @@ def run_governed_diffusion_training(
     *, adapter, dataset_id, experimental_seed
 ):
     """Return completed training evidence without writing artifacts."""
+    require_governed_experimental_seed(experimental_seed)
     if DIFFUSION_REAL_DATASET_TRAINING_ENABLED is not True:
         raise PermissionError(
             "Diffusion real-dataset training is not authorized"

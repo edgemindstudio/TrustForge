@@ -34,7 +34,7 @@ fi
 : "${DATASET_ID:?DATASET_ID is required}"
 : "${CHECKPOINT_DIR:?CHECKPOINT_DIR is required}"
 
-EXPERIMENTAL_SEED="${EXPERIMENTAL_SEED:-42}"
+: "${EXPERIMENTAL_SEED:?EXPERIMENTAL_SEED is required for production RBM training}"
 
 case "${DATASET_ID}" in
   ustc_tfc2016|cicmaldroid2020|malnet_image|malex)

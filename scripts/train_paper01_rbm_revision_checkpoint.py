@@ -24,6 +24,10 @@ from trustforge.data.paper01_revision_2026 import (
     MalNetImageRevision2026,
     USTCRevision2026,
 )
+from trustforge.models.paper01_revision_2026.experimental_seed_policy import (
+    require_governed_experimental_seed,
+)
+
 from trustforge.models.paper01_revision_2026.restricted_boltzmann_checkpoint import (
     persist_rbm_checkpoint,
 )
@@ -381,7 +385,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--experimental-seed",
         type=int,
-        default=DEFAULT_EXPERIMENTAL_SEED,
+        default=argparse.SUPPRESS,
+        help=(
+            "Explicit governed experimental seed 42-48 required for "
+            "production training"
+        ),
     )
 
     parser.add_argument(
@@ -409,20 +417,20 @@ def main(
         argv
     )
 
+    if not hasattr(args, "experimental_seed"):
+        raise ValueError(
+            "--experimental-seed is required for production training"
+        )
+
+    experimental_seed = require_governed_experimental_seed(
+        args.experimental_seed
+    )
+
     _require_slurm_compute_node()
 
     repo_root = _repo_root(
         args.repo_root
     )
-
-    experimental_seed = int(
-        args.experimental_seed
-    )
-
-    if experimental_seed < 0:
-        raise ValueError(
-            "experimental seed must be non-negative"
-        )
 
     checkpoint_dir = Path(
         args.checkpoint_dir

@@ -37,6 +37,9 @@ from trustforge.models.paper01_revision_2026.gan_adapter_identity import (
 from trustforge.models.paper01_revision_2026.gan_dataset_provenance import (
     require_gan_dataset_provenance,
 )
+from trustforge.models.paper01_revision_2026.experimental_seed_policy import (
+    require_governed_experimental_seed,
+)
 
 
 # This is an authorization boundary, not a command-line option.
@@ -348,6 +351,11 @@ def execute_gan_production_run(
     dataset,
 ):
     """Production-only entry point; authorization remains mandatory."""
+    if not isinstance(preparation, GANRunPreparation):
+        raise TypeError("invalid governed GAN preparation")
+    require_governed_experimental_seed(
+        preparation.plan.experimental_seed
+    )
     return _execute_gan_authorized_run(
         preparation,
         dataset=dataset,
