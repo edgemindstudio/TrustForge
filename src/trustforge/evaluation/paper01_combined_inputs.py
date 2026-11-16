@@ -1,6 +1,6 @@
 """Logical real-plus-synthetic training access without full image concatenation.
 
-CIC AR/MAF scope. Does not authenticate provenance or select shuffle policy.
+CIC AR/MAF/GAN scope. Does not authenticate provenance or select shuffle policy.
 """
 
 from copy import deepcopy
@@ -9,14 +9,15 @@ import numpy as np
 
 from .paper01_inputs import MAX_BATCH_SIZE, RealSplitView, validate_batch
 from .paper01_cic_pool import CICPoolView
+from .paper01_gan_pool import GANPoolView
 
 
 class CombinedTrainingView:
     def __init__(self, *, real, synthetic):
         if not isinstance(real, RealSplitView):
             raise TypeError("governed real split view required")
-        if not isinstance(synthetic, CICPoolView):
-            raise TypeError("CIC synthetic pool view required")
+        if not isinstance(synthetic, (CICPoolView, GANPoolView)):
+            raise TypeError("governed synthetic pool view required")
         real_identity = real.identity
         synthetic_identity = synthetic.identity
         if real_identity["split"] != "train":
