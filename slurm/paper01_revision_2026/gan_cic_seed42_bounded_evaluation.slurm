@@ -69,7 +69,8 @@ PYTHON="$home/miniforge3/envs/gcs_py310/bin/python"
 
 AUTHORIZATION="$home/trustforge_revision_2026_artifacts/paper01/gan/evaluations/authorizations/cicmaldroid2020_seed42_evaluation.json"
 POOL_MANIFEST="$home/trustforge_revision_2026_artifacts/paper01/gan/cicmaldroid2020/seed42/pools/production/commit4324aee_attempt01/manifest.json"
-RUN_DIR="$home/trustforge_revision_2026_artifacts/paper01/gan/evaluations/cicmaldroid2020/seed42/runs/attempt01-$SLURM_JOB_ID"
+# Fixed attempt-1 destination, known before Slurm submission; must be absent.
+RUN_DIR="$home/trustforge_revision_2026_artifacts/paper01/gan/evaluations/cicmaldroid2020/seed42/runs/attempt01"
 DRIVER="$checkout/scripts/run_paper01_cic_gan_seed42_bounded_evaluation.py"
 
 # ---------------------------------------------------------------------------
@@ -472,9 +473,7 @@ def main():
     require_regular(dataset_config, "dataset configuration")
     require_regular(weights, "Inception weights")
 
-    expected_run = home / EVAL_RELATIVE / "runs" / (
-        "attempt01-" + os.environ["SLURM_JOB_ID"]
-    )
+    expected_run = home / EVAL_RELATIVE / "runs" / "attempt01"
     if record["run_dir"] != str(expected_run) or run_dir != expected_run:
         fail("evaluation run directory differs from the approved identity")
     if run_dir.exists() or run_dir.is_symlink():

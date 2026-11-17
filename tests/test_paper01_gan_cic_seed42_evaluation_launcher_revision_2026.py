@@ -126,7 +126,9 @@ if args.phase == "train":
         "evaluator_seed": 42,
         "synthetic_pool_manifest_sha256": args.pool_manifest_sha256,
         "source_commit": args.expected_head,
-        "job_id": os.environ["SLURM_JOB_ID"],
+        "job_id": os.environ.get(
+            "FAKE_RECEIPT_JOB_ID", os.environ["SLURM_JOB_ID"],
+        ),
         "train_pid": 111,
         "arms": {
             "real_only": {"manifest_sha256": "1" * 64},
@@ -239,7 +241,7 @@ def _build_fixture(tmp_path):
         / "cicmaldroid2020/seed42/runs"
     )
     run_parent.mkdir(parents=True)
-    run_dir = run_parent / f"attempt01-{JOB_ID}"
+    run_dir = run_parent / "attempt01"
 
     authorization_dir = (
         home
@@ -459,6 +461,45 @@ def test_runtime_environment_is_cpu_only_and_checkout_bound(fixture):
         assert entry["omp"] == "8"
 
 
+def test_authorization_binds_fixed_attempt_before_submission(fixture):
+    record = _authorization(fixture)
+
+    assert record["run_dir"] == str(fixture.run_dir)
+    assert record["run_dir"].endswith("/runs/attempt01")
+    assert record["attempt"] == 1
+    assert JOB_ID not in record["run_dir"]
+
+
+def test_fixed_run_dir_is_independent_of_slurm_job_id(fixture):
+    other_job = "67890"
+    line = (
+        f"JobId={other_job} JobName=p1r1-gan-eval-s42 Partition=talon "
+        "JobState=RUNNING NumNodes=1 NumTasks=1 NumCPUs=8 "
+        "TRES=cpu=8,node=1,mem=32768M,billing=8 MinMemoryNode=32768M "
+        "TimeLimit=02:00:00 Requeue=0 Restarts=0 Gres=(null)"
+    )
+    result = _run(
+        fixture,
+        overrides={
+            "SLURM_JOB_ID": other_job,
+            "FAKE_SCONTROL_LINE": line,
+        },
+    )
+
+    assert result.returncode == 0, result.stderr
+    _, train, restore = _entries(fixture)
+    assert _option(train, "--run-dir") == str(
+        fixture.run_dir.parent / "attempt01"
+    )
+    assert _option(restore, "--run-dir") == str(
+        fixture.run_dir.parent / "attempt01"
+    )
+    receipt = json.loads(
+        (fixture.run_dir / "expectations.json").read_text(encoding="utf-8")
+    )
+    assert receipt["job_id"] == other_job
+
+
 # ---------------------------------------------------------------------------
 # Authorization and source identity rejection
 # ---------------------------------------------------------------------------
@@ -536,6 +577,56 @@ def test_wrong_pool_path_blocks(fixture):
 
     assert result.returncode != 0
     assert "pool path" in result.stderr
+    assert _entries(fixture) == []
+
+
+def test_job_derived_run_dir_is_rejected(fixture):
+    _mutate(
+        fixture,
+        run_dir=str(fixture.run_dir.parent / f"attempt01-{JOB_ID}"),
+    )
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "run directory differs" in result.stderr
+    assert _entries(fixture) == []
+
+
+def test_arbitrary_run_dir_is_rejected(fixture):
+    _mutate(fixture, run_dir="/tmp/other-evaluation-run")
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "run directory differs" in result.stderr
+    assert _entries(fixture) == []
+
+
+def test_attempt_two_is_rejected(fixture):
+    _mutate(fixture, attempt=2)
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "attempt is not 1" in result.stderr
+    assert _entries(fixture) == []
+
+
+def test_attempt_two_run_dir_is_rejected(fixture):
+    _mutate(fixture, run_dir=str(fixture.run_dir.parent / "attempt02"))
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "run directory differs" in result.stderr
+    assert _entries(fixture) == []
+
+
+def test_symlink_run_directory_blocks(fixture):
+    target = fixture.run_dir.parent / "elsewhere"
+    target.mkdir()
+    fixture.run_dir.symlink_to(target)
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "already exists" in result.stderr
     assert _entries(fixture) == []
 
 
@@ -621,6 +712,13 @@ def test_allocation_lookup_failure_blocks(fixture):
     assert _entries(fixture) == []
 
 
+def test_invalid_slurm_identity_blocks(fixture):
+    result = _run(fixture, overrides={"SLURM_JOB_ID": "not-a-job"})
+
+    assert result.returncode != 0
+    assert _entries(fixture) == []
+
+
 def test_missing_slurm_identity_blocks_even_with_authorization(fixture):
     result = _run(fixture, drop=("SLURM_JOB_ID",))
 
@@ -662,6 +760,16 @@ def test_tampered_receipt_identity_prevents_restore(fixture):
 
     assert result.returncode != 0
     assert "training receipt identity mismatch" in result.stderr
+    assert _phases(fixture) == ["preflight", "train"]
+
+
+def test_receipt_job_id_mismatch_prevents_restore(fixture):
+    result = _run(
+        fixture, overrides={"FAKE_RECEIPT_JOB_ID": "99999"},
+    )
+
+    assert result.returncode != 0
+    assert "training receipt identity mismatch: job_id" in result.stderr
     assert _phases(fixture) == ["preflight", "train"]
 
 
