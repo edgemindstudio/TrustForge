@@ -1292,13 +1292,18 @@ def test_cli_rejects_unapproved_seed_and_incomplete_configuration():
         ])
 
 
-def test_gan_launcher_is_fail_closed_pending_resource_approval():
+def test_gan_launcher_is_fail_closed_pending_execution_authorization():
     path = (
         REPOSITORY_ROOT
         / "slurm/paper01_revision_2026/gan_cic_seed42_bounded_evaluation.slurm"
     )
     text = path.read_text(encoding="utf-8")
-    assert "BLOCKED" in text
-    assert "exit 78" in text
+    assert "GAN_EVAL_LAUNCHER_BLOCKED" in text
+    assert "RESEARCHER_DECISION_PENDING" in text
+    assert "authorization_status" in text
+    assert "APPROVED" in text
     assert "sbatch" not in text
     assert "run_paper01_cic_gan_seed42_bounded_evaluation.py" in text
+    assert "--preflight-only" in text
+    assert "--phase train" in text
+    assert "--phase restore" in text
