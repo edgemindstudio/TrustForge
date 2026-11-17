@@ -1956,3 +1956,153 @@ STAGE_2_OVERALL=IN_PROGRESS
 FULL_BENCHMARK_GO=NO
 
 SEED45_EXECUTION_AUTHORIZED=NO
+
+## CIC GAN seed-42 bounded evaluation acceptance — job 314607
+
+PASS for one bounded CICMalDroid2020 / GAN / experimental seed-42 real-data
+paired evaluation at evaluation source
+49d6f5c2b7a31e458b97fe1ebe2b45ffab92ba74 and generator/synthesis source
+4324aeecb45a47a72ac0b479d8cd994fe79dc1e0.
+
+Evaluation authorization: P1R2026-GAN-CIC-S42-EVAL-A01
+
+Authorization SHA-256:
+100439a0cee3ee550599ae328b73551dd49c708aee7ce3c0b4682f13e1e24fec
+
+Launcher SHA-256:
+c7e959d4a2ed8100a0b34aac46c4428b0729a547078dc99c2a77cf0b5c437643
+
+Driver SHA-256:
+f1efa4379d3ca09530ff28d64a5fd36506acb36d5eedd166a33abe1510a0e757
+
+```
+GAN_EVAL_LAUNCHER_BINDING=PASS
+CIC_GAN_SEED42_EVALUATION_PREFLIGHT=PASS
+CIC_GAN_SEED42_EVALUATION_RESTORE=PASS
+CIC_GAN_SEED42_BOUNDED_EVALUATION=PASS
+GAN_CIC_SEED42_EVALUATION_LAUNCHER=PASS
+```
+
+Job 314607 completed on talon11 in 00:23:08 with exit code 0:0 and State:
+COMPLETED under the approved envelope of 8 CPUs, 32 GB, CPU only, a two-hour
+maximum and no automatic retries. Training and restoration ran as separate
+processes (PIDs 2641100 and 2643537); restoration began only after the training
+receipt existed and its SHA-256 had been captured successfully.
+
+### Evaluation identity
+
+- Paper: Paper 1 Revision-2026.
+- Dataset: cicmaldroid2020; generator: GAN; experimental seed: 42; attempt: 1.
+- Classes: 0, 1, 2, 3, 4.
+- Evaluation source: 49d6f5c2b7a31e458b97fe1ebe2b45ffab92ba74.
+- Generator/synthesis source: 4324aeecb45a47a72ac0b479d8cd994fe79dc1e0.
+
+### Accepted synthetic pool
+
+- Five classes; 2,000 images per class; 10,000 synthetic images; 625 production
+  batches.
+- Pool manifest SHA-256:
+  b4a640411b8120c412e51d2aa68b9e110ad2bfcc0215a1d8b20e6d7776dbceb1.
+- Generator checkpoint SHA-256:
+  963b45ba5c467fe935e13a34bfb3abae52fe52636eebfd796787c04526de6530.
+- Generator recipe SHA-256:
+  98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9.
+
+### Evaluation controls
+
+- Classifier recipe SHA-256:
+  1d989ec3b9f2c1cf33ff4a765dc4618ec114b826080033bf4be02276fdf77982.
+- Metric recipe SHA-256:
+  d6fca7bf2421f34bafc43621595d7c2c218b17d2e0df891bd78d298549eb3a85.
+- Real training samples: 8,117; augmented training samples: 18,117;
+  validation samples: 1,158; held-out real test samples: 2,323 per arm.
+- Shared initial classifier weights SHA-256:
+  4e5a33f021164e0d148bba5f058d0dc01a0cd8ca48ad3f0b7c07f9013e7a19ba.
+- Completed augmented epochs: 20; selected augmented epoch index: 19;
+  synthetic examples per augmented epoch: 10,000.
+
+### Restoration
+
+- Training PID: 2641100; restoration PID: 2643537.
+- Training receipt SHA-256:
+  4610ac53f266811c741c0e7db5dee6f35e21bbac077f92406a66063cce030969.
+- Real-only selected weights SHA-256:
+  33ad5a3c0f9dfabc8ad5f8178fb4a112bfc3bb163064e5b6ad338f6dcab54586.
+- Augmented selected weights SHA-256:
+  6abf51b8593019aabcbef53e1125461d4f2d058ac2329fd01580ed0641a3e04a.
+- Both selected-weight assignments verified; separate training/restoration
+  processes verified; receipt identity linkage passed.
+
+### Evaluation artifacts
+
+Artifact root:
+`~/trustforge_revision_2026_artifacts/paper01/gan/evaluations/cicmaldroid2020/seed42/runs/attempt01`
+
+- expectations.json:
+  4610ac53f266811c741c0e7db5dee6f35e21bbac077f92406a66063cce030969
+- train_report.json:
+  37c978b1e2859e6012ca65ae1b6cfba50b1b1af442248731837b2b2e540dbbc7
+- restore_report.json:
+  9ad1e48118551a62155ac25da0d58e092f15e007d2d56bff47eca6a5d28d515e
+- evaluation.json:
+  1070c889748e612de4ee3d8218b433af0af4445ed25fff86c9804e7a2b402624
+- paired_downstream.json:
+  f7b33b8ebe3e6049edb27923658390cfb0273138f8cc707d72480c0c9b5d0d42
+- pool_consumption.json:
+  4bb8dc5d79ccecc41e5a688379a9a69a036c37b98dbcf19a89079ef8a94d59fa
+
+### Accepted performance evidence
+
+| Metric | Real-only | Real+Synthetic |
+|---|---:|---:|
+| Macro-F1 | 0.646541025275839 | 0.6856195221624064 |
+| Balanced accuracy | 0.6362720813251682 | 0.6682172717808181 |
+| Macro-AUPRC | 0.7401845205982388 | 0.8171141940261919 |
+| Macro recall at 1% FPR | 0.36582116465732895 | 0.5088252777870776 |
+| Brier score | 0.423329924895245 | 0.3470150440937509 |
+| ECE | 0.1416111566668382 | 0.051022664398865804 |
+
+Primary paired endpoint:
+augmented_minus_real_only_macro_f1 = 0.03907849688656739
+
+Observed improvement of 3.90785 percentage points in macro-F1 for this single
+bounded seed. This does not establish statistical significance.
+
+### Unified validation scope
+
+- Required verified result groups: 7 of 7.
+- Required status blockers: 0; lineage blockers: 0.
+- Groups: real_only_downstream, real_plus_synthetic_downstream,
+  paired_downstream, pooled_balanced_kid, pooled_balanced_fid, class_fid,
+  intra_class_ms_ssim.
+- Paired metric replay verified; augmented checkpoint bundle verified;
+  synthetic pool consumption verified.
+- complete_evaluation=false.
+
+### Preserved boundaries
+
+- This is one successful bounded evaluation, not full benchmark completion,
+  independent semantic label-fidelity verification or seven-seed statistical
+  aggregation.
+- Generator lineage is DRIVER_VERIFIED; semantic class fidelity remains
+  NOT_ESTABLISHED.
+- Unified validation records feature_extraction_authentication,
+  image_score_recomputation, provenance_validation and publication_validation
+  as NOT_PERFORMED. These statuses must not be silently promoted to VERIFIED.
+- A successful single seed does not establish statistical significance or the
+  superiority of GAN over other generator families.
+- complete_evaluation=false; full_benchmark_go=false.
+
+### Researcher disposition
+
+The researcher accepted and closed this specific bounded
+GAN/CICMalDroid2020 seed-42 evaluation after review of the published evidence.
+This is an accepted individual experimental cell. It does not close Stage 5 or
+authorize further execution. No additional seed, generator, dataset, repeat,
+Slurm submission or full-benchmark run is approved. Stage 2 S2-03 and S2-04
+remain closed as previously accepted and are not reopened. Existing S2-01
+(BLOCKED) and other stage statuses remain unchanged.
+
+STAGE_2_OVERALL=IN_PROGRESS
+
+FULL_BENCHMARK_GO=NO
