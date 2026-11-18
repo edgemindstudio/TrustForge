@@ -17,6 +17,9 @@ from scripts import run_paper01_ar_cic_seed42_pool as coordinator
 from trustforge.models.paper01_revision_2026.ar_maf_execution_inputs import (
     synthesis_batch_seed,
 )
+from trustforge.models.paper01_revision_2026.ar_cic_pool_authorization import (
+    RESOURCE_FIELDS,
+)
 
 
 ACCEPTED_CHECKPOINT = (
@@ -193,6 +196,46 @@ def _full_workers(fixture, *, invalid_first=False, invalid_image=False):
             )
 
 
+def _authorization_record(fixture):
+    return {
+        "schema": "trustforge.paper01.ar-cic-seed42-pool-authorization.v1",
+        "paper": "paper01",
+        "revision": "revision_2026",
+        "family": "ar",
+        "dataset_id": "cicmaldroid2020",
+        "experimental_seed": 42,
+        "attempt": 1,
+        "checkpoint_sha256": fixture.plan["checkpoint_sha256"],
+        "dataset_config_sha256": fixture.plan["config_sha256"],
+        "recipe_sha256": fixture.plan["recipe_sha256"],
+        "synthesis_commit": fixture.plan["synthesis_commit"],
+        "run_root": fixture.plan["run_root"],
+        "destination": fixture.plan["destination"],
+        "expected_task_count": len(fixture.plan["tasks"]),
+        "expected_batch_count": fixture.plan["total_batches"],
+        "resources": {
+            key: fixture.plan["resources"][key]
+            for key in RESOURCE_FIELDS
+        },
+        "authorization_status": "APPROVED",
+        "authorization_id": "fixture-ar-pool-authorization",
+    }
+
+
+def _write_authorization(fixture):
+    path = fixture.run_root.parent / "authorization.json"
+    path.write_text(
+        json.dumps(
+            _authorization_record(fixture),
+            sort_keys=True,
+            separators=(",", ":"),
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+    return path
+
+
 def test_production_bindings_remain_exact():
     assert coordinator.FAMILY == "ar"
     assert coordinator.DATASET_ID == "cicmaldroid2020"
@@ -207,7 +250,6 @@ def test_production_bindings_remain_exact():
     assert coordinator.GENERATION == "ar_cic_seed42"
     assert coordinator.RECIPE_SHA256 == ACCEPTED_RECIPE
     assert coordinator.CONFIG_SHA256 == ACCEPTED_CONFIG
-    assert coordinator.AR_CIC_POOL_PUBLICATION_ENABLED is False
 
 
 def test_plan_has_exactly_1250_identities_and_250_per_class(fixture):
@@ -418,29 +460,36 @@ def test_worker_partition_rejects_missing_worker(fixture):
         coordinator.validate_worker_partition(fixture.plan, fixture.run_root)
 
 
-def test_finalize_requires_explicit_activation(fixture):
+def test_finalize_requires_authorization(fixture):
     _write_report_workers(fixture)
-    with pytest.raises(PermissionError, match="not authorized"):
+    missing = fixture.run_root.parent / "missing-authorization.json"
+    with pytest.raises(PermissionError, match="authorization"):
         coordinator.finalize_pool(
             plan=fixture.plan,
             run_root=fixture.run_root,
             destination=fixture.plan["destination"],
+            authorization_path=missing,
         )
     assert not Path(fixture.plan["destination"]).exists()
 
 
-def test_finalize_publishes_only_complete_pool_and_verifies(fixture, monkeypatch):
-    monkeypatch.setattr(coordinator, "AR_CIC_POOL_PUBLICATION_ENABLED", True)
+def test_finalize_publishes_only_complete_pool_and_verifies(fixture):
+    authorization = _write_authorization(fixture)
     _full_workers(fixture)
 
     summary = coordinator.finalize_pool(
         plan=fixture.plan,
         run_root=fixture.run_root,
         destination=fixture.plan["destination"],
+        authorization_path=authorization,
     )
     assert summary["batch_count"] == 1250
     assert summary["pool_samples"] == 10000
     assert summary["class_counts"] == [2000] * 5
+    assert summary["publication_authorized"] is True
+    assert summary["publication_authorization_id"] == (
+        "fixture-ar-pool-authorization"
+    )
     manifest = Path(fixture.plan["destination"]) / "manifest.json"
     assert manifest.is_file()
     assert _sha_file(manifest) == summary["manifest_sha256"]
@@ -454,11 +503,12 @@ def test_finalize_publishes_only_complete_pool_and_verifies(fixture, monkeypatch
             plan=fixture.plan,
             run_root=fixture.run_root,
             destination=fixture.plan["destination"],
+            authorization_path=authorization,
         )
 
 
-def test_finalize_rejects_invalid_labels_before_manifest(fixture, monkeypatch):
-    monkeypatch.setattr(coordinator, "AR_CIC_POOL_PUBLICATION_ENABLED", True)
+def test_finalize_rejects_invalid_labels_before_manifest(fixture):
+    authorization = _write_authorization(fixture)
     _full_workers(fixture, invalid_first=True)
 
     with pytest.raises(ValueError, match="class IDs mismatch"):
@@ -466,14 +516,13 @@ def test_finalize_rejects_invalid_labels_before_manifest(fixture, monkeypatch):
             plan=fixture.plan,
             run_root=fixture.run_root,
             destination=fixture.plan["destination"],
+            authorization_path=authorization,
         )
     assert not (Path(fixture.plan["destination"]) / "manifest.json").exists()
 
 
-def test_finalize_rejects_invalid_image_shape_before_manifest(
-    fixture, monkeypatch,
-):
-    monkeypatch.setattr(coordinator, "AR_CIC_POOL_PUBLICATION_ENABLED", True)
+def test_finalize_rejects_invalid_image_shape_before_manifest(fixture):
+    authorization = _write_authorization(fixture)
     _full_workers(fixture, invalid_image=True)
 
     with pytest.raises(ValueError, match="invalid canonical batch"):
@@ -481,29 +530,32 @@ def test_finalize_rejects_invalid_image_shape_before_manifest(
             plan=fixture.plan,
             run_root=fixture.run_root,
             destination=fixture.plan["destination"],
+            authorization_path=authorization,
         )
     assert not (Path(fixture.plan["destination"]) / "manifest.json").exists()
 
 
-def test_missing_batch_prevents_manifest(fixture, monkeypatch):
-    monkeypatch.setattr(coordinator, "AR_CIC_POOL_PUBLICATION_ENABLED", True)
+def test_missing_batch_prevents_manifest(fixture):
+    authorization = _write_authorization(fixture)
     _write_report_workers(fixture, skip=(4, 249))
     with pytest.raises(ValueError, match="range coverage differs"):
         coordinator.finalize_pool(
             plan=fixture.plan,
             run_root=fixture.run_root,
             destination=fixture.plan["destination"],
+            authorization_path=authorization,
         )
     assert not (Path(fixture.plan["destination"]) / "manifest.json").exists()
 
 
-def test_verify_rejects_changed_published_archive(fixture, monkeypatch):
-    monkeypatch.setattr(coordinator, "AR_CIC_POOL_PUBLICATION_ENABLED", True)
+def test_verify_rejects_changed_published_archive(fixture):
+    authorization = _write_authorization(fixture)
     _full_workers(fixture)
     coordinator.finalize_pool(
         plan=fixture.plan,
         run_root=fixture.run_root,
         destination=fixture.plan["destination"],
+        authorization_path=authorization,
     )
     manifest = Path(fixture.plan["destination"]) / "manifest.json"
     target = Path(fixture.plan["destination"]) / "c0-b000.npy"
@@ -518,4 +570,5 @@ def test_coordinator_has_no_slurm_submission_path():
     assert "sbatch" not in source
     assert "srun" not in source
     assert "subprocess.run(" not in source
-    assert coordinator.AR_CIC_POOL_PUBLICATION_ENABLED is False
+    assert "AR_CIC_POOL_PUBLICATION_ENABLED" not in source
+    assert "--authorization" in source

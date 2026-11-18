@@ -25,6 +25,9 @@ from trustforge.models.paper01_revision_2026.ar_maf_cic_pool_preflight import (
 from trustforge.models.paper01_revision_2026.ar_maf_execution_inputs import (
     synthesis_batch_seed,
 )
+from trustforge.models.paper01_revision_2026.ar_cic_pool_authorization import (
+    validate_ar_cic_pool_authorization,
+)
 
 
 FAMILY = "ar"
@@ -67,9 +70,8 @@ PROPOSED_RESOURCES = {
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
-# Execution authorization boundary. Do not enable without separate researcher
-# authorization for production publication.
-AR_CIC_POOL_PUBLICATION_ENABLED = False
+# Publication is default-deny: the production finalizer requires a validated
+# external authorization record bound to the exact plan and destinations.
 
 
 def _require_commit(value, name):
@@ -210,7 +212,8 @@ def build_plan(
     plan = {
         "schema": "trustforge.paper01.ar-cic-seed42-pool-plan.v1",
         "execution_authorized": False,
-        "publication_enabled": AR_CIC_POOL_PUBLICATION_ENABLED,
+        "publication_enabled": False,
+        "publication_requires_authorization": True,
         "family": FAMILY,
         "dataset_id": DATASET_ID,
         "experimental_seed": EXPERIMENTAL_SEED,
@@ -399,12 +402,14 @@ def _verify_pool_arrays(images, labels):
     return {"class_counts": counts, "images": POOL_SAMPLES}
 
 
-def finalize_pool(*, plan, run_root, destination):
+def finalize_pool(*, plan, run_root, destination, authorization_path):
     """Finalize and verify the full pool; publication is explicitly gated."""
-    if AR_CIC_POOL_PUBLICATION_ENABLED is not True:
-        raise PermissionError(
-            "AR CIC pool publication is not authorized in this source"
-        )
+    authorization = validate_ar_cic_pool_authorization(
+        authorization_path,
+        plan=plan,
+        run_root=run_root,
+        destination=destination,
+    )
     destination = Path(destination)
     if destination.exists() or destination.is_symlink():
         raise FileExistsError("pool destination already exists")
@@ -435,7 +440,8 @@ def finalize_pool(*, plan, run_root, destination):
         "manifest_sha256": _sha256_file(manifest),
         "batch_count": TOTAL_BATCHES,
         "pool_samples": POOL_SAMPLES,
-        "execution_authorized": False,
+        "publication_authorized": True,
+        "publication_authorization_id": authorization["authorization_id"],
     })
     return summary
 
@@ -474,6 +480,7 @@ def _parser():
     parser.add_argument("--config-sha256")
     parser.add_argument("--destination")
     parser.add_argument("--manifest")
+    parser.add_argument("--authorization")
     parser.add_argument(
         "--ranges-per-class", type=int, default=DEFAULT_RANGES_PER_CLASS,
     )
@@ -515,10 +522,13 @@ def main(argv=None):
         print(json.dumps(plan, sort_keys=True, allow_nan=False), flush=True)
         return
     if args.finalize:
+        if args.authorization is None:
+            raise SystemExit("--finalize requires --authorization")
         summary = finalize_pool(
             plan=plan,
             run_root=args.run_root,
             destination=plan["destination"],
+            authorization_path=args.authorization,
         )
         print(json.dumps(summary, sort_keys=True), flush=True)
         return
