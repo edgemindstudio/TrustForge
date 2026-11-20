@@ -2227,3 +2227,168 @@ FULL_BENCHMARK_GO=NO
 No other dataset, generator, seed or experimental attempt is authorized by
 this entry. AR seed 43 is not authorized. Existing historical entries and
 original stage exit criteria are preserved unchanged.
+
+## VAE Stage 3 bounded launcher-integration acceptance — 2026-11-20
+
+RESEARCHER ACCEPTANCE RECORD. The researcher accepted and closed the bounded
+VAE Stage 3 launcher-integration milestone after reviewing the implementation
+and the reported TensorFlow verification evidence. This is an accepted
+implementation milestone only. It does not authorize operational training,
+real-data execution, checkpoint publication, synthesis or evaluation.
+
+### Accepted implementation scope
+
+The reviewed implementation package contains four files:
+
+- `src/trustforge/models/paper01_revision_2026/variational_autoencoder_governed_training.py`
+  (modified): adds a minimal gate-only authorization helper and uses it in the
+  existing governed training function. The helper reads the existing
+  `VAE_REAL_DATASET_TRAINING_ENABLED` constant. It does not add a second
+  activation flag or any environment, token, development-mode or test-mode
+  bypass. Existing gate semantics are preserved.
+- `scripts/train_paper01_vae_revision_production.py` (new): Revision-2026 VAE
+  production CLI with explicit dataset, experimental-seed, attempt, expected
+  source-commit, repository-root and dataset-source inputs. It requires Slurm,
+  a clean checkout, the exact expected commit and Revision-2026 module paths.
+  It invokes the gate before adapter construction and delegates only to
+  `run_governed_vae_training`.
+- `slurm/paper01_revision_2026/vae_revision_production.slurm` (new): inert
+  production launcher specification. It requires explicit identity and source
+  inputs, rejects an incomplete or mismatched checkout, disables automatic
+  requeue and invokes only the new CLI. Its resource values are provisional
+  implementation settings, not an accepted production resource envelope.
+- `tests/test_variational_autoencoder_production_entry_point_revision_2026.py`
+  (new): focused entry-point contract tests using fixtures and mocks.
+
+The real-data gate remains disabled:
+
+`VAE_REAL_DATASET_TRAINING_ENABLED = False`
+
+### Accepted verification evidence
+
+The accepted bounded verification was reported from an existing MacStudio
+environment and reviewed by the researcher. It is not a new independent rerun
+performed during this documentation update.
+
+- Interpreter: `/Users/poisedre/TrustForge/.venv/bin/python`
+- Python: 3.10.11
+- TensorFlow: 2.20.0
+- NumPy: 2.2.6
+- pytest: 8.3.3
+
+The interpreter was used read-only with:
+
+`PYTHONPATH=/Users/poisedre/TrustForge-opencode/src:/Users/poisedre/TrustForge-opencode`
+
+Imports were verified to resolve to this checkout, not to the interpreter's
+own checkout.
+
+| Module | Result |
+| --- | --- |
+| `tests/test_variational_autoencoder_production_entry_point_revision_2026.py` | 22 passed |
+| `tests/test_paper01_experimental_seed_binding_revision_2026.py` | 36 passed |
+| `tests/test_variational_autoencoder_governed_training_revision_2026.py` | 9 passed |
+| `tests/test_variational_autoencoder_training_checkpoint_bridge_revision_2026.py` | 7 passed |
+
+Totals:
+
+- 74 passed
+- 0 failed
+- 0 skipped
+- 0 expected failures
+- 0 collection errors
+
+The two previously skipped TensorFlow-dependent entry-point tests executed and
+passed. These are researcher-reviewed OpenCode-reported test results, not a new
+independently rerun verification. The checkpoint-bridge tests construct models
+and serialize synthetic in-memory weights; they do not train, read real data or
+publish checkpoints.
+
+### Source and implementation identity
+
+- Base source commit: `1d3ed01b06887c4e7fdf73b9eac2f6c65112e340`
+- Branch: `engineering/paper01-opencode-stage5`
+
+Reviewed implementation file SHA-256 identities:
+
+| File | SHA-256 |
+| --- | --- |
+| `variational_autoencoder_governed_training.py` | `0ba540319b296b1fd27bd5c263ebea5eda51c1d93f5296b18343af2d0aa49f83` |
+| `train_paper01_vae_revision_production.py` | `81938213b1d4190cecf5f57860e7dab91d5322710789ed127b22dcbb62252a98` |
+| `vae_revision_production.slurm` | `2e150141c52421e7d38684dca8ee76031db64f9576e6e6d98b3ff264df01646a` |
+| `test_variational_autoencoder_production_entry_point_revision_2026.py` | `d1d0bc63eda0868759b9450a430d871dea3815244e203879a4198f3d1d3d9ebf` |
+
+The four files were uncommitted working-tree changes at the recorded base
+commit when this entry was prepared. No preservation commit is recorded or
+implied by this entry.
+
+### Scientific controls preserved
+
+The accepted implementation does not change:
+
+- conditional convolutional VAE;
+- canonical float32 NHWC `40 x 40 x 3` representation;
+- latent dimension 100;
+- fixed Gaussian observation variance 1.0;
+- KL coefficient 1.0;
+- no KL annealing;
+- Adam optimizer with learning rate 0.001;
+- training batch size 64;
+- exactly two complete epochs;
+- full governed validation after each epoch;
+- earliest minimum validation-total-loss selection;
+- distinct best and last checkpoint states;
+- held-out test isolation from training and selection.
+
+### Acceptance limitations
+
+- No real dataset was accessed.
+- No real-data production training was performed.
+- No Slurm job was submitted.
+- No checkpoint was published.
+- No synthetic image pool was generated.
+- No downstream classifier evaluation was performed.
+- No full benchmark was authorized.
+
+The accepted tests establish bounded integration correctness, not real-data
+operational readiness. The production launcher has not been demonstrated
+through an authorized Slurm execution. This accepted implementation milestone
+therefore does not close Stage 3 overall.
+
+### Stage boundaries
+
+Stage 3 retains execution source/configuration identity, dataset provenance,
+launcher integration, activation and fail-closed runtime behavior.
+
+Stage 4 separately retains durable checkpoint publication, independent
+checkpoint restoration, checkpoint-backed synthesis, complete class quotas and
+pool publication. No Stage 4 requirement is moved into this accepted Stage 3
+milestone.
+
+### Status
+
+VAE_STAGE3_LAUNCHER_INTEGRATION=ACCEPTED_AND_CLOSED
+
+VAE_STAGE3_TENSORFLOW_VERIFICATION=PASS_REPORTED
+
+VAE_RUNTIME_TRAINING_ACTIVATION=DISABLED
+
+VAE_REAL_DATA_EXECUTION=NOT_PERFORMED
+
+VAE_CHECKPOINT_PUBLICATION=NOT_PERFORMED
+
+VAE_SYNTHESIS_EXECUTION=NOT_PERFORMED
+
+STAGE_3_OVERALL=IN_PROGRESS
+
+STAGE_4_OVERALL=IN_PROGRESS
+
+RBM_PRODUCTION_SAMPLING=BLOCKED
+
+FULL_BENCHMARK_GO=NO
+
+No other dataset, generator, seed or experimental attempt is authorized by
+this entry. This entry does not authorize staging, commit, push, operational
+activation, real-data training, Slurm execution, checkpoint publication,
+synthesis or evaluation. Existing historical entries and original stage exit
+criteria are preserved unchanged.

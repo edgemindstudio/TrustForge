@@ -28,6 +28,18 @@ APPROVED_BATCH_SIZE = 64
 APPROVED_LEARNING_RATE = 0.001
 
 
+def require_vae_production_authorization():
+    """Fail closed unless the governed VAE real-data gate is enabled.
+
+    This is a gate-only helper. It does not add a second activation flag,
+    environment override, token, development mode or test mode.
+    """
+    if VAE_REAL_DATASET_TRAINING_ENABLED is not True:
+        raise PermissionError(
+            "VAE real-dataset training is not authorized"
+        )
+
+
 def run_governed_vae_training(
     *,
     adapter,
@@ -43,10 +55,7 @@ def run_governed_vae_training(
     its presence does not authorize checkpoint publication.
     """
     require_governed_experimental_seed(experimental_seed)
-    if VAE_REAL_DATASET_TRAINING_ENABLED is not True:
-        raise PermissionError(
-            "VAE real-dataset training is not authorized"
-        )
+    require_vae_production_authorization()
 
     if not os.environ.get("SLURM_JOB_ID"):
         raise PermissionError(
@@ -110,5 +119,6 @@ def run_governed_vae_training(
 
 __all__ = [
     "VAE_REAL_DATASET_TRAINING_ENABLED",
+    "require_vae_production_authorization",
     "run_governed_vae_training",
 ]
