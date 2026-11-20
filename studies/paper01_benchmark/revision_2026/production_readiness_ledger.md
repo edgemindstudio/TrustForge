@@ -2106,3 +2106,124 @@ remain closed as previously accepted and are not reopened. Existing S2-01
 STAGE_2_OVERALL=IN_PROGRESS
 
 FULL_BENCHMARK_GO=NO
+
+## AR CICMalDroid2020 seed-42 bounded production synthesis acceptance — jobs 314793 / 314794
+
+RESEARCHER ACCEPTANCE RECORD. This entry closes one bounded AR
+CICMalDroid2020 seed-42 production-synthesis milestone after researcher review
+of the reported execution, publication and verifier evidence. It does not close
+Stage 4 overall, perform downstream evaluation, or authorize another dataset,
+generator, seed or attempt.
+
+### Accepted scope
+
+- Dataset: cicmaldroid2020; family: AR PixelCNN; experimental seed: 42;
+  attempt: 01; classes 0,1,2,3,4.
+- Synthetic budget: 2,000 images per class; 10,000 images total; 8 images per
+  batch; 250 batches per class; 1,250 batches total.
+- Canonical output contract: float32 NHWC 40x40x3 in [0,1].
+- This is production synthesis only. It is not a classifier-utility,
+  semantic-label-fidelity, realism, distributional-quality or seven-seed
+  statistical result. No downstream classifier evaluation is claimed or
+  authorized.
+
+### Source and scientific identities
+
+- Synthesis source: d7199228b19f9d67d747ca06a31c02230af00fb9.
+- Training source: e4473abcdbc53f0de3a01ebe48858f2f3c7b841a.
+- Checkpoint generation: ar_cic_seed42.
+- Checkpoint SHA-256:
+  d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0.
+- Dataset configuration SHA-256:
+  ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b.
+- Recipe SHA-256:
+  202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478.
+
+### Slurm execution evidence
+
+- Worker array 314793: 50 expected tasks, array 0-49 with maximum concurrency
+  two; 50 COMPLETED with exit code 0:0.
+- Worker envelope: 8 CPUs per task, 32 GB per task, 90 minutes per task,
+  CPU-only, no automatic retries, requeue disabled.
+- Dependent finalizer 314794: COMPLETED, exit code 0:0, elapsed 00:00:31;
+  8 CPUs, 32 GB, 30-minute walltime; dependency afterok:314793.
+- Accounting and scheduler success are reported execution evidence; they do
+  not by themselves establish completed synthesis.
+
+### Authorization provenance
+
+- Authorization ID: P1R2026-AR-CIC-S42-ATTEMPT01-20261118.
+- Approved authorization record SHA-256:
+  34c7549a8388f5fdec23ebba2698ff379f022d83d066d5faa60b0cd352ff5513.
+- The preceding non-active preparation record remained unchanged.
+- The active record was created separately for this exact bounded attempt;
+  the researcher's explicit approval governs this execution.
+
+### Published pool and manifest
+
+Pool:
+`~/trustforge_revision_2026_artifacts/paper01/ar/cicmaldroid2020/seed42/pools/production/attempt01/pool`
+
+Manifest:
+`<pool>/manifest.json`
+
+Published manifest SHA-256:
+ce2b6c6a332b578ad9f67091cf035f15a57e55e88eb22d9f98ade10ef94835e2.
+
+The accepted finalizer logs report:
+
+- batch_count=1250
+- class_counts=[2000,2000,2000,2000,2000]
+- images=10000
+- pool_samples=10000
+- publication_authorized=true
+
+The subsequent existing pool verifier reported the same complete counts and
+manifest identity. Finalizer stderr was empty in the supplied read-only
+inspection.
+
+### Coverage and verification scope
+
+- Five classes; 2,000 images per class; 10,000 images; 1,250 batches.
+- The accepted finalizer and existing verifier report complete coverage and
+  manifest identity.
+- This entry records execution success from researcher-provided Slurm
+  accounting, the pool/manifest from researcher-provided filesystem output,
+  and publication/verifier success from the accepted finalizer logs.
+- Full independent manifest rehashing or batch-content replay was not
+  performed during this documentation review. This entry does not claim a new
+  independent verification run; the reported verifier outcome is preserved
+  evidence, not a rerun. The absence of a rerun is not a verification failure.
+
+### Researcher acceptance and closure
+
+The researcher accepted the bounded AR CICMalDroid2020 seed-42 production
+synthesis result after review of the reported publication and verification
+evidence. This closes the bounded production-synthesis milestone only. It does
+not accept classifier utility, semantic label fidelity, synthetic realism,
+distributional quality or seven-seed statistics, and it does not authorize
+downstream evaluation or another seed.
+
+### Status
+
+AR_CIC_SEED42_PRODUCTION_EXECUTION=COMPLETE
+
+AR_CIC_SEED42_POOL_PUBLICATION=COMPLETE
+
+AR_CIC_SEED42_POOL_VERIFIER=PASS_REPORTED
+
+AR_CIC_SEED42_BOUNDED_SYNTHESIS=ACCEPTED
+
+AR_CIC_SEED42_DOWNSTREAM_EVALUATION=NOT_PERFORMED
+
+STAGE_4_OVERALL=IN_PROGRESS
+
+STAGE_5_OVERALL=IN_PROGRESS
+
+RBM_PRODUCTION_SAMPLING=BLOCKED
+
+FULL_BENCHMARK_GO=NO
+
+No other dataset, generator, seed or experimental attempt is authorized by
+this entry. AR seed 43 is not authorized. Existing historical entries and
+original stage exit criteria are preserved unchanged.
