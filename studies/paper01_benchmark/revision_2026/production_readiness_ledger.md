@@ -2782,3 +2782,149 @@ as passing. These results were not rerun during this Git-preservation task.
 No other dataset, generator, seed, attempt or experiment is authorized by
 this entry. Existing Stage 2–5 records and original stage exit conditions
 remain unchanged.
+
+## VAE Stage 4 — Single-Execution Permit Validator Implementation Acceptance — 2026-11-21
+
+### Scope and disposition
+
+This entry records researcher acceptance of the bounded VAE Stage 4
+single-execution checkpoint-publication permit validator implementation.
+
+`VAE_STAGE4_PERMIT_VALIDATOR_IMPLEMENTATION=ACCEPTED_AND_CLOSED`
+
+Implementation commit:
+
+`266a3c785a2458a0b148141328c3230efe025c33`
+
+Parent commit:
+
+`713ce08534c63ab24c2755267f6ca7cd67d49ef1`
+
+The implementation adds only the permit-validation component and its
+production CLI integration. It does not authorize authoritative checkpoint
+publication, a new training attempt, production synthesis, or a new
+experimental execution.
+
+### Accepted custody model
+
+The researcher accepts same-account operational custody under a cooperative,
+nonadversarial execution assumption. Owner-only file permissions, canonical
+JSON, exact identity binding and hashes protect against accidental
+modification, identity confusion and scope substitution.
+
+These controls do not authenticate researcher approval against a malicious
+same-UID actor. The SHA-256 integrity identifiers are not cryptographic
+proof of researcher authorization, and no OS-account federation, signing
+service or external approval platform was introduced.
+
+### Permit identity and approval scope
+
+The validator loads one fixed production permit path and rejects arbitrary
+caller-selected permit paths. The permit binds:
+
+- Paper 1 Revision-2026 and the conditional VAE family.
+- CICMalDroid2020, seed 42 and attempt 02.
+- The exact execution-source commit and `commit<7hex>_attempt02` identity.
+- The canonical absolute publication destination.
+- Ordered CIC class mapping `["0","1","2","3","4"]`.
+- Exactly the `best` and `last` checkpoint roles.
+- Observation version `gaussian_fixed_variance_1p0_v1`.
+- The accepted checkpoint-v1 contract identity and selection policy.
+- Authorization ID, approval-record identity, and authorization scope.
+- Best/last publication and committed-generation verification authority only;
+  synthesis and evaluation remain false.
+
+The fixed production permit path is:
+
+`~/trustforge_revision_2026_artifacts/paper01/vae/authorizations/vae_checkpoint_publication_permit.json`
+
+The canonical destination pattern is:
+
+`~/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/checkpoints/production/commit<7hex>_attempt02`
+
+Existing, symlinked, repository-internal or otherwise unsafe destinations are
+rejected before training.
+
+### Authorization-scope digest
+
+The validator computes a stable authorization-scope SHA-256 over canonical
+JSON containing every permit field that defines the approved execution and
+its capabilities, excluding only `approval_commit`:
+
+`authorization_scope_sha256 = SHA256(canonical_authorization_scope_bytes)`
+
+This resolves the approval-commit circularity: the approved scope digest can
+exist before the approval-ledger commit, and the final permit can reference
+that commit without changing the scope digest. The existing complete-permit
+SHA-256 remains separate and still covers `approval_commit` for permit-byte
+integrity and revalidation.
+
+### Approval-ledger verification
+
+Approval evidence is one explicit, canonical ledger entry line:
+
+`<!-- VAE_CHECKPOINT_PUBLICATION_APPROVAL {"authorization_id":"...","authorization_scope_sha256":"..."} -->`
+
+The validator reads the referenced approval ledger blob from the permit's
+`approval_commit`, rejects malformed or noncanonical entries, and requires
+exactly one entry matching the authorization ID with the exact approved scope
+digest. Missing, duplicate, ambiguous, other-ID, or unrelated-text digest
+occurrences are rejected. A digest appearing elsewhere in the ledger is not
+accepted as approval evidence.
+
+### Verification evidence
+
+Previously reported and reviewed OpenCode execution evidence, not rerun
+during this Git-preservation task:
+
+- Focused permit-validation module: 48 passed.
+- Targeted regression excluding two stale pre-activation assertions:
+  84 passed, 2 deselected.
+- Unfiltered targeted regression: 84 passed, 2 failed.
+
+The two retained historical failures are:
+
+- `test_gate_remains_disabled_in_source`
+- `test_disabled_gate_helper_raises`
+
+Both expect the obsolete pre-activation disabled training gate; the accepted
+Stage 3 activation deliberately enabled that gate. They are not represented
+as passing and were not modified.
+
+### Scientific and schema preservation
+
+No VAE model, observation, training, checkpoint-v1 manifest, commit-record,
+coordinator, publisher, loader or synthesis-linkage semantics changed. The
+accepted scientific settings remain unchanged, including the conditional
+convolutional VAE, 40x40x3 input, latent dimension 100, observation variance
+1.0, KL coefficient 1.0 without annealing, Adam learning rate 0.001, batch
+size 64, exactly two epochs, full governed validation, earliest
+minimum-validation-total-loss selection, distinct best/last states, and
+best-checkpoint decoder-mean synthesis policy.
+
+### Remaining limitations and status
+
+- Authoritative checkpoint publication remains unauthorized.
+- No production checkpoint was published.
+- No real permit or execution-specific approval record was created.
+- No new training attempt, Slurm execution, synthesis or evaluation occurred.
+- GPFS crash durability remains unverified.
+- `crash_durability_verified=False`.
+- The validator establishes approval consistency, not same-UID adversarial
+  authentication.
+- This entry does not close Stage 4 overall or establish full benchmark
+  readiness.
+
+`VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED=NO`
+
+`VAE_NEW_TRAINING_ATTEMPT_AUTHORIZED=NO`
+
+`VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+No other dataset, generator, seed, attempt or experiment is authorized by
+this entry. Existing historical entries and original stage exit conditions
+remain unchanged.
