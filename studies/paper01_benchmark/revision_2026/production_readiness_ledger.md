@@ -2700,3 +2700,85 @@ seeds, attempts, datasets, generator families, checkpoint publication,
 synthesis or evaluation. Historical Stage 2–5 records and original stage exit
 conditions remain unchanged. No other dataset, generator, seed, attempt or
 experiment is authorized by this entry.
+
+## VAE Stage 4 — Candidate Checkpoint-Publication Integration Acceptance — 2026-11-21
+
+### A. Scope and source identity
+
+- Dataset context: `cicmaldroid2020`.
+- Generator: conditional VAE.
+- Experimental seed context: 42.
+- Accepted Stage 3 training-only job: 316716.
+- Stage 3 activation source:
+  `9eb426b551f2bd4f07eac6eeac60027e2b9f64ca`.
+- Earlier Stage 3 evidence-preservation commit:
+  `2ca154225feb89343a81f4924920886dd23ee9e3`.
+- Stage 4 implementation commit:
+  `99d7f60fe60c4697308024216b49fbe454e8a486`.
+
+Seed 42 is the accepted Stage 3 context and synthetic-fixture identity. No
+new real-data training, production checkpoint publication or production
+synthesis occurred in this Stage 4 integration.
+
+### B. Accepted implementation
+
+The accepted integration adds:
+
+- a governed training-result to checkpoint-preparation coordinator;
+- distinct best and last checkpoint artifact preparation;
+- reuse of the existing VAE generation/commit publisher;
+- committed-generation verification before a checkpoint directory is exposed;
+- synthetic-fixture independent checkpoint restoration;
+- the approved observation-version identity
+  `gaussian_fixed_variance_1p0_v1`;
+- a default-off checkpoint-publication CLI;
+- a separate, default-deny authoritative publication authorization;
+- preservation of the existing scientific and checkpoint contracts.
+
+The integration is candidate checkpoint-preparation/publication orchestration.
+It does not establish authoritative checkpoint publication.
+
+### C. Test evidence
+
+Previously reported and reviewed OpenCode execution evidence:
+
+- Focused coordinator and authorization-boundary module: 16 passed.
+- Targeted regression suite excluding two historical pre-activation
+  assertions: 201 passed, 2 deselected.
+- Unfiltered targeted regression suite: 201 passed, 2 failed.
+
+The two retained historical failures are:
+
+- `test_gate_remains_disabled_in_source`
+- `test_disabled_gate_helper_raises`
+
+Both expect the previously disabled VAE training gate, whereas the accepted
+Stage 3 activation deliberately enabled that gate. They are not represented
+as passing. These results were not rerun during this Git-preservation task.
+
+### D. Remaining limitations
+
+- Authoritative checkpoint publication remains unauthorized.
+- Production synthesis remains unauthorized.
+- No production checkpoint was created for job 316716.
+- Real-data publication and restoration have not been accepted.
+- GPFS crash durability remains unverified.
+- `crash_durability_verified=False`.
+- No production synthetic pool or downstream evaluation was performed.
+- Existing loader and synthesis identity limitations remain disclosed.
+- This integration does not establish full Stage 4 or full benchmark
+  readiness.
+
+### E. Stage dispositions
+
+- `VAE_STAGE3_CIC_SEED42_TRAINING_ONLY=ACCEPTED_AND_CLOSED`
+- `VAE_STAGE4_CANDIDATE_PUBLICATION_INTEGRATION=ACCEPTED_AND_CLOSED`
+- `VAE_OBSERVATION_VERSION=APPROVED`
+- `VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED=NO`
+- `VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+- `STAGE_4_OVERALL=IN_PROGRESS`
+- `FULL_BENCHMARK_GO=NO`
+
+No other dataset, generator, seed, attempt or experiment is authorized by
+this entry. Existing Stage 2–5 records and original stage exit conditions
+remain unchanged.
