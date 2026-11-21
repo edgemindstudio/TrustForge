@@ -2587,3 +2587,116 @@ this entry. Existing RBM, GAN, VAE, AR, MAF and GMM acceptances are unchanged.
 This entry does not authorize staging, commit, push, runtime activation,
 real-data training, Slurm execution, checkpoint publication, synthesis,
 evaluation or full benchmark launch.
+
+## VAE Stage 3 — CICMalDroid2020 Seed-42 Bounded Real-Data Training Acceptance — Slurm 316716
+
+### Execution authority
+
+- Dataset: `cicmaldroid2020`
+- Generator: VAE
+- Experimental seed: 42
+- Attempt: 01
+- Run identity: `commit9eb426b_attempt01`
+- Source commit: `9eb426b551f2bd4f07eac6eeac60027e2b9f64ca`
+- Execution checkout: `/home/bruno.fonkeng/TrustForge-paper01-vae-stage3-activated`
+- Slurm job: 316716
+- Compute node: `talon07`
+
+### Observed completion
+
+- Job state: `COMPLETED`
+- Exit code: `0:0`
+- Elapsed: `00:02:32`
+- Training epochs: 2 expected / 2 completed
+- Optimizer updates: 254 expected / 254 completed
+- Governed training split: 8,117 examples
+- Governed validation split: 1,158 examples
+- Governed test split: 2,323 examples
+- Expected and actual source commit reported as identical:
+  `9eb426b551f2bd4f07eac6eeac60027e2b9f64ca`
+- Source status reported as `CLEAN`.
+- Imported Revision-2026 VAE modules reported under the activated checkout:
+  data integration, governed training, model, observation and training
+  runner.
+- Configuration identity checks reported as passing for the accepted
+  conditional VAE, canonical 40x40x3 input, latent dimension 100,
+  observation variance 1.0, KL coefficient 1.0, no KL annealing, Adam
+  learning rate 0.001, batch size 64, two complete epochs, full governed
+  validation, minimum validation-total-loss selection with earliest-epoch
+  tie-breaking, distinct best/last roles, and prohibited test-split usage.
+
+### Resources
+
+- 8 allocated CPUs
+- 32 GB requested memory
+- 2-hour walltime limit
+- Approximately 821 MiB reported batch-step MaxRSS (`840480K`)
+- Compute node `talon07` in the `talon` partition
+- GPU disabled and unused
+- No automatic requeue or retry
+
+### Data provenance
+
+- CIC authoritative source contract:
+  `cic_authoritative_source_revision_2026`
+- Compute-node full-file SHA-256 source verification method:
+  `sha256_full_file_stream_on_compute_node`
+- Verification scope: authoritative CSV and feature-column JSON
+- Source fingerprints reported:
+  - `source_csv`:
+    `3415babdd76a2b77c400a9ec3a8a6057705d5a57a9e91753191ecc2946df7c00`
+  - `feature_columns_path`:
+    `7a6045fe10bfe27c1faee98d729de470401b7cf733ccccc107499f11dea8fc8f`
+- Governed Revision-2026 partition policy: `cic_case3_revision_2026`,
+  partition seed 42, train 0.7 (8,117), validation 0.1 (1,158), test 0.2
+  (2,323).
+- The held-out test split was excluded from training and selection by the
+  governed configuration (`test_split_usage=prohibited`).
+
+### Evidence limitations
+
+- Individual per-epoch validation losses were not exposed in stdout.
+- The selected best epoch was not separately printed.
+- Per-epoch coverage counters were not separately printed.
+- The successful governed function return supports its internal completion
+  and selection checks, but does not independently expose every intermediate
+  quantity.
+- Source-file provenance verification does not by itself prove continuous
+  source immutability or independently trace every consumed training batch.
+- The governed provenance additionally records that it does not authenticate
+  checkpoint origin, does not prove training used only verified bytes, and
+  does not independently verify partition execution.
+
+### Publication restrictions
+
+- Checkpoint status: `NOT_PREPARED`
+- Publication status: `NOT_PUBLISHED`
+- No authoritative checkpoint publication
+- No synthetic-image generation
+- No downstream classifier evaluation
+
+### Log provenance
+
+- `~/p1r1-vae-prod.316716.out`
+  - SHA-256:
+    `08d99f0955ed8231bd7d0e8d181922a608e5bf960d1354a55dbf2d1ff17f4d67`
+- `~/p1r1-vae-prod.316716.err`
+  - SHA-256:
+    `4f4f6e3b834fc93d674fe8c4c2d4838afbf35027d77d985e57fdbbec0e75d812`
+
+These are OpenCode-reported, command-backed execution observations reviewed
+by ChatGPT. They are not described as an independently rerun Talon
+verification.
+
+### Status and boundary
+
+- `VAE_STAGE3_CIC_SEED42_TRAINING_ONLY=ACCEPTED_AND_CLOSED`
+- `VAE_STAGE4_CHECKPOINT_SYNTHESIS=NOT_ESTABLISHED`
+- `STAGE_3_OVERALL=IN_PROGRESS`
+- `FULL_BENCHMARK_GO=NO`
+
+This bounded Stage 3 training-only acceptance does not authorize further
+seeds, attempts, datasets, generator families, checkpoint publication,
+synthesis or evaluation. Historical Stage 2–5 records and original stage exit
+conditions remain unchanged. No other dataset, generator, seed, attempt or
+experiment is authorized by this entry.
