@@ -428,6 +428,31 @@ def build_adapter(args):
     raise ValueError("unsupported governed dataset ID")
 
 
+def validate_publication_permit(args, request):
+    """Validate one permit without enabling authoritative publication."""
+    publication_root = getattr(args, "publication_root", None)
+
+    if publication_root is None:
+        raise ValueError(
+            "--publication-root is required with "
+            "--publish-checkpoints"
+        )
+
+    from trustforge.models.paper01_revision_2026 import (
+        variational_autoencoder_checkpoint_publication_permit as permit_module,
+    )
+
+    return permit_module.require_vae_checkpoint_publication_permit(
+        dataset_id=request["dataset_id"],
+        experimental_seed=request["experimental_seed"],
+        attempt=request["attempt"],
+        execution_source_commit=request["expected_source_commit"],
+        publication_root=publication_root,
+        class_mapping=permit_module.CLASS_MAPPING,
+        repository_root=args.repository_root,
+    )
+
+
 def run(args):
     """Validate identity, enforce the gate, then delegate training."""
     request = validate_request(args)
@@ -454,11 +479,27 @@ def run(args):
             "--publication-root requires --publish-checkpoints"
         )
 
+    publication_permit = None
+
     if publish_requested:
+        # This default-deny boundary remains authoritative. The permit
+        # validator is implemented for a future accepted activation and
+        # cannot create a production success path while the boundary is
+        # closed.
         require_vae_checkpoint_publication_authorization()
+        publication_permit = validate_publication_permit(args, request)
 
     environment = require_environment(args)
     governed = _load_governed_module()
+
+    if publication_permit is not None:
+        if (
+            publication_permit.execution_source_commit
+            != environment.actual_source_commit
+        ):
+            raise PermissionError(
+                "publication permit source does not match the execution"
+            )
 
     # The gate must run before adapter construction or dataset access.
     governed.require_vae_production_authorization()
@@ -482,19 +523,40 @@ def run(args):
         from trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_publication_coordinator import (
             publish_governed_vae_checkpoints,
         )
+        from trustforge.models.paper01_revision_2026 import (
+            variational_autoencoder_checkpoint_publication_permit as permit_module,
+        )
+
+        if publication_permit is None:
+            raise PermissionError(
+                "publication permit was not validated"
+            )
+
+        permit_module.verify_vae_publication_permit_unchanged(
+            publication_permit
+        )
+        permit_module.require_unused_vae_publication_destination(
+            publication_permit,
+            repository_root=environment.repository_root,
+        )
 
         class_mapping = resolve_gan_class_mapping(
             dataset_id=request["dataset_id"],
             adapter=adapter,
         )
 
+        if tuple(class_mapping) != publication_permit.class_mapping:
+            raise PermissionError(
+                "publication class mapping does not match the permit"
+            )
+
         publication = publish_governed_vae_checkpoints(
             governed_result=result,
             class_mapping=class_mapping,
             effective_configuration=configuration,
-            publication_root=publication_root,
-            source_commit=environment.actual_source_commit,
-            attempt=request["attempt"],
+            publication_root=publication_permit.publication_root,
+            source_commit=publication_permit.execution_source_commit,
+            attempt=publication_permit.attempt,
             repository_root=environment.repository_root,
         )
 
@@ -522,6 +584,16 @@ def run(args):
 
     if publication is not None:
         summary["checkpoint_publication"] = publication
+
+    if publication_permit is not None:
+        summary["publication_authorization"] = {
+            "authorization_id":
+                publication_permit.authorization_id,
+            "permit_sha256":
+                publication_permit.permit_sha256,
+            "approval_commit":
+                publication_permit.approval_commit,
+        }
 
     print(
         "VAE_REVISION_PRODUCTION_RESULT "
