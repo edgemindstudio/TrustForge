@@ -2928,3 +2928,185 @@ best-checkpoint decoder-mean synthesis policy.
 No other dataset, generator, seed, attempt or experiment is authorized by
 this entry. Existing historical entries and original stage exit conditions
 remain unchanged.
+
+## VAE Stage 4 — Publication Activation Acceptance and Execution-Source Freezing — 2026-11-21
+
+### Scope and researcher acceptance
+
+This entry records researcher acceptance of the bounded VAE Stage 4
+publication-activation implementation and freezes its execution source for
+the proposed CICMalDroid2020 seed-42 attempt 02.
+
+The source-level publication route is enabled. This is not an execution
+authorization: actual checkpoint publication still requires the exact
+execution-specific permit, a separate approval-ledger commit, a clean frozen
+execution source and all existing destination and identity checks.
+
+### Frozen execution source
+
+`VAE_EXECUTION_SOURCE_COMMIT=1aec01c26fab51b87362a47e2cfa797bd428c359`
+
+Frozen commit prefix:
+
+`COMMIT7=1aec01c`
+
+Parent commit:
+
+`79d03e05e899a28c58cf650b42fe0598badb280d`
+
+Proposed run identity:
+
+`commit1aec01c_attempt02`
+
+The later documentation commit is not the execution-source commit.
+
+### Accepted implementation inventory
+
+The frozen implementation commit changed exactly:
+
+- `scripts/train_paper01_vae_revision_production.py`
+- `slurm/paper01_revision_2026/vae_revision_production.slurm`
+- `tests/test_variational_autoencoder_checkpoint_publication_coordinator_revision_2026.py`
+- `tests/test_variational_autoencoder_checkpoint_publication_permit_revision_2026.py`
+
+Accepted SHA-256 values:
+
+- CLI:
+  `2b21c205ffbeb0bb2148b2aa22555db6a14d3e93e6766c3783328066871b4a0e`
+- Slurm launcher:
+  `93435210a68ede1e3036f48a26e30129fa6d84d392b6965c505dba4417b25724`
+- Coordinator test module:
+  `2a71c9c28c5f20e38c3b1a1f0b0dea05ded292792276d10308f098bca66c8ee3`
+- Permit test module:
+  `fd78f601c6685bc2de201ceab24d4d1820cf79f794199f18863b0ecb8d8233be`
+
+### Activation behavior
+
+`VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED=True` makes only the
+mandatory permit-validation route reachable. The permit remains the sole
+publication authority and must bind the exact paper, revision, VAE family,
+CICMalDroid2020 dataset, seed 42, attempt 02, run identity, clean execution
+source, canonical destination, class mapping, best/last roles, observation
+version, checkpoint contract and authorization scope.
+
+The permit and destination are revalidated immediately before publication.
+The independent governed training authorization remains enforced. The
+launcher defaults publication requests to disabled and keeps synthesis
+publication disabled.
+
+### Preserved test evidence
+
+Previously reported and reviewed OpenCode evidence, not rerun during this
+Git-preservation task:
+
+- Focused permit-validation suite: 54 passed.
+- Targeted regression: 90 passed, 2 deselected.
+- Unfiltered targeted regression: 90 passed, 2 failed.
+- Launcher argument-capture verification: 15/15 passed.
+- Python syntax checks: PASS.
+- Bash syntax check: PASS.
+
+The two retained historical failures are:
+
+- `test_gate_remains_disabled_in_source`
+- `test_disabled_gate_helper_raises`
+
+Both expect the obsolete pre-activation Stage 3 training-gate condition. They
+were not modified and are not represented as passing.
+
+### Talon preflight acceptance and attempt availability
+
+The read-only Talon preflight established:
+
+- Talon home `/home/bruno.fonkeng`.
+- Python 3.10.19 in `$HOME/miniforge3/envs/gcs_py310`.
+- Slurm 25.05.6.
+- Canonical Paper 1 artifact root exists.
+- VAE artifact namespace is absent.
+- Fixed VAE production permit is absent.
+- Proposed attempt-02 execution checkout is absent.
+- Stage 3 attempt 01 remains preserved.
+- Job 316716 completed with exit code 0:0.
+- Scheduler history from 2026-10-01 through 2026-11-21 contains no
+  conflicting additional VAE production execution.
+- No active user jobs were present.
+
+Attempt 02 is accepted as available within the inspected Talon, scheduler,
+artifact and log evidence. The exact source-dependent destination must still
+be verified absent after the execution-source commit is frozen.
+
+### Proposed operational paths
+
+Execution checkout:
+
+`/home/bruno.fonkeng/TrustForge-paper01-vae-stage4-attempt02`
+
+Publication destination:
+
+`/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/checkpoints/production/commit1aec01c_attempt02`
+
+Fixed permit path:
+
+`/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/authorizations/vae_checkpoint_publication_permit.json`
+
+These are derived proposals only. No Talon worktree, directory, reservation
+marker, permit or checkpoint was created.
+
+### Permit and custody boundary
+
+A future execution requires a separate append-only approval-ledger commit
+containing the structured approval entry for the exact authorization-scope
+SHA-256. The final permit must reference that later commit and the complete
+permit SHA-256 must remain a separate integrity identifier.
+
+No real execution-specific permit or approval marker was issued by this
+entry. The accepted same-account cooperative custody model remains an
+auditable operational control, not protection against a malicious same-UID
+actor.
+
+### Scientific preservation and limitations
+
+No change was made to the conditional VAE architecture, canonical 40x40x3
+representation, latent dimension 100, observation variance 1.0, KL
+coefficient 1.0, Adam learning rate 0.001, batch size 64, two-epoch budget,
+governed validation, earliest minimum-validation-total-loss selection,
+distinct best/last states, held-out test isolation, checkpoint schemas or
+synthesis policy.
+
+GPFS crash durability remains unverified:
+
+`crash_durability_verified=False`
+
+No real-data training, production checkpoint publication, independent
+production restoration, synthesis or downstream evaluation occurred.
+
+### Milestone dispositions
+
+`VAE_STAGE4_OPERATIONAL_PREFLIGHT=ACCEPTED_AND_CLOSED`
+
+`VAE_STAGE4_PUBLICATION_ACTIVATION=ACCEPTED_AND_CLOSED`
+
+`VAE_EXECUTION_SOURCE_COMMIT=FROZEN`
+
+`VAE_CIC_SEED42_ATTEMPT02=PREFLIGHT_AVAILABLE`
+
+`VAE_PUBLICATION_ROUTE_ENABLED=YES`
+
+### Execution restrictions
+
+`VAE_REAL_EXECUTION_PERMIT=NOT_ISSUED`
+
+`VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED=NO`
+
+`VAE_NEW_TRAINING_ATTEMPT_AUTHORIZED=NO`
+
+`VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+The enabled source-level route does not grant actual execution authority.
+No other dataset, generator, seed, attempt or experiment is authorized by
+this entry. Existing historical entries and original stage exit conditions
+remain unchanged.
