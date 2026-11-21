@@ -52,6 +52,21 @@ SOURCE_ARGUMENTS = {
 }
 
 
+# Authoritative checkpoint publication remains withheld by the accepted
+# formal authorization. This default-deny boundary is separate from the
+# training gate and is not configurable through CLI arguments, environment
+# variables, Slurm context or synthetic fixtures.
+VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED = False
+
+
+def require_vae_checkpoint_publication_authorization():
+    """Fail closed unless authoritative publication is separately authorized."""
+    if VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED is not True:
+        raise PermissionError(
+            "VAE authoritative checkpoint publication is not authorized"
+        )
+
+
 @dataclass(frozen=True)
 class ProductionEnvironment:
     """Verified execution identity without dataset access."""
@@ -88,6 +103,21 @@ def make_parser():
         "--repository-root",
         required=True,
         type=Path,
+    )
+    parser.add_argument(
+        "--publish-checkpoints",
+        action="store_true",
+        help=(
+            "Publish best and last checkpoints after governed training."
+        ),
+    )
+    parser.add_argument(
+        "--publication-root",
+        type=Path,
+        help=(
+            "Explicit new checkpoint publication root outside the "
+            "source checkout."
+        ),
     )
 
     parser.add_argument("--ustc-source-dir", type=Path)
@@ -401,6 +431,32 @@ def build_adapter(args):
 def run(args):
     """Validate identity, enforce the gate, then delegate training."""
     request = validate_request(args)
+
+    publish_requested = getattr(
+        args,
+        "publish_checkpoints",
+        False,
+    )
+    publication_root = getattr(
+        args,
+        "publication_root",
+        None,
+    )
+
+    if publish_requested and publication_root is None:
+        raise ValueError(
+            "--publication-root is required with "
+            "--publish-checkpoints"
+        )
+
+    if publication_root is not None and not publish_requested:
+        raise ValueError(
+            "--publication-root requires --publish-checkpoints"
+        )
+
+    if publish_requested:
+        require_vae_checkpoint_publication_authorization()
+
     environment = require_environment(args)
     governed = _load_governed_module()
 
@@ -416,6 +472,31 @@ def run(args):
     )
 
     trained = result["training_result"]
+    configuration = effective_configuration()
+    publication = None
+
+    if publish_requested:
+        from trustforge.models.paper01_revision_2026.gan_class_mapping import (
+            resolve_gan_class_mapping,
+        )
+        from trustforge.models.paper01_revision_2026.variational_autoencoder_checkpoint_publication_coordinator import (
+            publish_governed_vae_checkpoints,
+        )
+
+        class_mapping = resolve_gan_class_mapping(
+            dataset_id=request["dataset_id"],
+            adapter=adapter,
+        )
+
+        publication = publish_governed_vae_checkpoints(
+            governed_result=result,
+            class_mapping=class_mapping,
+            effective_configuration=configuration,
+            publication_root=publication_root,
+            source_commit=environment.actual_source_commit,
+            attempt=request["attempt"],
+            repository_root=environment.repository_root,
+        )
 
     summary = {
         "dataset_id": request["dataset_id"],
@@ -429,7 +510,7 @@ def run(args):
         "repository_root": str(environment.repository_root),
         "source_status": "CLEAN",
         "revision_module_paths": environment.module_paths,
-        "effective_configuration": effective_configuration(),
+        "effective_configuration": configuration,
         "checkpoint_status": result["checkpoint_status"],
         "publication_status": result["publication_status"],
         "dataset_provenance": result["dataset_provenance"],
@@ -438,6 +519,9 @@ def run(args):
             "completed_updates": trained["completed_updates"],
         },
     }
+
+    if publication is not None:
+        summary["checkpoint_publication"] = publication
 
     print(
         "VAE_REVISION_PRODUCTION_RESULT "
