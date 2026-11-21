@@ -2863,7 +2863,10 @@ integrity and revalidation.
 
 Approval evidence is one explicit, canonical ledger entry line:
 
-`<!-- VAE_CHECKPOINT_PUBLICATION_APPROVAL {"authorization_id":"...","authorization_scope_sha256":"..."} -->`
+> The canonical entry is an HTML comment containing the reserved VAE approval
+> marker followed by canonical JSON with exactly two fields:
+> `authorization_id` and `authorization_scope_sha256`. Illustrative placeholders
+> are not reproduced using the reserved machine-readable marker syntax.
 
 The validator reads the referenced approval ledger blob from the permit's
 `approval_commit`, rejects malformed or noncanonical entries, and requires
@@ -3107,6 +3110,109 @@ production restoration, synthesis or downstream evaluation occurred.
 `FULL_BENCHMARK_GO=NO`
 
 The enabled source-level route does not grant actual execution authority.
+No other dataset, generator, seed, attempt or experiment is authorized by
+this entry. Existing historical entries and original stage exit conditions
+remain unchanged.
+
+## VAE Stage 4 — CICMalDroid2020 Seed-42 Attempt-02 Execution-Specific Authorization — 2026-11-21
+
+### Researcher approval
+
+The researcher explicitly approved the exact execution-specific authorization
+scope and digest recorded below for one bounded checkpoint-producing VAE
+execution.
+
+Authorization ID:
+
+`P1R2026-VAE-CIC-S42-A02-CHECKPOINT-PUBLICATION`
+
+Approved authorization-scope SHA-256:
+
+`9218772997ffbb112dd8df20a0058e1e75ac8406bae05338f305075cacf40f93`
+
+Frozen execution-source commit:
+
+`1aec01c26fab51b87362a47e2cfa797bd428c359`
+
+Run identity:
+
+`commit1aec01c_attempt02`
+
+Canonical publication destination:
+
+`/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/checkpoints/production/commit1aec01c_attempt02`
+
+The destination was accepted as available in the prior Talon preflight and
+remains subject to the mandatory pre-issuance collision check.
+
+### Approved execution identity
+
+- Dataset: `cicmaldroid2020`
+- Generator family: `vae`
+- Experimental seed: 42
+- Attempt: 2
+- Run identity: `commit1aec01c_attempt02`
+- Checkpoint roles: `best` and `last`
+- Ordered class mapping: `["0", "1", "2", "3", "4"]`
+- Observation version: `gaussian_fixed_variance_1p0_v1`
+- Checkpoint contract:
+  `paper01_revision2026_conditional_vae_checkpoint` schema version `1.0`,
+  architecture `paper01_revision2026_conditional_vae_arch_v1`, selection
+  policy `min_validation_total_loss_earliest_epoch_v1`
+- Authorization scope: checkpoint publication and committed-generation
+  verification only; synthesis and evaluation disabled
+
+The accepted scientific configuration remains unchanged: conditional
+convolutional VAE, canonical 40x40x3 float32 representation, latent dimension
+100, observation variance 1.0, KL coefficient 1.0, Adam learning rate 0.001,
+batch size 64, exactly two complete epochs, 254 expected optimizer updates,
+full governed validation, earliest minimum-validation-total-loss selection,
+distinct best/last states and held-out real-test isolation.
+
+### Structured approval entry
+
+<!-- VAE_CHECKPOINT_PUBLICATION_APPROVAL {"authorization_id":"P1R2026-VAE-CIC-S42-A02-CHECKPOINT-PUBLICATION","authorization_scope_sha256":"9218772997ffbb112dd8df20a0058e1e75ac8406bae05338f305075cacf40f93"} -->
+
+### Documentation erratum
+
+The original historical approval-ledger example reproduced the reserved
+machine-readable marker prefix in illustrative documentation, which the strict
+accepted parser interpreted as a malformed approval entry. The researcher
+authorized this narrow documentation correction. The original text remains
+preserved in Git history. No parser, permit schema, scientific configuration,
+frozen execution source or approved authorization scope changed.
+
+### Issuance and execution boundary
+
+The researcher authorizes issuance of the exact execution-specific permit
+that references this approval commit. The same-account cooperative custody
+model remains an auditable operational control, not protection against a
+malicious same-UID actor.
+
+Slurm execution release remains separate and held. This entry does not
+authorize job submission, training, checkpoint publication, restoration,
+synthesis or evaluation. GPFS crash-recovery durability remains unverified:
+
+`crash_durability_verified=False`
+
+### Dispositions
+
+`VAE_EXECUTION_SPECIFIC_AUTHORIZATION_SCOPE=APPROVED`
+
+`VAE_AUTHORIZATION_SCOPE_SHA256=9218772997ffbb112dd8df20a0058e1e75ac8406bae05338f305075cacf40f93`
+
+`VAE_REAL_EXECUTION_PERMIT_ISSUANCE=AUTHORIZED`
+
+`VAE_SLURM_EXECUTION_RELEASE=HELD`
+
+`VAE_NEW_TRAINING_ATTEMPT_AUTHORIZED=NO`
+
+`VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
 No other dataset, generator, seed, attempt or experiment is authorized by
 this entry. Existing historical entries and original stage exit conditions
 remain unchanged.
