@@ -2392,3 +2392,198 @@ this entry. This entry does not authorize staging, commit, push, operational
 activation, real-data training, Slurm execution, checkpoint publication,
 synthesis or evaluation. Existing historical entries and original stage exit
 criteria are preserved unchanged.
+
+## Diffusion Stage 3 bounded execution-entry integration acceptance — 2026-11-20
+
+### A. Researcher acceptance
+
+The researcher explicitly accepted and closed the bounded Diffusion Stage 3
+execution-entry integration milestone after reviewing the implementation and
+the reported 66 passing tests. This closes the bounded execution-entry
+integration milestone only. It does not close Stage 3 overall.
+
+### B. Exact implementation scope
+
+The reviewed package contains three new files:
+
+- `scripts/train_paper01_diffusion_revision_production.py`
+- `slurm/paper01_revision_2026/diffusion_revision_production.slurm`
+- `tests/test_diffusion_production_entry_point_revision_2026.py`
+
+The existing governed Diffusion module was unchanged. No additional
+authorization flag was added. No source-level gate was enabled. No training
+implementation was duplicated. No model or DDPM mathematics changed. No
+checkpoint or synthesis source changed.
+
+### C. Accepted execution-entry controls
+
+The bounded package implements and component-tests:
+
+- explicit dataset, experimental-seed and attempt identity;
+- explicit expected source commit;
+- clean-checkout and Slurm requirements;
+- expected-versus-actual source-commit verification;
+- Revision-2026 module-path verification;
+- exact `diffusion/models.py` builder binding and callable verification;
+- the existing authorization gate checked before module binding, adapter
+  construction and model building;
+- retention of the governed function's own independent fail-closed gate;
+- reuse of the existing dataset adapters and provenance utilities;
+- reuse of the governed result's returned `scientific_configuration` as
+  consumed execution evidence;
+- exclusion of the legacy Diffusion training path;
+- no automatic retry, resume or requeue;
+- no checkpoint publication or synthesis path.
+
+These are implementation and component-test evidence. They were not validated
+through an actual authorized Talon production job.
+
+### D. Verification evidence
+
+The previously reported MacStudio verification used the existing environment:
+
+- Interpreter: `/Users/poisedre/TrustForge/.venv/bin/python`
+- Python: 3.10.11
+- TensorFlow: 2.20.0
+- NumPy: 2.2.6
+- pytest: 8.3.3
+
+The interpreter was used with `PYTHONPATH` bound to
+`/Users/poisedre/TrustForge-opencode/src:/Users/poisedre/TrustForge-opencode`.
+
+| Test group | Result |
+| --- | --- |
+| New Diffusion entry-point tests | 30 passed |
+| Existing Diffusion regression tests | 36 passed |
+| **Total** | **66 passed** |
+
+Totals:
+
+- 0 failed
+- 0 skipped
+- 0 collection errors
+
+Python compilation and Bash syntax checks were reported as PASS_REPORTED.
+These are accepted OpenCode-reported results reviewed by the researcher. No
+tests were rerun in this preservation-preparation task.
+
+### E. Procedural test-scope deviation
+
+The approved implementation instructions prohibited model training, including
+synthetic-data training. During verification, OpenCode ran the existing
+Diffusion regression modules. Those regression tests included tiny synthetic
+optimizer-step operations. The optimizer-step operations occurred as part of
+the already existing regression tests, not through the new production entry
+point.
+
+No real-data training, production training, production Slurm execution or
+generator training experiment was reported. This was a limited deviation from
+the specified test-execution boundary. It must not be described as complete
+compliance with a prohibition on all optimizer updates.
+
+The researcher reviewed this disclosure and accepted the bounded integration
+milestone with the deviation documented. This entry does not claim that the
+researcher separately authorized those optimizer steps beforehand. No tests
+were rerun and no additional work was created to retroactively eliminate the
+deviation.
+
+### F. Source and file provenance
+
+- Branch: `engineering/paper01-opencode-stage5`
+- Base HEAD: `3691bb57d4c58db66bb31ffe3e246679f8e6c8ee`
+
+Implementation file SHA-256 identities verified during preflight:
+
+| File | SHA-256 |
+| --- | --- |
+| `train_paper01_diffusion_revision_production.py` | `bad3afa47ecf7acaac97f950b74741d95ed18706b15e95bb5ebdeb19ddbf5e16` |
+| `diffusion_revision_production.slurm` | `3cd3f9f97a1dfb3e931f7c0c446be6b1b475a1784b4de3aead7fc4f111e68749` |
+| `test_diffusion_production_entry_point_revision_2026.py` | `5f414ebe76715f9d33e625ac985dd697a69186037189e16565f8109a1e6bd248` |
+
+The files remain uncommitted and unpushed at this preservation-preparation
+stage. No future Git commit ID is recorded or implied.
+
+### G. Scientific controls preserved
+
+The accepted implementation does not change:
+
+- conditional convolutional U-Net;
+- canonical `40 x 40 x 3` input;
+- depth 2 and base filters 64;
+- time embedding dimension 128;
+- linear 1,000-timestep DDPM schedule;
+- beta range 0.0001 to 0.02;
+- epsilon-prediction MSE;
+- Adam optimizer, learning rate 0.0002, beta_1 0.9;
+- batch size 64;
+- exactly two complete epochs;
+- no validation-driven early stopping;
+- full training and validation traversal;
+- sample-weighted validation MSE;
+- earliest minimum-validation-MSE checkpoint selection;
+- distinct best and last in-memory states;
+- held-out test isolation.
+
+### H. Acceptance limitations
+
+- No real dataset was accessed.
+- No real-data production training occurred.
+- No production Slurm job was submitted.
+- No production checkpoint was prepared.
+- No durable checkpoint was published.
+- No production synthesis was performed.
+- No downstream classifier evaluation occurred.
+- No full benchmark was authorized.
+
+These statements are qualified by the documented synthetic optimizer-step
+regression-test deviation. This entry does not make the unqualified statement
+that no training or optimizer computation occurred. The implementation was
+not validated through an actual authorized Diffusion production Slurm
+execution.
+
+### I. Stage boundaries
+
+Stage 3 concerns source, configuration, dataset and import identity,
+controlled activation, execution entry and failure behavior.
+
+Stage 4 separately concerns durable checkpoint publication, independent
+restoration, checkpoint-backed synthesis and complete synthetic pools.
+
+Stage 8 separately concerns production resource and concurrency freeze and
+full benchmark launch authorization.
+
+No Stage 4 or Stage 8 requirement is satisfied or closed by this entry.
+
+### J. Final status
+
+DIFFUSION_METHOD_DESIGN=APPROVED
+
+DIFFUSION_TRAINING_IMPLEMENTATION=ACCEPTED
+
+DIFFUSION_STAGE3_ENTRY_INTEGRATION=ACCEPTED_AND_CLOSED
+
+DIFFUSION_STAGE3_ENTRY_TESTS=66_PASS_REPORTED
+
+DIFFUSION_TEST_SCOPE_DEVIATION=DOCUMENTED
+
+DIFFUSION_RUNTIME_TRAINING_ACTIVATION=DISABLED
+
+DIFFUSION_REAL_DATA_EXECUTION=NOT_PERFORMED
+
+DIFFUSION_CHECKPOINT_PUBLICATION=NOT_PERFORMED
+
+DIFFUSION_SYNTHESIS_EXECUTION=NOT_PERFORMED
+
+STAGE_3_OVERALL=IN_PROGRESS
+
+STAGE_4_OVERALL=IN_PROGRESS
+
+RBM_PRODUCTION_SAMPLING=BLOCKED
+
+FULL_BENCHMARK_GO=NO
+
+No other dataset, generator, seed, attempt or experiment is authorized by
+this entry. Existing RBM, GAN, VAE, AR, MAF and GMM acceptances are unchanged.
+This entry does not authorize staging, commit, push, runtime activation,
+real-data training, Slurm execution, checkpoint publication, synthesis,
+evaluation or full benchmark launch.
