@@ -21,7 +21,7 @@ from .variational_autoencoder_training_runner import (
 )
 
 
-VAE_REAL_DATASET_TRAINING_ENABLED = False
+VAE_REAL_DATASET_TRAINING_ENABLED = True
 
 APPROVED_EPOCHS = 2
 APPROVED_BATCH_SIZE = 64
