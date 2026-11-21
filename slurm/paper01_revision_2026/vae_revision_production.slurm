@@ -15,8 +15,13 @@ set -euo pipefail
 # Controlled Paper 1 Revision-2026 VAE production launcher.
 # Submission requires separate operational authorization.
 # One job invokes exactly one dataset/experimental-seed/attempt identity.
-# The real-data gate remains disabled in source.
-# This launcher publishes no checkpoint or synthetic artifact.
+# Training-only execution remains supported. Checkpoint publication is
+# requested only when VAE_PUBLISH_CHECKPOINTS=1 and an explicit absolute
+# VAE_PUBLICATION_ROOT is provided; the execution-specific permit remains
+# the sole publication authority.
+# This launcher never publishes synthetic artifacts.
+# For an authorized publication execution, submit from the frozen execution
+# worktree, not from the older primary Talon checkout.
 #
 # The resource values above are provisional implementation settings, not a
 # researcher-accepted production resource envelope.
@@ -108,6 +113,36 @@ case "$VAE_DATASET_ID" in
         ;;
 esac
 
+publish_checkpoints="${VAE_PUBLISH_CHECKPOINTS:-0}"
+publication_root="${VAE_PUBLICATION_ROOT:-}"
+
+case "$publish_checkpoints" in
+    0)
+        if [[ -n "$publication_root" ]]; then
+            echo "FAIL: VAE_PUBLICATION_ROOT requires VAE_PUBLISH_CHECKPOINTS=1" >&2
+            exit 1
+        fi
+        ;;
+    1)
+        if [[ -z "$publication_root" ]]; then
+            echo "FAIL: VAE_PUBLICATION_ROOT is required for publication" >&2
+            exit 1
+        fi
+        if [[ "$publication_root" != /* ]]; then
+            echo "FAIL: VAE_PUBLICATION_ROOT must be an absolute path" >&2
+            exit 1
+        fi
+        ARGS+=(
+            --publish-checkpoints
+            --publication-root "$publication_root"
+        )
+        ;;
+    *)
+        echo "FAIL: VAE_PUBLISH_CHECKPOINTS must be 0 or 1" >&2
+        exit 1
+        ;;
+esac
+
 echo "VAE_REVISION_LAUNCHER_PREFLIGHT"
 echo "DATASET_ID=$VAE_DATASET_ID"
 echo "EXPERIMENTAL_SEED=$VAE_EXPERIMENTAL_SEED"
@@ -115,7 +150,10 @@ echo "ATTEMPT=$VAE_ATTEMPT"
 echo "EXECUTION_CHECKOUT=$checkout"
 echo "SOURCE_HEAD=$VAE_EXPECTED_SOURCE_COMMIT"
 echo "SLURM_JOB_ID=$SLURM_JOB_ID"
-echo "CHECKPOINT_PUBLICATION=DISABLED"
+echo "CHECKPOINT_PUBLICATION_REQUEST=$publish_checkpoints"
+if [[ "$publish_checkpoints" == "1" ]]; then
+    echo "PUBLICATION_ROOT=$publication_root"
+fi
 echo "SYNTHESIS_PUBLICATION=DISABLED"
 
 "${ARGS[@]}"

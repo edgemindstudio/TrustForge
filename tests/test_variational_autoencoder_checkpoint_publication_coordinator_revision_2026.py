@@ -495,10 +495,14 @@ def test_cli_publication_options_are_default_off():
         cli.run(root_only)
 
 
-def test_production_publication_request_denied_before_data_or_training(
+def test_production_publication_request_denied_without_permit(
     tmp_path,
     monkeypatch,
 ):
+    from trustforge.models.paper01_revision_2026 import (
+        variational_autoencoder_checkpoint_publication_permit as permit_module,
+    )
+
     cli = _load_cli()
     args = cli.make_parser().parse_args(
         _cli_base_args()
@@ -518,10 +522,15 @@ def test_production_publication_request_denied_before_data_or_training(
 
         return stop
 
-    monkeypatch.setenv("SLURM_JOB_ID", "synthetic-test-only")
-    monkeypatch.setenv(
+    monkeypatch.setattr(
+        cli,
         "VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED",
-        "true",
+        True,
+    )
+    monkeypatch.setattr(
+        permit_module,
+        "PERMIT_PATH",
+        tmp_path / "missing-permit.json",
     )
     monkeypatch.setattr(
         cli,
@@ -541,7 +550,7 @@ def test_production_publication_request_denied_before_data_or_training(
 
     with pytest.raises(
         PermissionError,
-        match="publication is not authorized",
+        match="permit is absent",
     ):
         cli.run(args)
 
@@ -577,16 +586,15 @@ def test_training_only_default_does_not_require_publication_authorization(
     assert calls == []
 
 
-def test_synthetic_candidate_publication_does_not_authorize_production():
+def test_source_activation_enables_only_the_permit_route():
     cli = _load_cli()
 
     assert (
         cli.VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED
-        is False
+        is True
     )
 
-    with pytest.raises(
-        PermissionError,
-        match="publication is not authorized",
-    ):
-        cli.require_vae_checkpoint_publication_authorization()
+    # The source-level activation reaches the route; it is not itself a
+    # publication grant. The permit-dependent rejection is covered by
+    # test_production_publication_request_denied_without_permit.
+    cli.require_vae_checkpoint_publication_authorization()

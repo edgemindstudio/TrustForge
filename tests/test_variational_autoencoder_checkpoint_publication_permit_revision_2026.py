@@ -938,7 +938,7 @@ def test_training_only_cli_does_not_require_permit(
     assert calls == []
 
 
-def test_publication_denied_with_valid_test_permit(
+def test_publication_activation_with_valid_test_permit_reaches_environment(
     permit_context,
     monkeypatch,
 ):
@@ -947,8 +947,36 @@ def test_publication_denied_with_valid_test_permit(
         _cli_args(permit_context.record["publication_root"])
     )
 
+    assert cli.VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED is True
     assert permit.load_vae_checkpoint_publication_permit() == (
         permit_context.record
+    )
+
+    def stop_at_environment(args):
+        raise RuntimeError("environment reached")
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        stop_at_environment,
+    )
+
+    with pytest.raises(RuntimeError, match="environment reached"):
+        cli.run(args)
+
+    assert not Path(
+        permit_context.record["publication_root"]
+    ).exists()
+
+
+def test_publication_activation_without_permit_denied_before_environment(
+    permit_context,
+    monkeypatch,
+):
+    permit_context.permit_path.unlink()
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
     )
 
     def unexpected_environment(args):
@@ -962,13 +990,237 @@ def test_publication_denied_with_valid_test_permit(
 
     with pytest.raises(
         PermissionError,
-        match="publication is not authorized",
+        match="permit is absent",
     ):
         cli.run(args)
 
     assert not Path(
         permit_context.record["publication_root"]
     ).exists()
+
+
+def test_publication_activation_invalid_approval_denied_before_environment(
+    permit_context,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        permit,
+        "_read_approval_record",
+        lambda **kwargs: _approval_text(
+            permit_context.record,
+            entry_lines=[],
+        ),
+    )
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
+    )
+
+    def unexpected_environment(args):
+        raise AssertionError("environment must not run")
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        unexpected_environment,
+    )
+
+    with pytest.raises(
+        permit.VAECheckpointPublicationPermitError,
+        match="approval entry is missing",
+    ):
+        cli.run(args)
+
+
+def test_publication_activation_wrong_source_denied_before_environment(
+    permit_context,
+    monkeypatch,
+):
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
+    )
+    args.expected_source_commit = "c" * 40
+
+    def unexpected_environment(args):
+        raise AssertionError("environment must not run")
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        unexpected_environment,
+    )
+
+    with pytest.raises(
+        permit.VAECheckpointPublicationPermitError,
+        match="permit source does not match",
+    ):
+        cli.run(args)
+
+
+def test_publication_activation_destination_conflict_denied_before_environment(
+    permit_context,
+    monkeypatch,
+):
+    Path(permit_context.record["publication_root"]).mkdir(
+        parents=True
+    )
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
+    )
+
+    def unexpected_environment(args):
+        raise AssertionError("environment must not run")
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        unexpected_environment,
+    )
+
+    with pytest.raises(
+        permit.VAECheckpointPublicationPermitError,
+        match="already exists",
+    ):
+        cli.run(args)
+
+
+def test_publication_activation_governed_training_gate_enforced(
+    permit_context,
+    monkeypatch,
+):
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
+    )
+
+    class Governed:
+        @staticmethod
+        def require_vae_production_authorization():
+            raise PermissionError("training not authorized")
+
+        @staticmethod
+        def run_governed_vae_training(**kwargs):
+            raise AssertionError("training must not run")
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        lambda args: SimpleNamespace(
+            actual_source_commit=SOURCE_COMMIT,
+            repository_root=REPO_ROOT,
+            module_paths={},
+        ),
+    )
+    monkeypatch.setattr(
+        cli,
+        "_load_governed_module",
+        lambda: Governed,
+    )
+    monkeypatch.setattr(
+        cli,
+        "build_adapter",
+        lambda args: (_ for _ in ()).throw(
+            AssertionError("adapter must not run")
+        ),
+    )
+
+    with pytest.raises(
+        PermissionError,
+        match="training not authorized",
+    ):
+        cli.run(args)
+
+
+def test_publication_activation_revalidates_before_publish(
+    permit_context,
+    monkeypatch,
+):
+    pytest.importorskip("tensorflow")
+
+    from trustforge.models.paper01_revision_2026 import (
+        variational_autoencoder_checkpoint_publication_coordinator as coordinator,
+    )
+
+    cli = _load_cli()
+    args = cli.make_parser().parse_args(
+        _cli_args(permit_context.record["publication_root"])
+    )
+    calls = []
+
+    class Governed:
+        @staticmethod
+        def require_vae_production_authorization():
+            return None
+
+        @staticmethod
+        def run_governed_vae_training(**kwargs):
+            return {
+                "training_result": {
+                    "epochs_completed": 2,
+                    "completed_updates": 254,
+                },
+                "checkpoint_status": "NOT_PREPARED",
+                "publication_status": "NOT_PUBLISHED",
+                "dataset_provenance": {},
+            }
+
+    def verify_unchanged(value):
+        calls.append("permit")
+        return True
+
+    def require_destination(value, **kwargs):
+        calls.append("destination")
+        return value.publication_root
+
+    def publish(**kwargs):
+        calls.append("publish")
+        return {"publication_status": "PUBLISHED"}
+
+    monkeypatch.setattr(
+        cli,
+        "require_environment",
+        lambda args: SimpleNamespace(
+            actual_source_commit=SOURCE_COMMIT,
+            repository_root=REPO_ROOT,
+            module_paths={},
+        ),
+    )
+    monkeypatch.setattr(
+        cli,
+        "_load_governed_module",
+        lambda: Governed,
+    )
+    monkeypatch.setattr(cli, "build_adapter", lambda args: object())
+    monkeypatch.setattr(
+        cli,
+        "effective_configuration",
+        lambda: {"epochs": 2},
+    )
+    monkeypatch.setattr(
+        permit,
+        "verify_vae_publication_permit_unchanged",
+        verify_unchanged,
+    )
+    monkeypatch.setattr(
+        permit,
+        "require_unused_vae_publication_destination",
+        require_destination,
+    )
+    monkeypatch.setattr(
+        coordinator,
+        "publish_governed_vae_checkpoints",
+        publish,
+    )
+
+    summary = cli.run(args)
+
+    assert calls[-3:] == ["permit", "destination", "publish"]
+    assert calls.count("destination") == 2
+    assert summary["publication_authorization"]["authorization_id"] == (
+        AUTHORIZATION_ID
+    )
 
 
 def test_cli_permit_validator_accepts_test_permit(permit_context):

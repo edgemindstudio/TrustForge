@@ -52,15 +52,15 @@ SOURCE_ARGUMENTS = {
 }
 
 
-# Authoritative checkpoint publication remains withheld by the accepted
-# formal authorization. This default-deny boundary is separate from the
-# training gate and is not configurable through CLI arguments, environment
-# variables, Slurm context or synthetic fixtures.
-VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED = False
+# This source-level activation only makes the mandatory permit-validation
+# route reachable. It is not publication authority: every publication request
+# must still pass the exact execution-specific permit, approval-ledger,
+# source-identity and destination checks before training or publication.
+VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED = True
 
 
 def require_vae_checkpoint_publication_authorization():
-    """Fail closed unless authoritative publication is separately authorized."""
+    """Fail closed unless the mandatory permit route is activated."""
     if VAE_AUTHORITATIVE_CHECKPOINT_PUBLICATION_AUTHORIZED is not True:
         raise PermissionError(
             "VAE authoritative checkpoint publication is not authorized"
