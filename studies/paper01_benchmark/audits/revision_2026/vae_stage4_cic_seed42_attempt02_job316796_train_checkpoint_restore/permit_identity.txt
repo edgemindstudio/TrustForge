@@ -1,0 +1,22 @@
+Permit path:
+/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/authorizations/vae_checkpoint_publication_permit.json
+
+Authorization ID:
+P1R2026-VAE-CIC-S42-A02-CHECKPOINT-PUBLICATION
+
+Approved authorization-scope SHA-256:
+9218772997ffbb112dd8df20a0058e1e75ac8406bae05338f305075cacf40f93
+
+Approval-ledger commit:
+83a297ad6cb486a0a21c8758b99df5609479fe9b
+
+Frozen execution-source commit:
+1aec01c26fab51b87362a47e2cfa797bd428c359
+
+Complete-permit SHA-256 over canonical JSON without terminating newline:
+c2f4a0c821a831c7dea4ccaf2bfe409a62c535d9f9d66319f9dad9355cc32b2b
+
+Raw permit-file SHA-256 including terminating newline:
+65c67f73e6b82c2de816589876980ba6f8829736f4d3a39a73566a1aef433d6a
+
+The live permit was not copied into Git and was not reissued.

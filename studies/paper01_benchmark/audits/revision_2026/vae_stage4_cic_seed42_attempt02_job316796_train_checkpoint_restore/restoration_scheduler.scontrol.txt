@@ -1,0 +1,26 @@
+JobId=316811 JobName=p1r1-vae-restore
+   UserId=bruno.fonkeng(10174775) GroupId=bruno.fonkeng(10174775) MCS_label=N/A
+   Priority=4 Nice=0 Account=jielun.zhang QOS=normal
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=0:0
+   RunTime=00:00:09 TimeLimit=00:30:00 TimeMin=N/A
+   SubmitTime=2026-11-21T19:55:04 EligibleTime=2026-11-21T19:55:04
+   AccrueTime=Unknown
+   StartTime=2026-11-21T19:55:04 EndTime=2026-11-21T19:55:13 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-11-21T19:55:04 Scheduler=Main
+   Partition=talon AllocNode:Sid=login1:2868710
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=talon07
+   BatchHost=talon07
+   NumNodes=1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=8,mem=32G,node=1,billing=8
+   AllocTRES=cpu=8,mem=32G,node=1,billing=8
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryNode=32G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) LicensesAlloc=(null) Network=(null)
+   Command=/home/bruno.fonkeng/miniforge3/envs/gcs_py310/bin/python
+   WorkDir=/home/bruno.fonkeng/TrustForge-paper01-vae-stage4-attempt02
+   TresPerTask=cpu=8
+   
+

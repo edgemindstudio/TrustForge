@@ -3216,3 +3216,188 @@ synthesis or evaluation. GPFS crash-recovery durability remains unverified:
 No other dataset, generator, seed, attempt or experiment is authorized by
 this entry. Existing historical entries and original stage exit conditions
 remain unchanged.
+
+## VAE Stage 4 — CICMalDroid2020 Seed-42 Attempt-02 Train–Checkpoint–Restore Acceptance — 2026-11-21
+
+### Researcher acceptance
+
+The researcher accepted the bounded CICMalDroid2020 VAE seed-42 attempt-02
+train–checkpoint–restore execution and closed that milestone.
+
+- Dataset: `cicmaldroid2020`
+- Generator: `vae`
+- Experimental seed: 42
+- Attempt: 02
+- Run identity: `commit1aec01c_attempt02`
+- Frozen execution-source commit:
+  `1aec01c26fab51b87362a47e2cfa797bd428c359`
+- Approval-ledger commit:
+  `83a297ad6cb486a0a21c8758b99df5609479fe9b`
+- Authorization ID:
+  `P1R2026-VAE-CIC-S42-A02-CHECKPOINT-PUBLICATION`
+
+### Training and publication
+
+Slurm job `316796`:
+
+- State: `COMPLETED`
+- Exit code: `0:0`
+- Elapsed: `00:02:27`
+- Node: `talon07`
+- MaxRSS: `860356K`
+- Completed epochs: 2
+- Completed optimizer updates: 254
+- Validation total loss: `4508.749372571244`
+
+Training logs:
+
+- `p1r1-vae-prod.316796.out` SHA-256:
+  `3f67ecbd0fc33a04ff8b35c62e54ad6d3f4d4457715b5becffc5e1c5387bf898`
+- `p1r1-vae-prod.316796.err` SHA-256:
+  `d9ef2cfe960a00645ead9d757ad414133cae9a64b79471257c4a3ade02609f8c`
+
+Accepted scientific configuration: conditional convolutional VAE, canonical
+40x40x3 float32 input, latent dimension 100, Gaussian observation variance
+1.0, KL coefficient 1.0 without annealing, Adam learning rate 0.001, batch
+size 64, exactly two complete epochs, full governed validation, earliest
+minimum-validation-total-loss selection, distinct best/last states,
+test-split usage prohibited, and the governed CIC 70/10/20 partition with
+seed 42.
+
+### Checkpoint identities
+
+BEST:
+
+- Generation: `35ca3cd756a88d6b93dcc291f02c4747`
+- Manifest SHA-256:
+  `f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e`
+- Commit-record SHA-256:
+  `f1fcd7cdc8ac7ee99edf1e794eab726a0219213b68007b3a882e5dbebf282118`
+
+LAST:
+
+- Generation: `0d808f873b163a2d054f87aac34f3043`
+- Manifest SHA-256:
+  `ba2a5231db0ef90ac9d724525e61cec9fa4bda6c0838740b52312a13cd8816ac`
+- Commit-record SHA-256:
+  `a98b11cfbe7119944ee13c42eadf95660ab278d713636faeb0e2741575d95f15`
+
+Shared state digests:
+
+- Encoder:
+  `c308765d65090a97ca872133ed833d2d6f975c52bb8a031aceb2005a5faa0141`
+- Decoder:
+  `c7b4f3ff56a13c416f0997e4dd375812cd1db3b6bdadd60d60770a97d06557b0`
+- Dataset provenance:
+  `e6736e56b7bd8f2e81505d3f8b1811dfc95a0e0514c629d524025a88a03138ae`
+
+The identical model-state bytes are legitimate because the final epoch was
+also the selected best epoch. The distinct logical roles and generation
+identities remain preserved.
+
+### Independent restoration
+
+Restoration Slurm job `316811`:
+
+- State: `COMPLETED`
+- Exit code: `0:0`
+- Elapsed: `00:00:09`
+- Node: `talon07`
+- Process ID: `3935002`
+- Python: 3.10.19
+- CPUs: 8; memory: 32G; GPU disabled
+
+Both committed generations independently verified. BEST governed
+restoration, metadata equality, provenance equality and architecture
+fingerprint checks passed. The encoder has 16 variables and 3,423,400
+parameters; the decoder has 8 variables and 734,659 parameters. All restored
+floating-point variables are finite. No optimizer state was loaded, no
+training resumed and no synthetic samples were generated.
+
+`VAE_CHECKPOINT_ARTIFACTS_UNCHANGED=YES`
+
+### Preserved evidence
+
+Repository evidence directory:
+
+`studies/paper01_benchmark/audits/revision_2026/vae_stage4_cic_seed42_attempt02_job316796_train_checkpoint_restore`
+
+External restoration evidence directory:
+
+`/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/vae-stage4-cicmaldroid2020-seed42-attempt02-job316796-restoration-20261121`
+
+Evidence inventory SHA-256:
+
+`8743ad8ef634f9af42d51bd80b9e965fa41ceb8767e61c7976a9721ea7cfd568`
+
+README SHA-256:
+
+`9285fec41623554a4d4ffd9ff48ea9df2c7b2dad8b5951a71e02b342ff4e794f`
+
+Checkpoint inventory SHA-256:
+
+`bb6bc01722ac5f8803d8fb4e866c063a3346dcbde60131d6ead67c139283e24f`
+
+Model-state NPZ files, raw datasets, synthetic pools and the live permit were
+not copied into Git. The permit remains at its fixed external path with
+raw-file SHA-256:
+
+`65c67f73e6b82c2de816589876980ba6f8829736f4d3a39a73566a1aef433d6a`
+
+### Reporting discrepancy
+
+Top-level:
+
+`checkpoint_status=NOT_PREPARED`
+
+`publication_status=NOT_PUBLISHED`
+
+Nested checkpoint-publication result:
+
+`publication_status=PUBLISHED`
+
+The actual commit records, manifests, state files and independent restoration
+corroborate the nested publication result. This is a reporting limitation
+requiring appropriate treatment by future production reporting consumers; it
+does not invalidate the accepted checkpoint execution. The CLI was not
+modified and the original logs were not altered.
+
+### Remaining limitations and synthesis boundary
+
+- `crash_durability_verified=False`
+- GPFS crash-recovery durability remains unverified.
+- Same-account custody does not protect against a malicious same-UID actor.
+- Restoration does not independently authenticate checkpoint origin.
+- Dataset provenance does not independently prove partition execution or
+  continuous source immutability.
+- Successful restoration does not establish synthetic-data fidelity or
+  downstream utility.
+- Production synthesis remains unauthorized.
+- The eventual CIC VAE primary pool requires 2,000 samples per class and
+  10,000 samples total, subject to the accepted synthesis policy and any
+  required bounded synthesis compatibility evidence.
+- Independent synthetic-pool publication and verification remain Stage 4
+  requirements.
+
+### Dispositions
+
+`VAE_CIC_SEED42_ATTEMPT02_TRAINING=ACCEPTED_AND_CLOSED`
+
+`VAE_CHECKPOINT_PUBLICATION=ACCEPTED_AND_CLOSED`
+
+`VAE_INDEPENDENT_RESTORATION=ACCEPTED_AND_CLOSED`
+
+`VAE_TRAIN_CHECKPOINT_RESTORE_MILESTONE=ACCEPTED_AND_CLOSED`
+
+`VAE_CHECKPOINT_ARTIFACTS_UNCHANGED=YES`
+
+`VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+This closes only the bounded train–checkpoint–restore milestone. It does not
+close Stage 4 overall, authorize synthesis or establish full benchmark
+readiness. Existing historical entries and original stage exit conditions
+remain unchanged.
