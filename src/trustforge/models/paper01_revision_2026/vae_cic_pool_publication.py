@@ -56,7 +56,7 @@ FAILURE_FILENAME = "FAILURE.json"
 
 # Source-level activation only. The accepted recipe authorization fields and
 # the execution-specific researcher decision remain separate.
-VAE_PRODUCTION_SYNTHESIS_AUTHORIZED = False
+VAE_PRODUCTION_SYNTHESIS_AUTHORIZED = True
 
 
 class VAEPoolPublicationError(RuntimeError):

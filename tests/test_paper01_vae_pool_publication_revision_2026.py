@@ -192,11 +192,6 @@ def _install_runtime(
 
     monkeypatch.setattr(
         publication,
-        "require_vae_production_synthesis_authorization",
-        lambda: None,
-    )
-    monkeypatch.setattr(
-        publication,
         "capture_git_state",
         lambda root: SimpleNamespace(commit=commit, dirty=dirty),
     )
@@ -417,16 +412,20 @@ def test_complete_pool_manifest_and_batches(
     )
 
 
-def test_production_gate_is_default_deny_before_checkpoint(
+def test_activated_source_gate_still_requires_checkpoint_verification(
     tmp_path,
     monkeypatch,
 ):
     calls = []
 
+    def reject_checkpoint(*args, **kwargs):
+        calls.append("verify")
+        raise ValueError("checkpoint identity required")
+
     monkeypatch.setattr(
         publication,
         "verify_committed_vae_generation",
-        lambda *args, **kwargs: calls.append("verify"),
+        reject_checkpoint,
     )
     monkeypatch.setattr(
         publication,
@@ -435,9 +434,15 @@ def test_production_gate_is_default_deny_before_checkpoint(
     )
 
     destination = tmp_path / "pool"
+    assert publication.VAE_PRODUCTION_SYNTHESIS_AUTHORIZED is True
+    assert (
+        publication.require_vae_production_synthesis_authorization()
+        is None
+    )
+
     with pytest.raises(
-        PermissionError,
-        match="not authorized",
+        ValueError,
+        match="checkpoint identity required",
     ):
         publication.publish_vae_pool(
             destination,
@@ -451,8 +456,7 @@ def test_production_gate_is_default_deny_before_checkpoint(
             expected_synthesis_source_commit=SYNTH_SOURCE,
         )
 
-    assert publication.VAE_PRODUCTION_SYNTHESIS_AUTHORIZED is False
-    assert calls == []
+    assert calls == ["verify"]
     assert not destination.exists()
 
 
@@ -802,7 +806,9 @@ def test_inconsistent_completion_metadata_rejected(
         _view_from_document(path, digest, document)
 
 
-def test_recipe_authorization_remains_disabled(published_pool):
+def test_recipe_authorization_remains_disabled_after_gate_activation(
+    published_pool,
+):
     recipe = published_pool.recipe.data
 
     assert recipe["families"]["vae"]["production_execution_authorized"] is False
@@ -810,10 +816,13 @@ def test_recipe_authorization_remains_disabled(published_pool):
         value is False
         for value in recipe["authorization"].values()
     )
-    assert publication.VAE_PRODUCTION_SYNTHESIS_AUTHORIZED is False
+    assert publication.VAE_PRODUCTION_SYNTHESIS_AUTHORIZED is True
 
 
-def test_cli_gate_rejects_before_publisher(monkeypatch, tmp_path):
+def test_cli_gate_is_active_and_publisher_receives_explicit_identity(
+    monkeypatch,
+    tmp_path,
+):
     spec = importlib.util.spec_from_file_location(
         "paper01_vae_pool_cli",
         CLI_PATH,
@@ -823,10 +832,15 @@ def test_cli_gate_rejects_before_publisher(monkeypatch, tmp_path):
     spec.loader.exec_module(module)
 
     calls = []
+
+    def stop_at_publisher(*args, **kwargs):
+        calls.append(kwargs)
+        raise RuntimeError("publisher reached")
+
     monkeypatch.setattr(
         module,
         "publish_vae_pool",
-        lambda *args, **kwargs: calls.append("publish"),
+        stop_at_publisher,
     )
     args = module.make_parser().parse_args(
         [
@@ -851,8 +865,13 @@ def test_cli_gate_rejects_before_publisher(monkeypatch, tmp_path):
         ]
     )
 
-    with pytest.raises(PermissionError, match="not authorized"):
+    with pytest.raises(RuntimeError, match="publisher reached"):
         module.run(args)
 
-    assert calls == []
+    assert len(calls) == 1
+    assert calls[0]["generation_id"] == "0" * 32
+    assert calls[0]["expected_manifest_sha256"] == "0" * 64
+    assert calls[0]["dataset_id"] == "cicmaldroid2020"
+    assert calls[0]["experimental_seed"] == 42
+    assert calls[0]["class_mapping"] == CLASS_MAPPING
     assert not (tmp_path / "pool").exists()
