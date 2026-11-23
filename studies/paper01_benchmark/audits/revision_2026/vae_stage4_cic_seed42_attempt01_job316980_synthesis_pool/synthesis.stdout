@@ -1,0 +1,10 @@
+VAE_POOL_LAUNCHER_PREFLIGHT
+DATASET_ID=cicmaldroid2020
+EXPERIMENTAL_SEED=42
+GENERATION_ID=35ca3cd756a88d6b93dcc291f02c4747
+EXECUTION_CHECKOUT=/home/bruno.fonkeng/TrustForge-paper01-vae-synthesis-d4031a9
+SYNTHESIS_SOURCE_HEAD=d4031a9b39565e5382d08e2b28236162498a08ca
+SLURM_JOB_ID=316980
+PRODUCTION_SYNTHESIS_GATE=SOURCE_LEVEL_DEFAULT_DENY
+SYNTHESIS_PUBLICATION_REQUESTED=1
+VAE_POOL_PUBLICATION_COMPLETE {"checkpoint_generation_id": "35ca3cd756a88d6b93dcc291f02c4747", "checkpoint_manifest_sha256": "f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e", "class_mapping": ["0", "1", "2", "3", "4"], "dataset_id": "cicmaldroid2020", "experimental_seed": 42, "family": "vae", "manifest_path": "/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/pools/production/checkpoint35ca3cd756a88d6b93dcc291f02c4747_synthesis-d4031a9_attempt01/pool/manifest.json", "manifest_sha256": "08777645ccda4cb9659f8ebd9109b6b5b50d36e1189986df289537dda43fbcc6", "status": "COMPLETE", "synthesis_source_commit": "d4031a9b39565e5382d08e2b28236162498a08ca", "verified_batches": 315, "verified_images": 10000}

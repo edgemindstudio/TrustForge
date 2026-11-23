@@ -3505,3 +3505,119 @@ downstream evaluator acceptance.
 No approval marker or real execution authorization was added by this entry.
 Existing historical records and the original checkpoint-publication approval
 entry remain unchanged.
+
+## VAE Stage 4 — CICMalDroid2020 Seed-42 Attempt-01 Production Synthesis Acceptance — Slurm 316980
+
+Status: researcher-accepted and closed for one bounded production synthesis
+execution. This entry records production correctness and provenance only.
+
+### Accepted execution
+
+- Dataset: `cicmaldroid2020`; generator: `vae`; experimental seed: 42;
+  attempt: 01; checkpoint role: `best`.
+- Slurm job `316980` (`p1r1-vae-pool`), partition `talon`, node `talon06`,
+  account `jielun.zhang`.
+- Scheduler state `COMPLETED`; exit code `0:0`; elapsed `00:01:15` against a
+  `02:00:00` limit; 1 node, 1 task, 8 CPUs, 32G requested; batch MaxRSS
+  `649092K`; no requeue or restart.
+- Submitted `2026-11-22T22:31:01`, started `2026-11-22T22:31:01`, ended
+  `2026-11-22T22:32:16`. Exactly one submission; no retry.
+
+### Lineage
+
+- BEST checkpoint generation: `35ca3cd756a88d6b93dcc291f02c4747`.
+- BEST checkpoint manifest SHA-256:
+  `f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e`.
+- Checkpoint run identity: `commit1aec01c_attempt02`.
+- Historical checkpoint source commit:
+  `1aec01c26fab51b87362a47e2cfa797bd428c359`.
+- Frozen synthesis source commit:
+  `d4031a9b39565e5382d08e2b28236162498a08ca`.
+- Approved synthesis recipe SHA-256:
+  `98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9`
+  (unchanged; recipe authorization fields remain false).
+- Production manifest SHA-256:
+  `08777645ccda4cb9659f8ebd9109b6b5b50d36e1189986df289537dda43fbcc6`.
+- Latent-stream contract:
+  `trustforge.paper01.synthesis-latent-stream.v1`; PCG64; latent dimension
+  100; standard normal; NumPy 2.2.6 observed and baseline.
+
+### Publication
+
+- External destination:
+  `/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/pools/production/checkpoint35ca3cd756a88d6b93dcc291f02c4747_synthesis-d4031a9_attempt01/pool`
+- 315 batch artifacts, 63 per class for classes 0–4; 2,000 samples per class;
+  10,000 samples total; 316 top-level entries including `manifest.json`.
+- Manifest 128,201 bytes; `complete_pool=true`; `status=COMPLETE`;
+  `authoritative_artifact=true`; expected and observed totals both 10,000.
+- Canonical float32 NHWC output, shape `[40, 40, 3]`, range `[0, 1]`.
+- No `FAILURE.json` and no `.manifest.pending`; approximately 192,184,905 pool
+  bytes (196 MB). Prior attempt-specific parent directories were created for
+  this authorized run; the publisher retained exclusive creation of the leaf.
+
+### Independent verification
+
+- `trustforge.evaluation.paper01_vae_pool.VAEPoolView.preflight()` executed in
+  a separate process from the frozen worktree, reading only published
+  artifacts and never invoking the generator.
+- Result: 315 verified batches, 10,000 verified images, 315 batch records and
+  315 `.npy` files, no failure or pending marker, `VERIFIER_PASS`.
+- Each record was checked for existence, size, byte SHA-256, shape, dtype,
+  finiteness, canonical domain, ordered sample-index coverage and quota.
+- A bounded spot check at positions `[0, 31, 1999, 2000, 8000, 9999]` returned
+  float32 `(6, 40, 40, 3)` images within `[0.355, 0.534]` and one-hot labels.
+
+### Evidence
+
+- Repository audit directory:
+  `studies/paper01_benchmark/audits/revision_2026/vae_stage4_cic_seed42_attempt01_job316980_synthesis_pool`
+- Preserved files: `README.md`, `pool_inventory.tsv`, `pool_manifest.json`,
+  `submission_command.txt`, `submission_response.txt`, `synthesis.stdout`,
+  `synthesis.stderr`, `synthesis_scheduler.sacct.txt`,
+  `synthesis_scheduler.scontrol.txt`, `verification.txt`, and `SHA256SUMS`.
+- Key digests: `synthesis.stdout`
+  `d5c2deba30b7b71b9aa76b50eeb5cbed4f1d3165dec35bb726ca1e2100321fb4`;
+  `verification.txt`
+  `13e1526e0e202174ac440c6e677d90dfab0469ebc8b44fc319c8cba7d67a4312`.
+- External originals:
+  `/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/diagnostics/vae-stage4-cicmaldroid2020-seed42-attempt01-synthesis-job316980-20261122`
+  plus the pool destination above. Originals were hashed during preservation,
+  matched the repository copies and were not modified.
+- Not copied into Git: the 315 batch files, the production pool, datasets,
+  checkpoint NPZ state and held-out test data.
+
+### Manifest-digest transcription correction
+
+The execution-release command text carried a 62-character manifest digest
+ending `...9af53bf812e`, which is not a valid SHA-256 and would have been
+rejected before synthesis. Under explicit researcher confirmation, submission
+used the accepted 64-character digest
+`f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e`, matching
+the on-disk BEST manifest. No other input changed; the correction is recorded
+in the preserved submission command.
+
+### Accepted versus not yet established
+
+Accepted: production synthesis correctness, artifact completeness, provenance
+lineage and independent byte-level integrity verification for this one
+CICMalDroid2020 VAE seed-42 attempt.
+
+Not yet established: synthetic fidelity, requested-label fidelity, downstream
+classification utility, statistical reliability across seeds, and complete
+benchmark results.
+
+### Dispositions
+
+`VAE_CIC_SEED42_SYNTHESIS=ACCEPTED_AND_CLOSED`
+
+`VAE_CIC_SEED42_PRODUCTION_POOL=INDEPENDENTLY_VERIFIED`
+
+`VAE_DOWNSTREAM_EVALUATION_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+This entry adds acceptance evidence only. It does not authorize downstream
+evaluation, another seed or dataset, retraining, checkpoint republication or a
+full benchmark run.

@@ -1,0 +1,40 @@
+2026-11-22 22:32:58.252457: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-11-22 22:32:58.263372: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-11-22 22:33:00.101502: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-11-22 22:33:14.271392: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-11-22 22:33:14.274087: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+PREFLIGHT_RESULT {"identity": {"batches_per_class": 63, "checkpoint_generation_id": "35ca3cd756a88d6b93dcc291f02c4747", "checkpoint_manifest_sha256": "f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e", "checkpoint_role": "best", "checkpoint_run_identity": "commit1aec01c_attempt02", "checkpoint_source_commit": "1aec01c26fab51b87362a47e2cfa797bd428c359", "class_count": 5, "class_mapping": ["0", "1", "2", "3", "4"], "dataset_id": "cicmaldroid2020", "experimental_seed": 42, "family": "vae", "latent_stream_contract": "trustforge.paper01.synthesis-latent-stream.v1", "manifest_sha256": "08777645ccda4cb9659f8ebd9109b6b5b50d36e1189986df289537dda43fbcc6", "model_call_batch_size": 32, "quota_per_class": 2000, "recipe_sha256": "98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9", "schema": "trustforge.paper01.vae-cic-pool-manifest.v1", "synthesis_source_commit": "d4031a9b39565e5382d08e2b28236162498a08ca"}, "verified_batches": 315, "verified_images": 10000}
+SIZE 10000
+schema = 'trustforge.paper01.vae-cic-pool-manifest.v1'
+dataset_id = 'cicmaldroid2020'
+family = 'vae'
+experimental_seed = 42
+class_mapping = ['0', '1', '2', '3', '4']
+class_count = 5
+checkpoint_generation_id = '35ca3cd756a88d6b93dcc291f02c4747'
+checkpoint_manifest_sha256 = 'f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e'
+checkpoint_role = 'best'
+checkpoint_run_identity = 'commit1aec01c_attempt02'
+checkpoint_source_commit = '1aec01c26fab51b87362a47e2cfa797bd428c359'
+synthesis_source_commit = 'd4031a9b39565e5382d08e2b28236162498a08ca'
+recipe_sha256 = '98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9'
+latent_stream_contract = 'trustforge.paper01.synthesis-latent-stream.v1'
+rng = {'bit_generator': 'PCG64', 'contract': 'trustforge.paper01.synthesis-latent-stream.v1', 'dataset_codes': {'cicmaldroid2020': 2, 'malex': 4, 'malnet_image': 3, 'ustc_tfc2016': 1}, 'domain': 1414743601, 'domain_hex': '0x54534631', 'entropy_order': ['domain', 'dataset_code', 'family_code', 'experimental_seed', 'class_id', 'sample_index', 'purpose_code'], 'family_codes': {'gan': 1, 'vae': 2}, 'generator': 'numpy.random.Generator', 'latent_dimension': 100, 'latent_distribution': 'standard_normal', 'numpy_baseline': '2.2.6', 'numpy_observed': '2.2.6', 'purpose_codes': {'production_latent': 1}}
+model_call_batch_size = 32
+quota_per_class = 2000
+batches_per_class = 63
+complete_pool = True
+expected_total = 10000
+observed_total = 10000
+status = 'COMPLETE'
+authoritative_artifact = True
+canonical_output = {'dtype': 'float32', 'layout': 'NHWC', 'range': [0.0, 1.0], 'shape': [40, 40, 3]}
+batch_record_count = 315
+npy_files = 315
+failure_marker = False
+pending_marker = False
+SPOT_POSITIONS [0, 31, 1999, 2000, 8000, 9999]
+SPOT_IMAGES (6, 40, 40, 3) float32 0.35508668422698975 0.5338817238807678
+SPOT_LABELS (6, 5) float32 [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+VERIFIER_PASS

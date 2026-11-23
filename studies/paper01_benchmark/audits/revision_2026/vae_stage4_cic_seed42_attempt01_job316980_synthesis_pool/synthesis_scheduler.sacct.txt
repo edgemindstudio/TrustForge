@@ -1,0 +1,4 @@
+JobID|JobName|Partition|Account|AllocCPUS|ReqMem|State|ExitCode|Elapsed|Start|End|NodeList|MaxRSS|MaxVMSize
+316980|p1r1-vae-pool|talon|jielun.zhang|8|32G|COMPLETED|0:0|00:01:15|2026-11-22T22:31:01|2026-11-22T22:32:16|talon06||
+316980.batch|batch||jielun.zhang|8||COMPLETED|0:0|00:01:15|2026-11-22T22:31:01|2026-11-22T22:32:16|talon06|649092K|622152K
+316980.extern|extern||jielun.zhang|8||COMPLETED|0:0|00:01:15|2026-11-22T22:31:01|2026-11-22T22:32:16|talon06||

@@ -1,0 +1,20 @@
+# Submitted once. Executed on talon login2.cm.cluster as bruno.fonkeng.
+# NOTE: manifest digest corrected from the 62-char transcription to the accepted
+# 64-char value f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e
+# under explicit researcher confirmation; no other input changed.
+WORKTREE="/home/bruno.fonkeng/TrustForge-paper01-vae-synthesis-d4031a9"
+EXEC_SHA="d4031a9b39565e5382d08e2b28236162498a08ca"
+CHECKPOINT_ROOT="/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/checkpoints/production/commit1aec01c_attempt02"
+GENERATION_ID="35ca3cd756a88d6b93dcc291f02c4747"
+MANIFEST_SHA="f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e"
+DEST="/home/bruno.fonkeng/trustforge_revision_2026_artifacts/paper01/vae/cicmaldroid2020/seed42/pools/production/checkpoint35ca3cd756a88d6b93dcc291f02c4747_synthesis-d4031a9_attempt01/pool"
+VAE_SYNTHESIS_EXECUTION_CHECKOUT="$WORKTREE" \
+VAE_SYNTHESIS_SOURCE_COMMIT="$EXEC_SHA" \
+VAE_CHECKPOINT_PUBLICATION_ROOT="$CHECKPOINT_ROOT" \
+VAE_GENERATION_ID="$GENERATION_ID" \
+VAE_EXPECTED_MANIFEST_SHA256="$MANIFEST_SHA" \
+VAE_DATASET_ID="cicmaldroid2020" \
+VAE_EXPERIMENTAL_SEED="42" \
+VAE_CLASS_MAPPING="0,1,2,3,4" \
+VAE_POOL_DESTINATION="$DEST" \
+sbatch --export=ALL "$WORKTREE/slurm/paper01_revision_2026/vae_pool_production.slurm"
