@@ -68,6 +68,7 @@ def make_args(**overrides):
         "attempt": 1,
         "expected_source_commit": COMMIT,
         "repository_root": REPO_ROOT,
+        "checkpoint_root": None,
         "ustc_source_dir": None,
         "cic_source_csv": Path("/fixture/source.csv"),
         "cic_feature_columns": Path("/fixture/features.json"),
@@ -284,6 +285,58 @@ def test_actual_model_builder_binding(cli):
     )
     builder = cli._load_model_builder_module()
     assert callable(builder.build_diffusion_model)
+
+
+# 6b. Checkpoint root CLI registration.
+def test_checkpoint_root_parsed_as_path(cli, tmp_path):
+    root = tmp_path / "checkpoints"
+    args = cli.make_parser().parse_args([
+        "--dataset-id", "cicmaldroid2020",
+        "--experimental-seed", "42",
+        "--attempt", "1",
+        "--expected-source-commit", COMMIT,
+        "--repository-root", str(REPO_ROOT),
+        "--checkpoint-root", str(root),
+    ])
+    assert isinstance(args.checkpoint_root, Path)
+    assert args.checkpoint_root == root
+
+
+def test_checkpoint_root_forwarded_to_publication(
+    cli, monkeypatch, tmp_path,
+):
+    captured = {}
+
+    class Governed:
+        DIFFUSION_REAL_DATASET_TRAINING_ENABLED = True
+
+        @staticmethod
+        def run_governed_diffusion_training(**kwargs):
+            return fake_result()
+
+    def publish(**kwargs):
+        captured.update(kwargs)
+        return {
+            "checkpoint_directory": "/fixture/checkpoints",
+            "manifest_sha256": "b" * 64,
+            "best_state_sha256": "c" * 64,
+            "last_state_sha256": "d" * 64,
+            "checkpoint_role_primary": "best",
+        }
+
+    monkeypatch.setattr(cli, "_load_governed_module", lambda: Governed)
+    monkeypatch.setattr(
+        cli, "require_environment", lambda args: fake_environment()
+    )
+    monkeypatch.setattr(
+        cli, "require_module_binding", lambda **kwargs: fake_binding()
+    )
+    monkeypatch.setattr(cli, "build_adapter", lambda args: object())
+    monkeypatch.setattr(cli, "publish_governed_checkpoint", publish)
+
+    cli.run(make_args(checkpoint_root=tmp_path))
+
+    assert captured["checkpoint_root"] == tmp_path
 
 
 # 7. Disabled authorization gate remains False.
@@ -600,6 +653,17 @@ def test_scientific_configuration_reused(cli, monkeypatch):
         lambda **kwargs: fake_binding(),
     )
     monkeypatch.setattr(cli, "build_adapter", lambda args: object())
+    publication = {
+        "checkpoint_directory": "/fixture/checkpoints",
+        "manifest_sha256": "b" * 64,
+        "best_state_sha256": "c" * 64,
+        "last_state_sha256": "d" * 64,
+        "checkpoint_role_primary": "best",
+    }
+    monkeypatch.setattr(
+        cli, "publish_governed_checkpoint",
+        lambda **kwargs: publication,
+    )
 
     summary = cli.run(make_args())
 
@@ -609,8 +673,9 @@ def test_scientific_configuration_reused(cli, monkeypatch):
     assert summary["dataset_provenance"] is (
         result["dataset_provenance"]
     )
-    assert summary["checkpoint_status"] == "NOT_PREPARED"
-    assert summary["publication_status"] == "NOT_PUBLISHED"
+    assert summary["checkpoint_status"] == "PREPARED"
+    assert summary["publication_status"] == "PUBLISHED"
+    assert summary["checkpoint_publication"] == publication
     assert summary["training_result"]["completed_epochs"] == 2
     assert summary["training_result"]["best_epoch"] == 1
     assert summary["supplementary_execution_policy"] == {
@@ -752,13 +817,11 @@ def test_launcher_contract():
         assert token not in source
 
 
-# 16. No checkpoint preparation or publication.
-def test_no_checkpoint_or_synthesis_automation_in_source():
+# 16. No synthesis or evaluation automation; Stage 4 publication is expected.
+def test_no_synthesis_or_evaluation_automation_in_source():
     source = CLI_PATH.read_text(encoding="utf-8")
 
     for token in (
-        "diffusion_checkpoint_state",
-        "prepare_diffusion_checkpoint_states",
         "restore_diffusion_checkpoint_state",
         "synthesize_diffusion_batch",
         "sample_governed_diffusion",
@@ -766,3 +829,9 @@ def test_no_checkpoint_or_synthesis_automation_in_source():
         "classifier",
     ):
         assert token not in source
+
+    for token in (
+        "prepare_diffusion_checkpoint_states",
+        "publish_diffusion_checkpoint_bundle",
+    ):
+        assert token in source

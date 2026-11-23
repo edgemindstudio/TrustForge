@@ -1057,13 +1057,15 @@ def load_vae_decoder_for_synthesis(
 
 def restore_diffusion_model_for_synthesis(
     *,
-    prepared,
+    prepared=None,
+    checkpoint_directory=None,
+    expected_manifest_sha256=None,
     model_factory,
     request,
     recipe,
     checkpoint_identity,
 ):
-    """Restore an unpublished Diffusion best state for Stage 2 fixtures."""
+    """Restore the validation-best Diffusion state for synthesis."""
     validate_checkpoint_identity(
         checkpoint_identity,
         request=request,
@@ -1074,6 +1076,52 @@ def restore_diffusion_model_for_synthesis(
     from .diffusion_checkpoint_state import (
         restore_diffusion_checkpoint_state,
     )
+
+    if checkpoint_directory is not None:
+        if prepared is not None:
+            raise ValueError(
+                "exactly one Diffusion checkpoint source is required"
+            )
+        if expected_manifest_sha256 is None:
+            raise ValueError("published manifest SHA-256 required")
+        requested_digest = checkpoint_identity.get("checkpoint_sha256")
+        if requested_digest is None:
+            raise ValueError("published checkpoint SHA-256 required")
+        from .diffusion_checkpoint_bundle import (
+            load_diffusion_checkpoint_bundle,
+        )
+
+        loaded = load_diffusion_checkpoint_bundle(
+            checkpoint_directory,
+            expected_manifest_sha256=expected_manifest_sha256,
+            requested_dataset_id=request.dataset_id,
+            requested_experimental_seed=request.experimental_seed,
+            requested_class_mapping=list(request.class_mapping),
+            requested_role="best",
+            expected_source_commit=checkpoint_identity.get("source_commit"),
+        )
+        prepared = loaded["best"]
+        if prepared["checkpoint_role"] != "best":
+            raise ValueError(
+                "Diffusion primary synthesis requires the best checkpoint"
+            )
+        if prepared["state_sha256"] != requested_digest:
+            raise ValueError(
+                "requested checkpoint SHA-256 does not match the "
+                "verified best state"
+            )
+    else:
+        if prepared is None:
+            raise ValueError("Diffusion checkpoint source required")
+        if request.scope != "fixture":
+            raise ValueError(
+                "production synthesis requires a published checkpoint "
+                "directory"
+            )
+        if prepared.get("checkpoint_role") != "best":
+            raise ValueError(
+                "Diffusion primary synthesis requires the best checkpoint"
+            )
 
     return restore_diffusion_checkpoint_state(
         prepared=prepared,

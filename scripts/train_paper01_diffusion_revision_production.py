@@ -97,6 +97,10 @@ def make_parser():
         required=True,
         type=Path,
     )
+    parser.add_argument(
+        "--checkpoint-root",
+        type=Path,
+    )
 
     parser.add_argument("--ustc-source-dir", type=Path)
     parser.add_argument("--cic-source-csv", type=Path)
@@ -412,12 +416,94 @@ def build_adapter(args):
     raise ValueError("unsupported governed dataset ID")
 
 
+def _create_private_parents(path):
+    """Create missing attempt-namespace parents with restrictive modes."""
+    path = Path(path)
+    if path.exists():
+        return
+    _create_private_parents(path.parent)
+    path.mkdir(mode=0o700)
+
+
+def publish_governed_checkpoint(
+    *,
+    result,
+    request,
+    environment,
+    adapter,
+    checkpoint_root,
+):
+    """Prepare and durably publish the accepted Diffusion best/last states."""
+    from trustforge.models.paper01_revision_2026.ar_maf_dataset_preflight import (
+        adapter_class_mapping,
+    )
+    from trustforge.models.paper01_revision_2026.diffusion_checkpoint_bundle import (
+        publish_diffusion_checkpoint_bundle,
+    )
+    from trustforge.models.paper01_revision_2026.diffusion_checkpoint_state import (
+        prepare_diffusion_checkpoint_states,
+    )
+
+    if (
+        not isinstance(result, dict)
+        or result.get("checkpoint_status") != "NOT_PREPARED"
+        or result.get("publication_status") != "NOT_PUBLISHED"
+    ):
+        raise ValueError("training result is not eligible for publication")
+    if (
+        result.get("dataset_id") != request["dataset_id"]
+        or result.get("experimental_seed")
+        != request["experimental_seed"]
+    ):
+        raise ValueError("training result identity differs from the request")
+
+    mapping = adapter_class_mapping(
+        dataset_id=request["dataset_id"], adapter=adapter,
+    )
+    prepared = prepare_diffusion_checkpoint_states(
+        governed_result=result, class_mapping=mapping,
+    )
+    root = (
+        Path(checkpoint_root).expanduser()
+        if checkpoint_root is not None
+        else Path.home()
+        / "trustforge_revision_2026_artifacts"
+        / "paper01"
+        / "diffusion"
+    )
+    destination = (
+        root
+        / request["dataset_id"]
+        / f"seed{request['experimental_seed']}"
+        / "checkpoints"
+        / "production"
+        / request["run_identity"]
+    )
+    _create_private_parents(destination.parent)
+    published = publish_diffusion_checkpoint_bundle(
+        prepared=prepared,
+        destination=destination,
+        source_commit=environment.actual_source_commit,
+        dataset_provenance=result["dataset_provenance"],
+    )
+    return {
+        "checkpoint_root": str(root),
+        "checkpoint_directory": published["path"],
+        "manifest_sha256": published["manifest_sha256"],
+        "manifest_bytes": published["bytes"],
+        "best_state_sha256": prepared["best"]["state_sha256"],
+        "last_state_sha256": prepared["last"]["state_sha256"],
+        "checkpoint_role_primary": "best",
+    }
+
+
 def build_summary(
     *,
     request,
     environment,
     binding,
     result,
+    publication,
 ):
     """Return an identity summary using the governed result directly."""
     trained = result["training_result"]
@@ -455,8 +541,9 @@ def build_summary(
             "best_validation_mse":
                 trained["best_validation_mse"],
         },
-        "checkpoint_status": result["checkpoint_status"],
-        "publication_status": result["publication_status"],
+        "checkpoint_status": "PREPARED",
+        "publication_status": "PUBLISHED",
+        "checkpoint_publication": publication,
     }
 
 
@@ -481,11 +568,20 @@ def run(args):
         experimental_seed=request["experimental_seed"],
     )
 
+    publication = publish_governed_checkpoint(
+        result=result,
+        request=request,
+        environment=environment,
+        adapter=adapter,
+        checkpoint_root=getattr(args, "checkpoint_root", None),
+    )
+
     summary = build_summary(
         request=request,
         environment=environment,
         binding=binding,
         result=result,
+        publication=publication,
     )
 
     print(
