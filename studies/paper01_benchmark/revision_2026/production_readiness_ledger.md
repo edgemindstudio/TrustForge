@@ -3401,3 +3401,107 @@ This closes only the bounded train–checkpoint–restore milestone. It does not
 close Stage 4 overall, authorize synthesis or establish full benchmark
 readiness. Existing historical entries and original stage exit conditions
 remain unchanged.
+
+## VAE Stage 4 — Production Synthesis Integration Milestone A Acceptance — 2026-11-22
+
+### Researcher acceptance
+
+The researcher accepted the bounded VAE production synthesis integration
+implementation and closed Milestone A. This acceptance covers implementation
+and fixture verification only; it does not authorize real-checkpoint
+synthesis, production pool publication or downstream evaluation.
+
+Implementation source commit:
+
+`36165327a9d9eed2a40808db1c51f1301c42bc2d`
+
+Parent:
+
+`df6e6dc3ca81d299d62829fb508dabe5bd8e5b5f`
+
+### Accepted implementation inventory
+
+The implementation commit adds exactly:
+
+- `src/trustforge/models/paper01_revision_2026/vae_cic_pool_publication.py`
+- `src/trustforge/evaluation/paper01_vae_pool.py`
+- `scripts/publish_paper01_vae_pool.py`
+- `slurm/paper01_revision_2026/vae_pool_production.slurm`
+- `tests/test_paper01_vae_pool_publication_revision_2026.py`
+
+No existing source, test, scientific configuration or authorization file was
+modified.
+
+### Accepted scientific recipe
+
+The approved synthesis recipe remains unchanged:
+
+`98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9`
+
+The VAE path retains the approved best-checkpoint role, conditional decoder-mean
+generation, standard-normal prior, latent dimension 100, one-hot requested-class
+conditioning, disabled observation noise, model-call batch size 32, quota 2,000
+samples per class, deterministic latent stream, and canonical float32 NHWC
+40x40x3 output in [0,1].
+
+### Verified implementation behavior
+
+Previously reported and reviewed fixture evidence, not rerun during this
+Git-preservation task:
+
+- Focused VAE pool module: 28 passed.
+- Relevant regression set: 149 passed.
+- Python syntax checks: PASS.
+- Slurm launcher Bash syntax check: PASS.
+- Complete fixture pool: five classes, 10,000 samples, 315 model-call batches.
+- Terminal partial batches: five batches of 16 samples each.
+- Independent streaming artifact-byte verification: exercised.
+- Invalid, incomplete and corrupted pool cases: rejected.
+- Production authorization: default-deny and verified before checkpoint
+  loading or generation.
+
+The implementation supports the approved four-dataset architecture through
+the governed dataset class-count contract and explicit ordered class mappings.
+The CIC-specific schema/module naming does not restrict runtime dataset
+acceptance. Non-CIC production execution remains unverified.
+
+### Fixture versus production authority
+
+The 10,000-sample pool was fixture-generated in isolated temporary test
+directories from a synthetic checkpoint and test-local gate mock. The
+authoritative artifact contract was simulated; it was not a real CIC
+production pool.
+
+The real production synthesis gate remains false. Fixture evidence does not
+establish real-checkpoint synthesis, authentic production lineage or
+downstream evaluator acceptance.
+
+### Remaining requirements
+
+- Real-checkpoint VAE synthesis remains unexecuted.
+- Production VAE synthetic-pool publication remains unauthorized.
+- Independent verification of a real published VAE pool remains outstanding.
+- Downstream evaluator pool admission remains deferred to Milestone B.
+- Cross-family and cross-seed operational coverage remains outside this
+  milestone.
+- GPFS crash durability remains unverified.
+
+### Dispositions
+
+`VAE_MILESTONE_A_IMPLEMENTATION=ACCEPTED_AND_CLOSED`
+
+`VAE_MILESTONE_A_GIT_PRESERVATION=COMPLETED`
+
+`VAE_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`VAE_REAL_CHECKPOINT_SYNTHESIS=NOT_EXECUTED`
+
+`VAE_DOWNSTREAM_EVALUATOR_INTEGRATION=DEFERRED_TO_MILESTONE_B`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+No approval marker or real execution authorization was added by this entry.
+Existing historical records and the original checkpoint-publication approval
+entry remain unchanged.
