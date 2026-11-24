@@ -4770,3 +4770,447 @@ register. Stage 3 overall is not closed.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — Diffusion Stage 3 Operational Acceptance and Consolidated Stage 3 Closure — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher accepted the
+successful governed Diffusion execution and closed S3-O1 at its original
+bounded scope. The researcher further determined that all five outstanding
+Stage 3 requirements in the original closure register have satisfied their
+bounded acceptance criteria and that Stage 3 is complete at the original
+agreed scope.
+
+This entry introduces no new scientific requirement and reopens no accepted
+investigation. It does not authorize Stage 4 execution or the full benchmark.
+
+Evidence provenance: the Talon execution, scheduler, checkpoint, terminal
+artifact and hash records below were supplied by the researcher and reviewed
+by ChatGPT. OpenCode did not access Talon, execute training, restore any
+checkpoint or independently recompute remote artifact hashes during this
+documentation task. ChatGPT inspected the exact executed source to establish
+the zero-based epoch convention. The researcher performed terminal
+preservation and file-integrity verification.
+
+### Diffusion attempt-01 failure preservation
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed / attempt | CICMalDroid2020 / 42 / 01 |
+| Slurm job | 317239 |
+| Execution source | `4b6aa8537c98eb686b325c5878599eb45ceb800f` |
+| Compute node | talon16 |
+| Scheduler state | FAILED |
+| Exit code | 1:0 |
+| Elapsed | 9 seconds |
+| Failure boundary | model-builder import |
+| Immediate failure | Keras optree `ImportError` |
+| Training reached | NO |
+| Checkpoint publication reached | NO |
+| Automatic retries | 0 |
+| Execution authority | EXHAUSTED |
+| Disposition | CLOSED_FAILED |
+
+Historical evidence directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/diffusion/operational_verification/cicmaldroid2020_seed42_attempt01/`
+
+Execution specification SHA-256:
+
+`7307f607ffd40f88800ec0cb332c0a1fd53d88fac147ef5a8d309b9dbcffbf91`
+
+The failed attempt remains preserved. Its scheduler outcome is not rewritten.
+
+### Dependency diagnosis and compatibility correction
+
+Recorded behavior:
+
+- `optree` was installed and directly importable.
+- `pip check` reported no broken requirements.
+- The original production import sequence reproduced the failure on login2.
+- Explicit `optree` preload before loading the production entry resolved the
+  reproduced failure.
+- The precise underlying Keras/native-library mechanism remains UNKNOWN.
+
+Controlled comparison artifact SHA-256:
+
+`f24c21e541e92e10700e3355fd977521382139b252f63cb0e7e1b70602c0f878`
+
+Accepted corrective commit:
+
+`d58c660701c3e5e4cf28ea7e5141ffb0c28914f8`
+
+Commit message:
+
+`fix(paper01): preload optree for governed Diffusion entry`
+
+The correction adds explicit early `optree` initialization in the governed
+production entry before TensorFlow/Keras-dependent production imports. No
+scientific methodology, architecture, dataset preprocessing, training
+mathematics, checkpoint implementation, launcher or package environment was
+changed.
+
+Verification:
+
+- Three focused tests passed.
+- 31 tests deliberately deselected.
+- Runtime: 4.80 seconds.
+- Python compilation: PASS.
+- Git diff integrity: PASS.
+- No model construction or optimizer steps.
+
+Corrected production entry SHA-256:
+
+`c17ea751c96f47280b4f3ccc50283d74c1b6a32c43fd041c7d8d9c49f04d1e2b`
+
+Focused regression test module SHA-256:
+
+`32a3876d3cda536f5bf94f4cb4fd45f9b204e1055f41f4382017b96e06ee4a43`
+
+Corrected Talon login-node import verification passed without manual optree
+preloading. Evidence directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/diffusion/operational_verification/import_correction_d58c660/`
+
+Verification artifact SHA-256:
+
+`bdacba46bf159d3122f25bdf9cec8b86d5d864f9f24fd5d5a2f2ecd5d2588a65`
+
+The subsequent successful compute-node training execution establishes
+operational effectiveness of the correction.
+
+### Successful attempt-02 execution
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed / attempt | CICMalDroid2020 / 42 / 02 |
+| Slurm job | 317249 |
+| Run identity | `commitb5d8178_attempt02` |
+| Activation source | `b5d8178fd894e6da46181809bf0b986b2b5f9712` |
+| Activation parent | `d58c660701c3e5e4cf28ea7e5141ffb0c28914f8` |
+| Requested / resolved source commits | Exact match |
+| Source status | CLEAN |
+| Bound Revision-2026 modules | 11 |
+| Exact model builder | `diffusion/models.py` in the activated checkout |
+| Compute node | talon08 |
+| Slurm version | 25.05.6 |
+| Scheduler state | COMPLETED |
+| Exit code | 0:0 |
+| Elapsed | 00:13:03 |
+| Authorized submissions | 1 |
+| Actual submissions | 1 |
+| Automatic retries | 0 |
+| Requeue | 0 |
+| Restarts | 0 |
+| Runtime activation | Isolated source-level gate |
+| Development Diffusion gate | False |
+| Development RBM gate | False |
+
+The exact activation diff contains only the approved `False` to `True` training
+gate change. The isolated activation branch is retained without merging into
+development.
+
+### Consumed scientific configuration and provenance
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset ID | cicmaldroid2020 |
+| Classes | 5 |
+| Class mapping | `["0", "1", "2", "3", "4"]` |
+| Training examples | 8,117 |
+| Validation examples | 1,158 |
+| Held-out test examples | 2,323 |
+| Partition policy | `cic_case3_revision_2026` |
+| Partition seed | 42 |
+| Partition fractions | 0.70 / 0.10 / 0.20 |
+| Canonical observation shape | [40, 40, 3] |
+| Architecture | Conditional convolutional U-Net |
+| Depth | 2 |
+| Base filters | 64 |
+| Time embedding dimension | 128 |
+| DDPM schedule | Linear |
+| Timesteps | 1,000 |
+| Beta start / end | 0.0001 / 0.02 |
+| Batch size | 64 |
+| Optimizer | Adam |
+| Learning rate | 0.0002 |
+| Adam beta_1 | 0.9 |
+| Objective | Epsilon-prediction MSE |
+| Completed epochs | 2 |
+| Completed optimizer updates | 254 |
+| Early stopping | None |
+| Checkpoint selection | Minimum validation MSE |
+| Tie-break | Earliest epoch |
+| Held-out test usage | Prohibited |
+
+Authoritative source and configuration hashes:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Source CSV | `3415babdd76a2b77c400a9ec3a8a6057705d5a57a9e91753191ecc2946df7c00` |
+| Feature-column JSON | `7a6045fe10bfe27c1faee98d729de470401b7cf733ccccc107499f11dea8fc8f` |
+
+Compute-node source verification method:
+
+`sha256_full_file_stream_on_compute_node`
+
+Source contract:
+
+`cic_authoritative_source_revision_2026`
+
+Preserved provenance limitations:
+
+- `does_not_authenticate_checkpoint_origin`
+- `does_not_prove_continuous_source_immutability`
+- `does_not_prove_training_used_only_verified_bytes`
+- `does_not_independently_verify_partition_execution`
+
+Preserved fitted-scaler limitation: the Diffusion adapter refits
+`StandardScaler` on the governed training partition but does not record a
+separate consumed fitted-state digest. This bounded acceptance is not a waiver
+of future benchmark-wide reproducibility obligations.
+
+### Training and checkpoint publication
+
+| Item | Recorded value |
+| --- | --- |
+| Completed epochs | 2 |
+| Completed updates | 254 |
+| Best validation MSE | 0.034428963337949314 |
+| Best epoch index | 1 |
+| Last epoch index | 1 |
+| Epoch convention | Zero-based |
+| Best epoch ordinal | 2 |
+| Last epoch ordinal | 2 |
+| Checkpoint status | PREPARED |
+| Publication status | PUBLISHED |
+| Primary checkpoint role | best |
+| Pending publication marker | Absent |
+
+Interpretation: the training runner uses `range(epochs)` and checkpoint-state
+preparation assigns the `last` role to `APPROVED_EPOCHS - 1`. The stored epoch
+index `1` therefore denotes the second and final epoch. Both best and last
+refer to the same final epoch; identical weights and validation MSE are
+expected. No checkpoint-selection defect is established. No corrective
+training or attempt 03 is required.
+
+Checkpoint directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/diffusion/cicmaldroid2020/seed42/checkpoints/production/commitb5d8178_attempt02/`
+
+| Item | Recorded value |
+| --- | --- |
+| Manifest schema | `trustforge.paper01.diffusion-checkpoint-bundle.v1` |
+| Manifest bytes | 15,527 |
+| Best tensor files | 46 |
+| Last tensor files | 46 |
+| Tensor-file integrity checks | 92/92 PASS |
+| Reported disk consumption | 20M |
+| Manifest SHA-256 | `8cbeb041d58d71dc8d2828a949afe78c8d75d30a357315b36cb9331d9608b0fe` |
+| Reported best/last aggregate state SHA-256 | `6a94707ab23322fdd145bd40f864fb0bbee956a707404b9377a2cfcdfebfc459` |
+
+File-level integrity verification is distinguished from aggregate array-state
+digest recomputation and independent restoration. Neither aggregate digest
+recomputation nor independent model restoration was performed.
+
+### Operational resource evidence
+
+| Item | Recorded value |
+| --- | --- |
+| Partition | talon |
+| Nodes | 1 |
+| Tasks | 1 |
+| CPUs per task | 8 |
+| Allocated CPUs | 8 |
+| Allocated memory | 32 GB |
+| GPU allocation | None recorded |
+| Walltime limit | 8 hours |
+| Actual elapsed time | 783 seconds |
+| Maximum authorized allocated CPU core-hours | 64 |
+| Actual allocated CPU core-hours | 1.74 |
+| Slurm-reported TotalCPU | 57:09.525 |
+| Derived reported CPU efficiency | Approximately 54.75% |
+| Scheduler-reported batch MaxRSS | 512K |
+| Actual peak memory consumption | UNKNOWN |
+
+Allocated core-hours are not measured CPU consumption. The 512K MaxRSS is
+implausibly low and is retained only as reported. The terminal `scontrol` query
+could no longer retrieve the completed job; the earlier controller allocation
+record and terminal `sacct` accounting establish the resource allocation.
+
+The resource envelope was operationally sufficient for this bounded execution
+only. No full benchmark resource feasibility claim is established.
+
+### Terminal evidence preservation
+
+Attempt-02 evidence directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/diffusion/operational_verification/cicmaldroid2020_seed42_attempt02/`
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `execution_specification.json` | `cd269af24e78c6b73588867f0b58f42eab40e8dad106635a558593b546683acd` |
+| `submission_attempted.txt` | `ae06ef3609b1045d4eb1796c05de2608c858798402d6212cba537ae32c1567a4` |
+| `submission.stdout` | `797a95ccbf86099028f7827be809221d1873b8c6a1cce9dbe775a919904c30a2` |
+| `submission.stderr` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `job_id.txt` | `797a95ccbf86099028f7827be809221d1873b8c6a1cce9dbe775a919904c30a2` |
+| `slurm-317249.out` | `1286e12f10cf2f5caa7147227a5cc23adc96f3168c0e92b591d2ddda3fab32f3` |
+| `slurm-317249.err` | `f8eff4c409c7152a35ede51fffb2bd0380f26589e5470f59027c637b52b4d247` |
+| `sacct_resources.txt` | `5df7c1f7656c0b37557f7fdd75815239934adf7621b1d1100c5b28265aace610` |
+| `slurm_version.txt` | `c0654e25716a40eff478d8852c09f79af82bef30c69d811a9a6a9fc54037bafa` |
+| `execution_result.json` | `a420e4b14676a7882784cd6162a7377bb1fb0db1f60f58c479225c8c16ca731d` |
+| `checkpoint_integrity_report.json` | `aa8db8c28ea3792ebeffbf9894af5857dde70632722edaacd3fb9e7dddbf99e2` |
+| `execution_closure.txt` | `4493b7865e4f4e8ccb9b9be35fbd9de59b4bbdc77002a246e216d38d2f0207af` |
+| Checkpoint `manifest.json` | `8cbeb041d58d71dc8d2828a949afe78c8d75d30a357315b36cb9331d9608b0fe` |
+
+All thirteen identities were successfully reverified by the researcher.
+
+Closure time: 2026-11-24 16:59:52 UTC.
+
+Attempt-02 disposition: `CLOSED_COMPLETED`.
+
+Execution authority: `EXHAUSTED`. Runtime grant present: `NO`. Additional
+submissions authorized: `NO`.
+
+All fifteen historical attempt-01 and compatibility verification artifacts
+were also reverified.
+
+### Original S3-O1 requirement reconciliation
+
+| Requirement | Accepted bounded disposition | Preserved limitation |
+| --- | --- | --- |
+| R1 requested/resolved/consumed identity | ACCEPTED — exact source, dataset, seed, attempt, run identity and consumed configuration | None at bounded scope |
+| R2 source and import binding | ACCEPTED — clean checkout, 11 module paths, exact `diffusion/models.py` builder | None at bounded scope |
+| R3 dataset and preprocessing provenance | ACCEPTED — authoritative source hashes, Case-3 partition and source contract | Fitted-scaler digest not separately captured; provenance limitations preserved |
+| R4 launcher integration | ACCEPTED — actual launcher execution with explicit identity and resource envelope | None at bounded scope |
+| R5 controlled activation | ACCEPTED — isolated one-line source gate, no merge to development | Global gate has no execution-specific grant; operational discipline enforced |
+| R6 configuration, failure, fallback, retry and resume | ACCEPTED — gate ordering, no early stopping, no retry/resume, actual fail-closed attempt-01 and successful attempt-02 | No dataset/seed-wide failure matrix |
+| R7 operational resource evidence | ACCEPTED — actual allocation, elapsed and accounting | Peak memory UNKNOWN; 64 core-hour ceiling not a feasibility result |
+
+`S3_O1_DIFFUSION=ACCEPTED_AND_CLOSED`
+
+### Original Stage 3 exit-criteria reconciliation
+
+The governing Stage 3 exit condition is:
+
+> Confirm requested → resolved → consumed source/config/data identity, gates,
+> retries, and failure behavior.
+
+The Stage 3 register additionally requires accepted source/entry paths for each
+distinct family integration rather than full dataset or full seed coverage.
+No original Stage 3 passage requires the complete 196-cell benchmark.
+
+The previously outstanding Stage 3 register items were:
+
+- Diffusion controlled activation and operational evidence.
+- RBM governed production entry and activation.
+- GAN controlled activation.
+- GAN synthesis resource evidence.
+- GAN training execution identity.
+
+They are now represented by S3-O1 through S3-O5. Earlier accepted ledger
+entries establish S3-O2 through S3-O5. No genuine original Stage 3 requirement
+outside this five-item register remains unresolved. The 2026-11-23 phrase
+"remaining distinct paths" referred to the per-family outstanding paths now
+covered by the accepted family records below. Dataset/seed coverage,
+restoration, synthesis, evaluation and aggregation remain later-stage
+obligations.
+
+`STAGE_1_OVERALL=COMPLETE`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+### Consolidated five-item closure register
+
+`S3_O1_DIFFUSION=ACCEPTED_AND_CLOSED`
+
+`S3_O2_RBM=ACCEPTED_AND_CLOSED`
+
+`S3_O3_GAN_CONTROLLED_ACTIVATION=ACCEPTED_AND_CLOSED`
+
+`S3_O4_GAN_SYNTHESIS_RESOURCE_EVIDENCE=ACCEPTED_AND_CLOSED`
+
+`S3_O5_GAN_TRAINING_EXECUTION_IDENTITY=ACCEPTED_AND_CLOSED`
+
+### Consolidated seven-family bounded Stage 3 readiness
+
+| Family | Demonstrated bounded scope | Not demonstrated at Stage 3 closure |
+| --- | --- | --- |
+| GAN | CICMalDroid2020 seed-42 activation, checkpoint, synthesis and paired evaluation cell | Other datasets/seeds |
+| VAE | CICMalDroid2020 seed-42 train, checkpoint, restore, synthesis and paired evaluation | Other datasets/seeds |
+| Diffusion | CICMalDroid2020 seed-42 training and durable best/last publication | Fresh-process restoration, synthesis, pool |
+| Autoregressive | CICMalDroid2020 seed-42 training/checkpoint and complete synthesis pool | Paired downstream evaluation |
+| MAF | CICMalDroid2020 seeds 42–44 train, checkpoint, full pool and paired evaluation | Seeds 45–48 and other datasets |
+| RBM | MaleX seed-42 16-sample bounded production sampling | Full synthetic pool and all-class coverage |
+| GMM | CICMalDroid2020 class-0 seed-42 train, checkpoint, synthesis and pool verification | Other classes and downstream evaluation |
+
+These scopes are not interchangeable. Stage 3 completion does not imply
+identical end-to-end coverage across families.
+
+### Preserved Stage 4–9 obligations
+
+Stage 3 completion does not establish complete production readiness.
+
+- Diffusion durable publication is demonstrated; independent restoration and
+  counted production synthesis remain outstanding.
+- RBM bounded sampling is demonstrated; complete synthetic pool publication is
+  not established.
+- GMM class-level evidence is not all-class completion.
+- Remaining downstream evaluation and production aggregation obligations are
+  preserved.
+- Clean-environment reproducibility and integrated workflow validation remain
+  subject to their original gates.
+- Full benchmark authorization remains withheld.
+- No Stage 4 experimental execution is authorized by this entry.
+
+### Consolidated statuses
+
+`DIFFUSION_ATTEMPT_01=CLOSED_FAILED`
+
+`DIFFUSION_ATTEMPT_01_EXECUTION_AUTHORITY=EXHAUSTED`
+
+`DIFFUSION_COMPATIBILITY_CORRECTION=ACCEPTED_AND_OPERATIONALLY_VERIFIED`
+
+`DIFFUSION_ATTEMPT_02=CLOSED_COMPLETED`
+
+`DIFFUSION_ATTEMPT_02_EXECUTION_AUTHORITY=EXHAUSTED`
+
+`DIFFUSION_TRAINING_COMPLETION=ACCEPTED_BOUNDED_SCOPE`
+
+`DIFFUSION_CHECKPOINT_PUBLICATION=ACCEPTED`
+
+`DIFFUSION_TENSOR_FILE_INTEGRITY=92_OF_92_MATCHED`
+
+`DIFFUSION_EPOCH_INDEXING=ZERO_BASED`
+
+`DIFFUSION_PEAK_MEMORY_CONSUMPTION=UNKNOWN`
+
+`DIFFUSION_FRESH_PROCESS_RESTORATION=NOT_PERFORMED`
+
+`DIFFUSION_SYNTHESIS_AUTHORIZED=NO`
+
+`DIFFUSION_ADDITIONAL_TRAINING_REQUIRED_FOR_STAGE3=NO`
+
+`S3_O1_DIFFUSION=ACCEPTED_AND_CLOSED`
+
+`S3_O2_RBM=ACCEPTED_AND_CLOSED`
+
+`S3_O3_GAN_CONTROLLED_ACTIVATION=ACCEPTED_AND_CLOSED`
+
+`S3_O4_GAN_SYNTHESIS_RESOURCE_EVIDENCE=ACCEPTED_AND_CLOSED`
+
+`S3_O5_GAN_TRAINING_EXECUTION_IDENTITY=ACCEPTED_AND_CLOSED`
+
+`STAGE_1_OVERALL=COMPLETE`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
