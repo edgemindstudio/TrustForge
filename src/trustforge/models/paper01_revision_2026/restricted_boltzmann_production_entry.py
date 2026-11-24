@@ -114,7 +114,7 @@ _TOP_LEVEL_FIELDS = frozenset(
 
 # Activation boundary. This is not a command-line option and must remain
 # false. Enabling it is a separate researcher authorization decision.
-RBM_PRODUCTION_SAMPLING_ENABLED = False
+RBM_PRODUCTION_SAMPLING_ENABLED = True
 
 
 def _account_home() -> Path:
