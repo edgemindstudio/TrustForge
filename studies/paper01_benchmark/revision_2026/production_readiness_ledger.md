@@ -5414,3 +5414,353 @@ Stage 4.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — S4-G1 GMM Representative All-Class Integration Closure — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher accepted the
+completed representative GMM CICMalDroid2020 seed-42 all-class checkpoint-backed
+synthetic pool integration and prepared this S4-G1 closure entry for
+preservation.
+
+The scope is one representative dataset/seed integration, not full GMM
+benchmark completion. No new scientific requirement is introduced.
+
+Evidence provenance: the Talon execution, scheduler, artifact and terminal hash
+records below were supplied by the researcher from preserved execution results
+and reviewed by ChatGPT. OpenCode did not access Talon, restore checkpoints,
+execute synthesis or independently recompute remote artifact bytes during this
+documentation task.
+
+### Governing Stage 4 exit condition
+
+Research Continuity Charter §6:
+
+> **Checkpoint/synthesize:** Durable, integrity-checked publication; fresh
+> restoration; identity-safe, fully counted synthesis for each distinct family
+> integration.
+
+Ledger Stage 4 additionally retains durable checkpoint publication,
+independent checkpoint restoration, checkpoint-backed synthesis, complete class
+quotas and pool publication. Representative integration scope applies.
+
+### S4-G1 requirement and closure basis
+
+S4-G1 required one representative complete GMM CICMalDroid2020 seed-42
+checkpoint-backed pool covering all five classes and 2,000 samples per class.
+
+The completed work comprises:
+
+1. Reconciliation of historical checkpoint availability.
+2. Class-general pool publication and verification implementation.
+3. Acquisition of missing class 1–4 checkpoints.
+4. Fresh-process restoration of those four checkpoints.
+5. Durable publication and independent verification of four new class pools.
+6. Reuse and compatibility verification of the historical class-0 pool.
+7. Five-class verification totalling 10,000 samples.
+8. Preservation and closure of both execution authorizations.
+
+The scoped inventory found only class 0 in the inspected governed namespace.
+That inventory does not prove global nonexistence of historical checkpoints
+elsewhere.
+
+### Implementation evidence
+
+Accepted implementation commit:
+
+`6cc0d71e977d4187f0986544496c793aa38b583b`
+
+Commit message:
+
+`feat(paper01): generalize GMM class pool publication and verification`
+
+Changed files (3; 401 insertions, 25 deletions):
+
+- `src/trustforge/models/paper01_revision_2026/gaussian_mixture_class_pool.py`
+- `scripts/publish_paper01_gmm_class_pool.py`
+- `tests/test_gmm_production_class_pool_revision_2026.py`
+
+Focused fixture tests: 30 passed, reported duration 4.94 seconds.
+
+Class-general dataset/class/experimental-seed identity handling and complete
+dataset-pool verification were accepted. The existing class-pool schema,
+sampling methodology, 2,000-sample class budget and batch size eight were
+preserved. No new scientific decisions were required.
+
+The existing v4 training source-freeze document was reused successfully at the
+new execution revision:
+
+`395751118f1549626841e3fe2167caefd672cf7d1740d0020f0425fc6c2f123a`
+
+### Execution and artifact locations
+
+Talon execution checkout:
+
+`$HOME/TrustForge-paper01-gmm-cic-seed42-stage4`
+
+Clean detached source revision:
+
+`6cc0d71e977d4187f0986544496c793aa38b583b`
+
+Artifact cell root:
+
+`$HOME/trustforge_revision_2026_artifacts/paper01/gmm/cicmaldroid2020/seed42`
+
+Training evidence directory relative to the artifact cell:
+
+`operational_verification/stage4_classes1_to_4_commit6cc0d71_attempt01/`
+
+Synthesis evidence directory relative to the artifact cell:
+
+`operational_verification/stage4_synthesis_classes1_to_4_commit6cc0d71_attempt01/`
+
+Existing class-0 checkpoint:
+
+`production/class0_seed42_commit6b56e92_attempt02/`
+
+New class 1–4 checkpoints:
+
+`production/class{class_id}_seed42_commit6cc0d71_attempt01/`
+
+Existing class-0 pool:
+
+`pools/class0_seed42_synthesis9fe24e8_attempt01/`
+
+New class 1–4 pools:
+
+`pools/class{class_id}_seed42_synthesis6cc0d71_attempt01/`
+
+### Training acceptance evidence
+
+Historical class-0 training job: 313922.
+Historical class-0 training source:
+`6b56e92d906f2f0d6149b3e74ff40bb5277f45ab`.
+
+New class 1–4 training source:
+`6cc0d71e977d4187f0986544496c793aa38b583b`.
+
+| Class | Training job | Train count | Validation count | Maximum updates | Validation interval | Selected step | Selected validation NLL |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 313922 | 877 | 125 | 100 | 20 | 100 | -7533.081822699489 |
+| 1 | 317311 | 1470 | 210 | 100 | 20 | 100 | -8322.46310957256 |
+| 2 | 317312 | 2732 | 390 | 110 | 22 | 110 | -9754.151403607893 |
+| 3 | 317313 | 1782 | 254 | 100 | 20 | 100 | -6279.135953301703 |
+| 4 | 317314 | 1256 | 179 | 100 | 20 | 100 | -6718.665788788249 |
+
+All four new jobs completed with exit code 0:0, zero requeue and zero restarts.
+
+All four new checkpoint metadata/state pairs passed exact identity,
+state-integrity, governed budget and checkpoint-selection verification.
+
+Total real training coverage: 8,117. Total real validation coverage: 1,158.
+
+Class-dependent training budget execution is recorded without claiming
+convergence or changing the governed budget. All five checkpoints use five
+components, dimension 4,800, float64 parameters and the governed censored
+diagonal Gaussian mixture observation model.
+
+### Accepted checkpoint hashes
+
+| Class | Metadata SHA-256 | State SHA-256 |
+|---|---|---|
+| 0 | `e43011eccaaace1308c6e2b34fa151d8cdacc682ad832fc0e2eff632d0f5b58f` | `9452ebf1c780ceb65f39bebf9cca036cb21a3c88f6cff0eed634ddffdf897769` |
+| 1 | `bab0b2dd4609be1c2dd88d7ac3a5c3b31265a6466d8f37d886dcd3f3f4ecf54a` | `99c4dad68492d929344824e7d3d5eaa22ce7fa4d3fc9f020e788730096811f1d` |
+| 2 | `d3072d225bd87268c28411931c292200f0470b49860f5c504f0cc23a94cae589` | `90d2ec52f69b2459c691d8b0710b521a367b1821786594425816069bdbe1c6ea` |
+| 3 | `6feffcbf5827dbe8edf99be5c725aad9a85e5e53d9cba5cc4a9c97e799f157f7` | `b13a5a864f21723d68f8a73f4f9dd0d3eb1b6f9149e7d5927958d47317c4b4d4` |
+| 4 | `4c80258e81da66a961dfd353e0bef3cd8b4e67d79084fb0ab5d4c81eaf420356` | `8fa66f0018a088e4fac112135805a5e9ee5d5fd84ef5533dbd75ec5af9ca0bbe` |
+
+All five state files are 384,800 bytes.
+
+### Restoration and synthesis acceptance
+
+Historical class-0 synthesis job: 313927.
+Historical class-0 synthesis source:
+`9fe24e8f2adf76d74442d281790405df21d22a99`.
+
+New synthesis source:
+`6cc0d71e977d4187f0986544496c793aa38b583b`.
+
+| Class | Synthesis job | Manifest SHA-256 |
+|---|---:|---|
+| 0 | 313927 | `68b72e975927b6d804749ceab821a52b9b8f5656d5ad776ace672fab9aea9291` |
+| 1 | 317315 | `528ae8180c0231fd4c62be7994529832a875104e6f951b178ecbd3e484648280` |
+| 2 | 317316 | `729c1231da7e15d2aee63d1025b54142d2af69a51a68e727d4539091dcb3cbb9` |
+| 3 | 317317 | `fa945c01edd0eb8aff6210787a7935fbe58f77607227c8e920e3e84fc2bcc655` |
+| 4 | 317318 | `5b42fc77f7c99326e9922486e0f804acd42b22b4ade860336f7e8a88dc3e7735` |
+
+All four new jobs completed with exit code 0:0 and zero restarts. Each new job
+performed independent fresh-process checkpoint restoration, production
+synthesis and durable publication, separate-process pool verification, and
+exact checkpoint metadata/state hash preservation.
+
+All five manifests were subsequently independently verified through
+`verify_gmm_dataset_pools()` using their explicit accepted paths.
+
+Final verified coverage:
+
+- Dataset: cicmaldroid2020
+- Family: gmm
+- Experimental seed: 42
+- Classes: 0, 1, 2, 3, 4
+- Samples per class: 2,000
+- Batch size: 8
+- Batches per class: 250
+- Total batches: 1,250
+- Newly generated samples: 8,000
+- Historical class-0 samples reused: 2,000
+- Total verified samples: 10,000
+- Canonical representation: NHWC float32, 40 × 40 × 3, finite values in [0,1]
+- Schema: `trustforge.paper01.gmm-class-pool.v1`
+
+The class-0 artifacts were preserved and accepted under the generalized
+verifier without regeneration.
+
+### Resource accounting
+
+New training allocation: 8 CPUs, 32 GB, one-hour walltime per job.
+New restoration/synthesis allocation: 4 CPUs, 16 GB, 30-minute walltime per
+job. Maximum observed concurrency: two for both work packages.
+
+| Class | Training elapsed seconds | Training node | Synthesis elapsed seconds | Synthesis node |
+|---|---:|---|---:|---|
+| 1 | 38 | talon16 | 78 | talon06 |
+| 2 | 94 | talon07 | 21 | talon07 |
+| 3 | 39 | talon08 | 22 | talon06 |
+| 4 | 33 | talon16 | 20 | talon07 |
+
+Training allocated CPU core-seconds: 1,632.
+Training allocated CPU core-hours: 0.4533333333333333.
+Training authorized ceiling: 32 core-hours.
+
+Synthesis allocated CPU core-seconds: 564.
+Synthesis allocated CPU core-hours: 0.15666666666666668.
+Synthesis authorized ceiling: 8 core-hours.
+
+Combined actual allocated CPU core-hours: 0.61.
+Combined authorized ceiling: 40 core-hours.
+
+Historical class-0 execution and login-node verification are excluded from
+these combined totals.
+
+Training MaxRSS evidence: class 1 640K (unreliable); class 2 1,087,200K;
+class 3 512K (unreliable); class 4 520K (unreliable).
+
+Synthesis MaxRSS evidence: class 1 839,892K; class 2 590,620K; class 3 589,828K;
+class 4 590,288K.
+
+Full-benchmark resource requirements must not be inferred from this single
+representative dataset/seed.
+
+### Terminal evidence preservation
+
+Training authorization ID:
+
+`P1R2026-GMM-CIC-S42-C1TO4-A01-20261124`
+
+Training closure time: `2026-11-24T18:53:04Z`.
+
+Training evidence:
+
+| Artifact | SHA-256 |
+|---|---|
+| Execution specification | `dee6da9966374c60c9f69dddae35f59362d96f7cae5966f06879761274923e71` |
+| Checkpoint integrity report | `b6e69cd57f13d245bb43981efa94f280d302060aa4345e430ee907dc549c5792` |
+| Terminal accounting | `4eeb1163009df3c700f1298ba087662260946b3711dbdc59ba53958ac94387b9` |
+| Execution closure | `de91597cae832482166dff029208cc4091494a948fa27e501a5315fcf68da0b9` |
+
+Training preservation verified 20 submission evidence hashes, 16
+checkpoint/log hashes and 13 terminal evidence hashes.
+
+Synthesis authorization ID:
+
+`P1R2026-GMM-CIC-S42-SYNTH-C1TO4-A01-20261124`
+
+Synthesis closure time: `2026-11-24T19:00:26Z`.
+
+Synthesis evidence:
+
+| Artifact | SHA-256 |
+|---|---|
+| Execution specification | `d1fd95c9712bc58dda0f87fde6082a1b43f99295bc723e34d4c3e36e798fc687` |
+| External Slurm wrapper | `a9814caae550da5d30d3ce4f15f612857eab690bda79c391b40414272eb03b88` |
+| Complete dataset pool report | `c05d9902da870952d0acb163491d9b931ac19eaa95482704dc76f7956e35dea8` |
+| Terminal accounting | `0561a545a5381cfd97b66145179257a1aedcbf84d0461bf84e19d5b7b5a83efc` |
+| Execution closure | `1a76972370470fd0c899bfdfc9ff159fd5b225ebcc065ebdeb8f2770395d03d0` |
+
+Synthesis preservation verified 20 submission evidence hashes and 28 terminal
+evidence hashes.
+
+Both execution authorizations are `CLOSED_COMPLETED` with submission authority
+`EXHAUSTED`.
+
+The historical synthesis execution closure artifact retains
+`RESEARCHER_ACCEPTANCE=PENDING_REVIEW`; this entry records the later researcher
+acceptance recommendation without altering that external artifact.
+
+### Preserved limitations
+
+- Representative CICMalDroid2020 seed-42 integration only, not full GMM
+  benchmark completion.
+- Semantic class fidelity `NOT_ESTABLISHED`.
+- Downstream evaluation `NOT_PERFORMED` for the complete GMM pool.
+- Training convergence `NOT_ESTABLISHED`.
+- Actual peak training memory unreliable for classes 1, 3 and 4.
+- Historical class-0 source revisions retained.
+- External synthesis wrapper is operational evidence, not a newly committed
+  general-purpose launcher.
+- Execution specification is documentary authorization, not a
+  cryptographically enforced runtime grant.
+- Independent artifact verification does not authenticate every possible
+  historical execution claim.
+- No additional scientific requirements introduced.
+- No class-0 retraining or regeneration performed.
+- No additional GMM seed authorized.
+
+### Updated finite register
+
+These statuses are the proposed closure state, effective upon researcher
+acceptance and Git preservation of this documentation entry.
+
+`STAGE_1_OVERALL=COMPLETE`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`S4_0_COMPLETED_FAMILY_INTEGRATIONS=ACCEPTED_AND_CLOSED`
+
+`S4_GAN=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_VAE=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_AR=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_MAF=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_G1_GMM=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_R1_RBM=OUTSTANDING`
+
+`S4_D1_DIFFUSION=OUTSTANDING`
+
+`S4_A1_CONSOLIDATED_EXIT=PENDING`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`NEW_SCIENTIFIC_DECISIONS_REQUIRED_FOR_STAGE4=NONE_IDENTIFIED`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Remaining Stage 4 work:
+
+- S4-R1: MaleX seed-42 RBM complete pool, two classes × 2,000, approved T=10
+  sampler policy, reuse existing checkpoint, preserve the 650 allocated CPU
+  core-hour cumulative planning ceiling.
+- S4-D1: CICMalDroid2020 seed-42 Diffusion fresh restoration and complete
+  10,000-sample pool, reuse accepted published checkpoint.
+- S4-A1: documentation-only consolidated Stage 4 exit after both remaining
+  integrations close.
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
