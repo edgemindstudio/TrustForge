@@ -641,13 +641,214 @@ def _memory_gb(value: str) -> int:
     return int(round(amount * factors[unit]))
 
 
-def _tres_memory_gb(tres: str) -> int:
-    for item in tres.split(","):
-        if item.startswith("mem="):
-            return _memory_gb(item.split("=", 1)[1])
+def _parse_tres(value: Any, *, field: str) -> dict[str, str]:
+    """Parse one comma-separated Slurm TRES field or fail closed."""
+
+    if not isinstance(value, str) or not value.strip():
+        raise RBMProductionAuthorizationError(
+            f"{field} is missing or empty"
+        )
+
+    fields: dict[str, str] = {}
+
+    for item in value.split(","):
+        token = item.strip()
+
+        if not token or "=" not in token:
+            raise RBMProductionAuthorizationError(
+                f"{field} is malformed"
+            )
+
+        key, raw = token.split("=", 1)
+        key = key.strip()
+        raw = raw.strip()
+
+        if not key or not raw:
+            raise RBMProductionAuthorizationError(
+                f"{field} is malformed"
+            )
+
+        if key in fields:
+            raise RBMProductionAuthorizationError(
+                f"{field} contains a duplicate key: {key}"
+            )
+
+        fields[key] = raw
+
+    if not fields:
+        raise RBMProductionAuthorizationError(
+            f"{field} is empty"
+        )
+
+    return fields
+
+
+def _tres_integer(
+    fields: Mapping[str, str],
+    name: str,
+    *,
+    field: str,
+) -> int | None:
+    value = fields.get(name)
+
+    if value is None:
+        return None
+
+    if re.fullmatch(r"[0-9]+", value) is None:
+        raise RBMProductionAuthorizationError(
+            f"{field} {name} value is malformed"
+        )
+
+    return int(value)
+
+
+def _tres_memory_gb(
+    fields: Mapping[str, str],
+    *,
+    field: str,
+) -> int:
+    value = fields.get("mem")
+
+    if value is None:
+        raise RBMProductionAuthorizationError(
+            f"{field} lacks allocated memory"
+        )
+
+    return _memory_gb(value)
+
+
+def _tres_has_gpu(fields: Mapping[str, str]) -> bool:
+    return any("gpu" in key.lower() for key in fields)
+
+
+def _require_tres_matches_envelope(
+    fields: Mapping[str, str],
+    *,
+    field: str,
+    resources: Mapping[str, Any],
+) -> None:
+    """Reject any supplied TRES value contradicting the authorized envelope."""
+
+    allocated_cpu = _tres_integer(
+        fields,
+        "cpu",
+        field=field,
+    )
+
+    if (
+        allocated_cpu is not None
+        and allocated_cpu != _authorized_total_cpus(resources)
+    ):
+        raise RBMProductionAuthorizationError(
+            f"{field} CPU count differs from the authorized envelope"
+        )
+
+    allocated_nodes = _tres_integer(
+        fields,
+        "node",
+        field=field,
+    )
+
+    if (
+        allocated_nodes is not None
+        and allocated_nodes != resources["nodes"]
+    ):
+        raise RBMProductionAuthorizationError(
+            f"{field} node count differs from the authorized envelope"
+        )
+
+    if "mem" in fields:
+        if (
+            _tres_memory_gb(fields, field=field)
+            != resources["memory_gb"]
+        ):
+            raise RBMProductionAuthorizationError(
+                "Slurm allocated memory differs from the authorized envelope"
+            )
+
+    if _tres_has_gpu(fields):
+        raise RBMProductionAuthorizationError(
+            "RBM production sampling must not request a GPU"
+        )
+
+
+def _require_consistent_allocated_evidence(
+    allocated: Mapping[str, str],
+    legacy: Mapping[str, str],
+    resources: Mapping[str, Any],
+) -> None:
+    """Require both allocated representations to match the envelope.
+
+    Each supplied CPU, node, memory or GPU value is checked against the
+    authorized envelope even when the other representation omits that field.
+    """
+
+    _require_tres_matches_envelope(
+        allocated,
+        field="AllocTRES",
+        resources=resources,
+    )
+    _require_tres_matches_envelope(
+        legacy,
+        field="TRES",
+        resources=resources,
+    )
+
+
+def _allocated_tres(
+    allocation: Mapping[str, str],
+    resources: Mapping[str, Any],
+) -> dict[str, str]:
+    """Return authoritative allocated TRES, preferring AllocTRES.
+
+    ``ReqTRES`` is requested resources, not allocation evidence, and is never
+    substituted when allocated evidence is absent.
+    """
+
+    has_alloc = "AllocTRES" in allocation
+    has_legacy = "TRES" in allocation
+
+    if has_alloc:
+        allocated = _parse_tres(
+            allocation["AllocTRES"],
+            field="AllocTRES",
+        )
+
+        if has_legacy:
+            legacy = _parse_tres(
+                allocation["TRES"],
+                field="TRES",
+            )
+            _require_consistent_allocated_evidence(
+                allocated,
+                legacy,
+                resources,
+            )
+        else:
+            _require_tres_matches_envelope(
+                allocated,
+                field="AllocTRES",
+                resources=resources,
+            )
+
+        _tres_memory_gb(allocated, field="AllocTRES")
+        return allocated
+
+    if has_legacy:
+        legacy = _parse_tres(
+            allocation["TRES"],
+            field="TRES",
+        )
+        _require_tres_matches_envelope(
+            legacy,
+            field="TRES",
+            resources=resources,
+        )
+        _tres_memory_gb(legacy, field="TRES")
+        return legacy
 
     raise RBMProductionAuthorizationError(
-        "Slurm allocation lacks a memory TRES value"
+        "Slurm allocation lacks allocated-resource evidence"
     )
 
 
@@ -706,16 +907,47 @@ def validate_allocation(
             "and CPU counts"
         )
 
-    tres = allocation.get("TRES")
+    allocated = _allocated_tres(allocation, resources)
 
-    if not isinstance(tres, str):
+    allocated_cpu = _tres_integer(
+        allocated,
+        "cpu",
+        field="allocated TRES",
+    )
+
+    if (
+        allocated_cpu is not None
+        and allocated_cpu != _authorized_total_cpus(resources)
+    ):
         raise RBMProductionAuthorizationError(
-            "Slurm allocation lacks TRES"
+            "allocated TRES CPU count differs from the authorized envelope"
         )
 
-    if _tres_memory_gb(tres) != resources["memory_gb"]:
+    allocated_nodes = _tres_integer(
+        allocated,
+        "node",
+        field="allocated TRES",
+    )
+
+    if (
+        allocated_nodes is not None
+        and allocated_nodes != resources["nodes"]
+    ):
         raise RBMProductionAuthorizationError(
-            "Slurm memory differs from the authorized envelope"
+            "allocated TRES node count differs from the authorized envelope"
+        )
+
+    if (
+        _tres_memory_gb(allocated, field="allocated TRES")
+        != resources["memory_gb"]
+    ):
+        raise RBMProductionAuthorizationError(
+            "Slurm allocated memory differs from the authorized envelope"
+        )
+
+    if _tres_has_gpu(allocated):
+        raise RBMProductionAuthorizationError(
+            "RBM production sampling must not request a GPU"
         )
 
     time_limit = allocation.get("TimeLimit")

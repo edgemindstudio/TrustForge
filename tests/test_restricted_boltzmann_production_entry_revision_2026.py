@@ -50,6 +50,32 @@ ALLOCATION = {
     "Gres": "(null)",
 }
 
+# Observed Talon 25.05.6 controller representation for job 317176. It has
+# AllocTRES and ReqTRES but no standalone TRES field.
+TALON_ALLOCATION = {
+    "JobId": "317176",
+    "JobName": "p1r1-rbm-sample",
+    "JobState": "FAILED",
+    "Reason": "NonZeroExitCode",
+    "Requeue": "0",
+    "Restarts": "0",
+    "ExitCode": "1:0",
+    "RunTime": "00:00:40",
+    "TimeLimit": "00:10:00",
+    "Partition": "talon",
+    "NodeList": "talon16",
+    "BatchHost": "talon16",
+    "NumNodes": "1",
+    "NumCPUs": "8",
+    "NumTasks": "1",
+    "CPUs/Task": "8",
+    "ReqTRES": "cpu=8,mem=32G,node=1,billing=8",
+    "AllocTRES": "cpu=8,mem=32G,node=1,billing=8",
+    "MinCPUsNode": "8",
+    "MinMemoryNode": "32G",
+    "TresPerTask": "cpu=8",
+}
+
 
 def load_cli():
     spec = importlib.util.spec_from_file_location(
@@ -542,6 +568,280 @@ def test_gpu_envelope_rejected(tmp_path, monkeypatch):
             request,
             allocation=ALLOCATION,
         )
+
+
+def test_talon_alloctres_allocation_accepted(tmp_path, monkeypatch):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+
+    grant = entry.validate_authorization(
+        request,
+        allocation=TALON_ALLOCATION,
+    )
+
+    assert grant.resources["walltime_seconds"] == 600
+    assert grant.resources["cpus_per_task"] == 8
+    assert grant.resources["memory_gb"] == 32
+
+
+def test_allocated_memory_mismatch_rejected(tmp_path, monkeypatch):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(
+        TALON_ALLOCATION,
+        AllocTRES="cpu=8,mem=16G,node=1,billing=8",
+    )
+
+    with pytest.raises(entry.RBMProductionAuthorizationError, match="memory"):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+def test_requested_memory_does_not_conceal_allocated_mismatch(
+    tmp_path,
+    monkeypatch,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(
+        TALON_ALLOCATION,
+        ReqTRES="cpu=8,mem=32G,node=1,billing=8",
+        AllocTRES="cpu=8,mem=16G,node=1,billing=8",
+    )
+
+    with pytest.raises(entry.RBMProductionAuthorizationError, match="memory"):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+def test_requested_tres_alone_cannot_authorize(tmp_path, monkeypatch):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = {
+        key: value
+        for key, value in TALON_ALLOCATION.items()
+        if key != "AllocTRES"
+    }
+
+    with pytest.raises(
+        entry.RBMProductionAuthorizationError,
+        match="allocated-resource evidence",
+    ):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+@pytest.mark.parametrize(
+    "allocated",
+    [
+        None,
+        "",
+        "cpu=8,node=1",
+        "mem=32G,cpu",
+        "mem=32G,cpu=8,cpu=8",
+    ],
+)
+def test_missing_or_malformed_allocated_evidence_rejected(
+    tmp_path,
+    monkeypatch,
+    allocated,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(TALON_ALLOCATION)
+
+    if allocated is None:
+        allocation.pop("AllocTRES")
+    else:
+        allocation["AllocTRES"] = allocated
+
+    with pytest.raises(entry.RBMProductionAuthorizationError):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+@pytest.mark.parametrize(
+    "legacy",
+    [
+        "cpu=8,mem=16G,node=1",
+        "cpu=4,mem=32G,node=1",
+        "cpu=8,mem=32G,node",
+    ],
+)
+def test_contradictory_allocated_representations_rejected(
+    tmp_path,
+    monkeypatch,
+    legacy,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(TALON_ALLOCATION, TRES=legacy)
+
+    with pytest.raises(entry.RBMProductionAuthorizationError):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+@pytest.mark.parametrize(
+    "allocated,legacy",
+    [
+        ("mem=32G", "cpu=4,mem=32G,node=1"),
+        ("cpu=8,mem=32G", "cpu=8,mem=32G,node=2"),
+    ],
+)
+def test_legacy_supplied_value_contradicts_envelope_when_alloctres_omits_field(
+    tmp_path,
+    monkeypatch,
+    allocated,
+    legacy,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(
+        TALON_ALLOCATION,
+        AllocTRES=allocated,
+        TRES=legacy,
+    )
+
+    with pytest.raises(entry.RBMProductionAuthorizationError):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+def test_compatible_dual_allocated_representations_accepted(
+    tmp_path,
+    monkeypatch,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(
+        TALON_ALLOCATION,
+        TRES="cpu=8,mem=32G,node=1",
+    )
+
+    grant = entry.validate_authorization(
+        request,
+        allocation=allocation,
+    )
+
+    assert grant.resources["memory_gb"] == 32
+    assert grant.resources["walltime_seconds"] == 600
+
+
+@pytest.mark.parametrize(
+    "allocation_update",
+    [
+        {
+            "AllocTRES": "cpu=8,mem=32G,node=1,billing=8,gres/gpu=1",
+        },
+        {
+            "TRES": "cpu=8,mem=32G,node=1,gres/gpu=1",
+        },
+        {"Gres": "gpu:1"},
+    ],
+)
+def test_gpu_allocation_rejected(
+    tmp_path,
+    monkeypatch,
+    allocation_update,
+):
+    request = make_request(tmp_path)
+    resources = dict(entry.DEFAULT_RESOURCES)
+    resources["walltime_seconds"] = 600
+    install_authorization(
+        request,
+        tmp_path,
+        monkeypatch,
+        resources=resources,
+    )
+    allocation = dict(TALON_ALLOCATION, **allocation_update)
+
+    with pytest.raises(entry.RBMProductionAuthorizationError, match="GPU"):
+        entry.validate_authorization(
+            request,
+            allocation=allocation,
+        )
+
+
+def test_legacy_tres_allocation_supported(tmp_path, monkeypatch):
+    request = make_request(tmp_path)
+    install_authorization(request, tmp_path, monkeypatch)
+
+    grant = entry.validate_authorization(
+        request,
+        allocation=ALLOCATION,
+    )
+
+    assert grant.resources["memory_gb"] == 32
+    assert grant.resources["walltime_seconds"] == 12 * 60 * 60
 
 
 def test_checkpoint_state_mismatch_denied_before_loading(tmp_path, monkeypatch):
