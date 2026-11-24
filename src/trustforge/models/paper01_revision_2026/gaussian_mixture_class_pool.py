@@ -11,6 +11,12 @@ import re
 
 import numpy as np
 
+from trustforge.models.paper01_revision_2026.experimental_seed_policy import (
+    require_governed_experimental_seed,
+)
+from trustforge.models.paper01_revision_2026.gan_checkpoint_manifest import (
+    DATASET_CLASS_COUNTS,
+)
 from trustforge.provenance import canonical_json_bytes
 
 
@@ -35,6 +41,17 @@ def _commit(value, *, name):
     if type(value) is not str or COMMIT.fullmatch(value) is None:
         raise ValueError(name + " must be a 40-character commit")
     return value
+
+
+def _governed_identity(*, dataset_id, class_id, experimental_seed):
+    if dataset_id not in DATASET_CLASS_COUNTS:
+        raise ValueError("unsupported governed dataset")
+    if type(class_id) is not int or class_id < 0:
+        raise ValueError("class_id must be a nonnegative integer")
+    if class_id >= DATASET_CLASS_COUNTS[dataset_id]:
+        raise ValueError("class_id exceeds the governed class universe")
+    seed = require_governed_experimental_seed(experimental_seed)
+    return dataset_id, class_id, seed
 
 
 def _require_regular_file(path, *, name):
@@ -70,7 +87,14 @@ def _validate_batch(batch, *, name):
     return batch
 
 
-def _checkpoint_metadata(metadata_raw, *, expected_state_sha256):
+def _checkpoint_metadata(
+    metadata_raw,
+    *,
+    dataset_id,
+    class_id,
+    experimental_seed,
+    expected_state_sha256,
+):
     if type(metadata_raw) is not bytes or not metadata_raw:
         raise ValueError("checkpoint metadata bytes required")
     try:
@@ -80,9 +104,9 @@ def _checkpoint_metadata(metadata_raw, *, expected_state_sha256):
     if type(metadata) is not dict:
         raise ValueError("checkpoint metadata must be an object")
     if (
-        metadata.get("dataset_id") != "cicmaldroid2020"
-        or metadata.get("class_id") != 0
-        or metadata.get("experimental_seed") != 42
+        metadata.get("dataset_id") != dataset_id
+        or metadata.get("class_id") != class_id
+        or metadata.get("experimental_seed") != experimental_seed
     ):
         raise ValueError("checkpoint scientific identity mismatch")
     state_sha256 = _digest(
@@ -110,11 +134,18 @@ def _verify_manifest(manifest, *, directory, manifest_sha256):
     if (
         type(manifest) is not dict
         or manifest.get("schema") != SCHEMA
-        or manifest.get("dataset_id") != "cicmaldroid2020"
         or manifest.get("family") != "gmm"
-        or manifest.get("class_id") != 0
-        or manifest.get("experimental_seed") != 42
-        or manifest.get("sample_count") != SAMPLE_COUNT
+    ):
+        raise ValueError("GMM class-pool manifest identity mismatch")
+
+    dataset_id, class_id, experimental_seed = _governed_identity(
+        dataset_id=manifest.get("dataset_id"),
+        class_id=manifest.get("class_id"),
+        experimental_seed=manifest.get("experimental_seed"),
+    )
+
+    if (
+        manifest.get("sample_count") != SAMPLE_COUNT
         or manifest.get("batch_size") != BATCH_SIZE
         or manifest.get("batch_count") != BATCH_COUNT
     ):
@@ -167,6 +198,7 @@ def _verify_manifest(manifest, *, directory, manifest_sha256):
     filenames = set()
     total = 0
     for index, record in enumerate(batches):
+        expected_filename = f"class{class_id}-b{index:03d}.npy"
         if (
             type(record) is not dict
             or set(record) != {
@@ -177,9 +209,7 @@ def _verify_manifest(manifest, *, directory, manifest_sha256):
             or record["start_sample"] != index * BATCH_SIZE
             or record["stop_sample"] != (index + 1) * BATCH_SIZE
             or record["sample_count"] != BATCH_SIZE
-            or type(record["filename"]) is not str
-            or Path(record["filename"]).name != record["filename"]
-            or not record["filename"].endswith(".npy")
+            or record["filename"] != expected_filename
             or record["filename"] in filenames
         ):
             raise ValueError("invalid GMM batch record")
@@ -201,10 +231,10 @@ def _verify_manifest(manifest, *, directory, manifest_sha256):
     return {
         "schema": SCHEMA,
         "manifest_sha256": manifest_sha256,
-        "dataset_id": "cicmaldroid2020",
+        "dataset_id": dataset_id,
         "family": "gmm",
-        "class_id": 0,
-        "experimental_seed": 42,
+        "class_id": class_id,
+        "experimental_seed": experimental_seed,
         "batch_count": BATCH_COUNT,
         "sample_count": total,
         "sampling_identity_sha256": manifest["sampling_identity_sha256"],
@@ -239,6 +269,9 @@ def verify_gmm_class_pool(manifest_path):
 def publish_gmm_class_pool(
     destination,
     *,
+    dataset_id,
+    class_id,
+    experimental_seed,
     sampling_result,
     expected_sampling_identity_sha256,
     sampling_purpose,
@@ -249,6 +282,11 @@ def publish_gmm_class_pool(
     synthesis_source_commit,
 ):
     """Persist and independently verify one complete GMM class pool."""
+    dataset_id, class_id, experimental_seed = _governed_identity(
+        dataset_id=dataset_id,
+        class_id=class_id,
+        experimental_seed=experimental_seed,
+    )
     sampling_identity = _digest(
         getattr(sampling_result, "sampling_identity_sha256", None),
         name="GMM sampling identity",
@@ -259,14 +297,18 @@ def publish_gmm_class_pool(
     ):
         raise ValueError("GMM sampling identity mismatch")
     if (
-        getattr(sampling_result, "dataset_id", None) != "cicmaldroid2020"
-        or getattr(sampling_result, "class_id", None) != 0
-        or getattr(sampling_result, "experimental_seed", None) != 42
+        getattr(sampling_result, "dataset_id", None) != dataset_id
+        or getattr(sampling_result, "class_id", None) != class_id
+        or getattr(sampling_result, "experimental_seed", None)
+        != experimental_seed
     ):
         raise ValueError("GMM sampling result scientific identity mismatch")
     images = _validate_images(getattr(sampling_result, "images", None))
     metadata, evidence = _checkpoint_metadata(
         checkpoint_metadata_raw,
+        dataset_id=dataset_id,
+        class_id=class_id,
+        experimental_seed=experimental_seed,
         expected_state_sha256=checkpoint_state_sha256,
     )
     if (
@@ -296,7 +338,7 @@ def publish_gmm_class_pool(
         start = index * BATCH_SIZE
         stop = start + BATCH_SIZE
         batch = _validate_batch(images[start:stop], name="GMM batch")
-        filename = f"class0-b{index:03d}.npy"
+        filename = f"class{class_id}-b{index:03d}.npy"
         buffer = io.BytesIO()
         np.save(buffer, batch, allow_pickle=False)
         raw = buffer.getvalue()
@@ -331,10 +373,10 @@ def publish_gmm_class_pool(
 
     manifest = {
         "schema": SCHEMA,
-        "dataset_id": "cicmaldroid2020",
+        "dataset_id": dataset_id,
         "family": "gmm",
-        "class_id": 0,
-        "experimental_seed": 42,
+        "class_id": class_id,
+        "experimental_seed": experimental_seed,
         "sample_count": SAMPLE_COUNT,
         "batch_size": BATCH_SIZE,
         "batch_count": BATCH_COUNT,
@@ -381,11 +423,14 @@ def sample_and_publish_gmm_class_pool(
     checkpoint_directory,
     destination,
     *,
+    dataset_id,
+    class_id,
+    experimental_seed,
     expected_training_source_commit,
     expected_training_source_freeze_sha256,
     synthesis_source_commit,
 ):
-    """Sample one continuous 2,000-image class-0 result and publish it."""
+    """Sample one complete governed class pool and publish it."""
     from .gaussian_mixture_checkpoint import load_gmm_checkpoint
     from .gaussian_mixture_sampling import (
         SAMPLING_PURPOSE as GOVERNED_SAMPLING_PURPOSE,
@@ -396,9 +441,11 @@ def sample_and_publish_gmm_class_pool(
     if GOVERNED_SAMPLING_PURPOSE != SAMPLING_PURPOSE:
         raise RuntimeError("governed GMM sampling purpose mismatch")
 
-    dataset_id = "cicmaldroid2020"
-    class_id = 0
-    experimental_seed = 42
+    dataset_id, class_id, experimental_seed = _governed_identity(
+        dataset_id=dataset_id,
+        class_id=class_id,
+        experimental_seed=experimental_seed,
+    )
     result = sample_gmm_checkpoint(
         checkpoint_directory,
         dataset_id=dataset_id,
@@ -422,6 +469,9 @@ def sample_and_publish_gmm_class_pool(
     ).hexdigest()
     return publish_gmm_class_pool(
         destination,
+        dataset_id=dataset_id,
+        class_id=class_id,
+        experimental_seed=experimental_seed,
         sampling_result=result,
         expected_sampling_identity_sha256=sampling_identity_sha256(
             dataset_id=dataset_id,
@@ -439,6 +489,59 @@ def sample_and_publish_gmm_class_pool(
     )
 
 
+def verify_gmm_dataset_pools(manifest_paths):
+    """Verify complete class coverage across one dataset/seed's class pools."""
+    if isinstance(manifest_paths, (str, bytes)):
+        raise TypeError("manifest_paths must be an ordered path sequence")
+
+    try:
+        paths = tuple(manifest_paths)
+    except TypeError as exc:
+        raise TypeError("manifest_paths must be an ordered path sequence") from exc
+
+    if not paths:
+        raise ValueError("at least one class-pool manifest is required")
+
+    reports = [verify_gmm_class_pool(path) for path in paths]
+
+    dataset_id = reports[0]["dataset_id"]
+    experimental_seed = reports[0]["experimental_seed"]
+    class_ids = [report["class_id"] for report in reports]
+
+    if any(
+        report["dataset_id"] != dataset_id
+        or report["experimental_seed"] != experimental_seed
+        for report in reports
+    ):
+        raise ValueError("GMM class-pool dataset or seed identity mismatch")
+
+    expected_classes = tuple(range(DATASET_CLASS_COUNTS[dataset_id]))
+
+    if (
+        len(set(class_ids)) != len(class_ids)
+        or set(class_ids) != set(expected_classes)
+    ):
+        raise ValueError("GMM class-pool coverage is incomplete or duplicated")
+
+    total_samples = sum(report["sample_count"] for report in reports)
+
+    if total_samples != len(expected_classes) * SAMPLE_COUNT:
+        raise ValueError("GMM dataset-pool total sample count mismatch")
+
+    ordered = sorted(reports, key=lambda report: report["class_id"])
+
+    return {
+        "dataset_id": dataset_id,
+        "family": "gmm",
+        "experimental_seed": experimental_seed,
+        "class_count": len(expected_classes),
+        "class_ids": list(expected_classes),
+        "sample_count_per_class": SAMPLE_COUNT,
+        "total_samples": total_samples,
+        "manifests": ordered,
+    }
+
+
 __all__ = [
     "BATCH_COUNT",
     "BATCH_SIZE",
@@ -448,4 +551,5 @@ __all__ = [
     "publish_gmm_class_pool",
     "sample_and_publish_gmm_class_pool",
     "verify_gmm_class_pool",
+    "verify_gmm_dataset_pools",
 ]

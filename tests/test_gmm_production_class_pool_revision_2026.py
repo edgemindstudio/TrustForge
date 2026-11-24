@@ -18,7 +18,9 @@ from trustforge.models.paper01_revision_2026.gaussian_mixture_class_pool import 
     SAMPLING_PURPOSE,
     SAMPLE_COUNT,
     publish_gmm_class_pool,
+    sample_and_publish_gmm_class_pool,
     verify_gmm_class_pool,
+    verify_gmm_dataset_pools,
 )
 from trustforge.provenance import canonical_json_bytes
 
@@ -82,6 +84,9 @@ def _metadata_raw(**overrides):
 def _publish(tmp_path, *, result=None, metadata_raw=None, **overrides):
     destination = tmp_path / "pool"
     arguments = {
+        "dataset_id": DATASET_ID,
+        "class_id": CLASS_ID,
+        "experimental_seed": SEED,
         "sampling_result": _result() if result is None else result,
         "expected_sampling_identity_sha256": SAMPLING_IDENTITY,
         "sampling_purpose": PURPOSE,
@@ -131,10 +136,262 @@ def test_publishes_exactly_2000_images_in_250_ordered_batches(tmp_path):
         )
 
 
+def test_publishes_nonzero_class_pool_with_class_identity(tmp_path):
+    target_class = 1
+    destination, report = _publish(
+        tmp_path,
+        class_id=target_class,
+        result=_result(class_id=target_class),
+        metadata_raw=_metadata_raw(class_id=target_class),
+    )
+
+    assert report["dataset_id"] == DATASET_ID
+    assert report["class_id"] == target_class
+    assert report["experimental_seed"] == SEED
+    assert report["sample_count"] == SAMPLE_COUNT
+    assert (destination / "class1-b000.npy").is_file()
+    assert (destination / "class1-b249.npy").is_file()
+    assert not (destination / "class0-b000.npy").exists()
+
+    manifest = json.loads((destination / "manifest.json").read_bytes())
+    assert manifest["class_id"] == target_class
+    assert all(
+        record["filename"].startswith("class1-b")
+        for record in manifest["batches"]
+    )
+
+
+def test_explicit_class_mismatch_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="scientific identity"):
+        _publish(tmp_path, class_id=1)
+
+
+def test_checkpoint_metadata_class_mismatch_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="checkpoint scientific identity"):
+        _publish(
+            tmp_path,
+            class_id=1,
+            result=_result(class_id=1),
+            metadata_raw=_metadata_raw(class_id=0),
+        )
+
+
+def test_checkpoint_metadata_seed_mismatch_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="checkpoint scientific identity"):
+        _publish(
+            tmp_path,
+            metadata_raw=_metadata_raw(experimental_seed=43),
+        )
+
+
+def test_complete_dataset_class_pool_accounting(tmp_path, monkeypatch):
+    from trustforge.models.paper01_revision_2026 import (
+        gaussian_mixture_class_pool as class_pool,
+    )
+
+    def fake_verify(manifest_path):
+        class_id = int(Path(manifest_path).parent.name.removeprefix("class"))
+        return {
+            "dataset_id": DATASET_ID,
+            "experimental_seed": SEED,
+            "class_id": class_id,
+            "sample_count": SAMPLE_COUNT,
+        }
+
+    monkeypatch.setattr(class_pool, "verify_gmm_class_pool", fake_verify)
+
+    paths = [
+        tmp_path / f"class{class_id}" / "manifest.json"
+        for class_id in range(5)
+    ]
+    report = verify_gmm_dataset_pools(paths)
+
+    assert report["dataset_id"] == DATASET_ID
+    assert report["experimental_seed"] == SEED
+    assert report["class_count"] == 5
+    assert report["class_ids"] == [0, 1, 2, 3, 4]
+    assert report["sample_count_per_class"] == 2000
+    assert report["total_samples"] == 10_000
+    assert [entry["class_id"] for entry in report["manifests"]] == [
+        0, 1, 2, 3, 4,
+    ]
+
+
+def test_incomplete_dataset_class_pool_coverage_is_rejected(
+    tmp_path,
+    monkeypatch,
+):
+    from trustforge.models.paper01_revision_2026 import (
+        gaussian_mixture_class_pool as class_pool,
+    )
+
+    def fake_verify(manifest_path):
+        class_id = int(Path(manifest_path).parent.name.removeprefix("class"))
+        return {
+            "dataset_id": DATASET_ID,
+            "experimental_seed": SEED,
+            "class_id": class_id,
+            "sample_count": SAMPLE_COUNT,
+        }
+
+    monkeypatch.setattr(class_pool, "verify_gmm_class_pool", fake_verify)
+
+    paths = [
+        tmp_path / f"class{class_id}" / "manifest.json"
+        for class_id in range(4)
+    ]
+
+    with pytest.raises(ValueError, match="coverage"):
+        verify_gmm_dataset_pools(paths)
+
+
+def test_duplicate_dataset_class_pool_coverage_is_rejected(
+    tmp_path,
+    monkeypatch,
+):
+    from trustforge.models.paper01_revision_2026 import (
+        gaussian_mixture_class_pool as class_pool,
+    )
+
+    def fake_verify(manifest_path):
+        class_id = int(Path(manifest_path).parent.name.removeprefix("class"))
+        return {
+            "dataset_id": DATASET_ID,
+            "experimental_seed": SEED,
+            "class_id": class_id,
+            "sample_count": SAMPLE_COUNT,
+        }
+
+    monkeypatch.setattr(class_pool, "verify_gmm_class_pool", fake_verify)
+
+    paths = [
+        tmp_path / f"class{class_id}" / "manifest.json"
+        for class_id in (0, 1, 2, 3, 3)
+    ]
+
+    with pytest.raises(ValueError, match="coverage"):
+        verify_gmm_dataset_pools(paths)
+
+
+def test_mixed_dataset_class_pool_seed_is_rejected(tmp_path, monkeypatch):
+    from trustforge.models.paper01_revision_2026 import (
+        gaussian_mixture_class_pool as class_pool,
+    )
+
+    def fake_verify(manifest_path):
+        class_id = int(Path(manifest_path).parent.name.removeprefix("class"))
+        return {
+            "dataset_id": DATASET_ID,
+            "experimental_seed": 43 if class_id == 4 else SEED,
+            "class_id": class_id,
+            "sample_count": SAMPLE_COUNT,
+        }
+
+    monkeypatch.setattr(class_pool, "verify_gmm_class_pool", fake_verify)
+
+    paths = [
+        tmp_path / f"class{class_id}" / "manifest.json"
+        for class_id in range(5)
+    ]
+
+    with pytest.raises(ValueError, match="seed identity"):
+        verify_gmm_dataset_pools(paths)
+
+
+def test_sample_entry_forwards_explicit_class_identity(
+    tmp_path,
+    monkeypatch,
+):
+    from trustforge.models.paper01_revision_2026 import (
+        gaussian_mixture_checkpoint as checkpoint_module,
+        gaussian_mixture_class_pool as class_pool,
+        gaussian_mixture_sampling as sampling_module,
+    )
+
+    class_id = 1
+    metadata_path = tmp_path / "metadata.json"
+    state_path = tmp_path / "state.npz"
+    metadata_path.write_bytes(_metadata_raw(class_id=class_id))
+    state_path.write_bytes(b"fixture-state")
+
+    checkpoint = SimpleNamespace(
+        metadata_path=metadata_path,
+        state_path=state_path,
+    )
+    identity = sampling_module.sampling_identity_sha256(
+        dataset_id=DATASET_ID,
+        class_id=class_id,
+        experimental_seed=SEED,
+    )
+    result = SimpleNamespace(
+        images=_images(),
+        dataset_id=DATASET_ID,
+        class_id=class_id,
+        experimental_seed=SEED,
+        sampling_identity_sha256=identity,
+    )
+    calls = {}
+
+    def fake_sample(path, **kwargs):
+        calls["sample"] = kwargs
+        return result
+
+    def fake_load(path, **kwargs):
+        calls["load"] = kwargs
+        return checkpoint
+
+    def fake_publish(destination, **kwargs):
+        calls["publish"] = kwargs
+        return {"fixture_publish": True}
+
+    monkeypatch.setattr(
+        sampling_module,
+        "sample_gmm_checkpoint",
+        fake_sample,
+    )
+    monkeypatch.setattr(
+        checkpoint_module,
+        "load_gmm_checkpoint",
+        fake_load,
+    )
+    monkeypatch.setattr(
+        class_pool,
+        "publish_gmm_class_pool",
+        fake_publish,
+    )
+
+    report = sample_and_publish_gmm_class_pool(
+        tmp_path / "checkpoint",
+        tmp_path / "pool",
+        dataset_id=DATASET_ID,
+        class_id=class_id,
+        experimental_seed=SEED,
+        expected_training_source_commit=TRAIN_COMMIT,
+        expected_training_source_freeze_sha256=FREEZE_SHA256,
+        synthesis_source_commit=SYNTHESIS_COMMIT,
+    )
+
+    assert report == {"fixture_publish": True}
+    assert calls["sample"]["class_id"] == class_id
+    assert calls["sample"]["experimental_seed"] == SEED
+    assert calls["load"]["requested_class_id"] == class_id
+    assert calls["publish"]["class_id"] == class_id
+    assert calls["publish"]["experimental_seed"] == SEED
+    assert calls["publish"]["checkpoint_metadata_raw"] == (
+        metadata_path.read_bytes()
+    )
+    assert calls["publish"]["checkpoint_state_sha256"] == hashlib.sha256(
+        b"fixture-state"
+    ).hexdigest()
+
+
 def test_identical_result_is_reproducibly_published(tmp_path):
     first = tmp_path / "first"
     second = tmp_path / "second"
     arguments = {
+        "dataset_id": DATASET_ID,
+        "class_id": CLASS_ID,
+        "experimental_seed": SEED,
         "sampling_result": _result(),
         "expected_sampling_identity_sha256": SAMPLING_IDENTITY,
         "sampling_purpose": PURPOSE,

@@ -30,6 +30,18 @@ def _require_source(root, expected):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--dataset-id",
+        required=True,
+        choices=(
+            "ustc_tfc2016",
+            "cicmaldroid2020",
+            "malnet_image",
+            "malex",
+        ),
+    )
+    parser.add_argument("--class-id", required=True, type=int)
+    parser.add_argument("--experimental-seed", required=True, type=int)
     parser.add_argument("--checkpoint-dir", required=True, type=Path)
     parser.add_argument("--destination", required=True, type=Path)
     parser.add_argument("--repository-root", required=True, type=Path)
@@ -55,6 +67,9 @@ def main():
     report = sample_and_publish_gmm_class_pool(
         checkpoint_dir,
         args.destination,
+        dataset_id=args.dataset_id,
+        class_id=args.class_id,
+        experimental_seed=args.experimental_seed,
         expected_training_source_commit=args.expected_training_source_commit,
         expected_training_source_freeze_sha256=(
             args.expected_training_source_freeze_sha256
