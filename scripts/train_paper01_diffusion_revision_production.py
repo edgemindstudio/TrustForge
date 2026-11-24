@@ -14,6 +14,11 @@ this entry point.
 
 from __future__ import annotations
 
+# Talon's TensorFlow 2.20.0 / Keras 3.11.3 can fail tree initialization when
+# optree is first imported later during model-builder binding. Preload optree
+# before any TensorFlow/Keras-dependent production import.
+import optree  # noqa: F401
+
 import argparse
 import json
 import os

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+import subprocess
 import sys
 from types import SimpleNamespace
 
@@ -59,6 +60,47 @@ def load_cli():
 @pytest.fixture()
 def cli():
     return load_cli()
+
+
+def test_optree_preloaded_before_production_imports():
+    source = CLI_PATH.read_text(encoding="utf-8")
+    optree_index = source.index("import optree")
+
+    assert optree_index < source.index("from trustforge")
+    assert optree_index < source.index("def _load_governed_module")
+    assert optree_index < source.index("def _load_model_builder_module")
+
+
+def test_entry_import_preloads_optree_in_fresh_process():
+    script = f"""
+import importlib.util
+from pathlib import Path
+import sys
+
+repo = Path({str(REPO_ROOT)!r})
+sys.path.insert(0, str(repo / "src"))
+sys.path.insert(0, str(repo))
+
+spec = importlib.util.spec_from_file_location(
+    "diffusion_entry_optree_probe",
+    {str(CLI_PATH)!r},
+)
+module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+
+assert "optree" in sys.modules, "optree was not preloaded"
+assert "tensorflow" not in sys.modules, "TensorFlow imported too early"
+"""
+
+    completed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
 
 
 def make_args(**overrides):
