@@ -5,9 +5,11 @@ One invocation validates one explicit dataset/experimental-seed/attempt
 identity and delegates to the existing governed Diffusion training boundary.
 
 Compute-node only. Requires a clean committed source revision and a Slurm
-allocation. The real-data gate remains disabled. This entry point does not
-construct a dataset adapter before authorization, prepare checkpoints,
-publish artifacts or run downstream evaluation.
+allocation. The real-data gate remains disabled. After successful governed
+training this entry point prepares and durably publishes the accepted best/last
+checkpoint bundle. Publication and execution require separate researcher
+authorization; production synthesis and downstream evaluation are not part of
+this entry point.
 """
 
 from __future__ import annotations

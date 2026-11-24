@@ -16,7 +16,9 @@ set -euo pipefail
 # Submission requires separate operational authorization.
 # One job invokes exactly one dataset/experimental-seed/attempt identity.
 # The real-data gate remains disabled in source.
-# This launcher publishes no checkpoint or synthetic artifact.
+# This launcher invokes governed training and, after successful training,
+# durable best/last checkpoint publication. Publication and execution require
+# separate researcher authorization. No synthetic images are produced.
 #
 # The resource directives above are PROVISIONAL implementation settings.
 # They are not a researcher-accepted scientific or production resource
@@ -116,7 +118,8 @@ echo "ATTEMPT=$DIFFUSION_ATTEMPT"
 echo "EXECUTION_CHECKOUT=$checkout"
 echo "SOURCE_HEAD=$DIFFUSION_EXPECTED_SOURCE_COMMIT"
 echo "SLURM_JOB_ID=$SLURM_JOB_ID"
-echo "CHECKPOINT_PUBLICATION=DISABLED"
+echo "CHECKPOINT_PUBLICATION=DURABLE_BEST_LAST_AFTER_TRAINING"
+echo "CHECKPOINT_PUBLICATION_AUTHORIZED=NO"
 echo "SYNTHESIS_PUBLICATION=DISABLED"
 echo "RESOURCE_ENVELOPE=PROVISIONAL"
 
