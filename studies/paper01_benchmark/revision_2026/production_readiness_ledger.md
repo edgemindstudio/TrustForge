@@ -4029,3 +4029,211 @@ evaluation, clean reproduction, full benchmark freeze and publication.
 
 No source, configuration, test, recipe, experimental artifact or earlier ledger
 entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — GAN Stage 3 Consolidated Researcher Acceptance — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher reviewed the
+recovered GAN execution evidence and accepted the consolidated closure of
+three original Stage 3 requirements for the bounded CICMalDroid2020 seed-42
+GAN path:
+
+- S3-O3 — GAN controlled activation.
+- S3-O4 — GAN synthesis resource evidence.
+- S3-O5 — GAN training execution identity.
+
+This entry is a documentation-only reconciliation. It performed no training,
+synthesis, evaluation, test, Slurm submission, activation change or source
+modification. It does not reopen any accepted checkpoint, restoration,
+synthesis or evaluation milestone.
+
+Evidence provenance: the execution, accounting, provenance and hash records
+below were recovered from preserved Talon records by the researcher and
+provided for review. ChatGPT and the researcher reviewed and accepted them.
+OpenCode did not access Talon, rerun the historical execution or independently
+recompute these digests during this documentation task.
+
+### S3-O5 — Training execution identity
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed / attempt | CICMalDroid2020 / 42 / 01 |
+| Training Slurm job | 314528 |
+| Compute node | talon06 |
+| State / exit code | COMPLETED / 0:0 |
+| Actual elapsed | 00:27:09 |
+| Allocated CPUs / requested memory | 8 / 32 GB |
+| Scheduler batch MaxRSS | 3003396K |
+| Authorized walltime | 12 hours |
+| GPU | disabled and unused |
+| Expected and executed source commit | `42c40fce8b7f1005301408444fdcae7ff7f19db5` |
+| Scientific baseline commit | `14982b142887095c53e62387749f5e308ce42d5d` |
+| Authorization ID | `paper01-gan-cicmaldroid2020-seed42-attempt01-42c40fc` |
+| Run identity | `commit42c40fc_attempt01` |
+
+The historical training stdout directly records the execution checkout,
+source HEAD, Slurm job ID, dataset, seed, attempt and completed scientific
+configuration.
+
+#### Consumed scientific configuration
+
+- Planned generator iterations: 500; completed generator iterations: 500.
+- Completed discriminator updates: 1,000.
+- Batch size: 256.
+- Class-sampling alpha: 0.85.
+- Learning rate: 0.0002.
+- Adam beta_1: 0.5.
+- Latent dimension: 100.
+- Class mapping: 0, 1, 2, 3, 4.
+- Canonical representation: 40 x 40 x 3.
+- Checkpoint selection: terminal governed iteration.
+
+Recorded training exposure: 128,000 total real draws against 8,117 unique
+governed training positions, with recorded 100% unique coverage for each of
+the five classes.
+
+Governed partition counts: training 8,117; validation 1,158; test 2,323;
+partition seed 42.
+
+The dataset provenance records compute-node full-file SHA-256 verification of
+the authoritative CSV and feature-column definitions.
+
+Preserved provenance limitations: the provenance record does not independently
+prove absence of leakage, continuous source immutability or checkpoint origin.
+
+#### Recovered evidence identities
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Training stdout | `2129d83341b41f29871fb720e3e21d69fe17ea9d442270cddc441797a7917d24` |
+| Training stderr | `73ea76a435ba6bb69f2b55182a95e79607db08898526b0c247f77f2368b2b446` |
+| Checkpoint `model_metadata.json` | `af534e4c64e7adb7a3065e4c5c8e3b2f9c8b888734a20041e573cf2f4aa10a04` |
+| Exposure evidence | `f944d654d648f3b220e7f3cbe2cf0c8d5600e4d22fbb238cf51a6127a82d053e` |
+| Dataset provenance | `e6736e56b7bd8f2e81505d3f8b1811dfc95a0e0514c629d524025a88a03138ae` |
+| Accepted checkpoint identity | `963b45ba5c467fe935e13a34bfb3abae52fe52636eebfd796787c04526de6530` |
+
+The exposure and dataset provenance hashes match the corresponding references
+in the checkpoint metadata.
+
+### S3-O4 — Synthesis resource evidence
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed / attempt | CICMalDroid2020 / 42 / 01 |
+| Synthesis Slurm job | 314574 |
+| Source commit | `4324aeecb45a47a72ac0b479d8cd994fe79dc1e0` |
+| Authorization ID | `P1R2026-GAN-CIC-S42-A01-20261116` |
+| Run identity | `commit4324aee_attempt01` |
+| Compute node | talon06 |
+| State / exit code | COMPLETED / 0:0 |
+| Actual elapsed | 00:01:54 |
+| Allocated CPUs / requested memory | 8 / 32 GB |
+| Scheduler batch MaxRSS | 595100K |
+| `seff` reported memory | 581.15 MB |
+| `seff` reported memory efficiency | 1.77% |
+| `seff` reported CPU efficiency | 11.73% |
+| Authorized walltime | 12 hours |
+| GPU | disabled and unused |
+| Automatic retries permitted | zero |
+| Model-call batch size | 16 |
+| Batches per class | 125 |
+| Verified batches | 625 |
+| Verified images | 10,000 |
+| Samples per class | 2,000 |
+| Pool execution status | COMPLETE |
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Synthesis authorization | `4b2a77aba6f57402b015f35dc98e9e11d129b40c9ac1272f9196674152a2af96` |
+| Synthesis recipe | `98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9` |
+| Pool manifest | `b4a640411b8120c412e51d2aa68b9e110ad2bfcc0215a1d8b20e6d7776dbceb1` |
+
+The recovered synthesis execution record, completion log, manifest hash,
+authorization and Slurm accounting support the accepted bounded resource
+evidence.
+
+Scheduler-reported memory utilization (`MaxRSS`, `seff`) is distinguished from
+independent process-level measurement; no independent process RSS measurement
+is recorded. The efficiency figures are utilization context, not a claim of
+optimal resources, measured optimum or benchmark-wide resource feasibility.
+
+### Historical execution lineage
+
+| Phase | Slurm job | Outcome |
+| --- | --- | --- |
+| GAN training | 314528 | COMPLETED |
+| Initial restoration | 314534 | FAILED |
+| Import diagnostic | 314535 | COMPLETED |
+| Restoration retry | 314537 | COMPLETED |
+| Production synthesis | 314574 | COMPLETED |
+| Paired evaluation | 314607 | COMPLETED |
+
+The failed initial restoration at job 314534 is preserved as historical
+evidence. The three source revisions are distinct and not interchangeable:
+
+- Training: `42c40fc`.
+- Synthesis: `4324aee`.
+- Evaluation: `49d6f5c`.
+
+No previously accepted checkpoint, restoration, synthesis or evaluation
+milestone is reopened by this entry.
+
+### S3-O3 — Controlled activation decision
+
+The researcher accepts the existing isolated GAN activation mechanism as
+satisfying the original bounded controlled-activation requirement.
+
+Preserved:
+
+- Historical activation commit `42c40fc`.
+- Execution-specific authorization.
+- Exact source-commit binding.
+- Default-deny behavior on the current development branch.
+
+The historical gate-enabled state is supported by the activated source
+revision and the successful governed execution; the recovered stdout does not
+independently print the gate value.
+
+No activation merge or cherry-pick is required for this closure. GAN is not
+enabled on the current branch. Future experimental execution remains subject
+to separate researcher authorization and the original Stage 8 freeze and
+launch requirements.
+
+### Scientific interpretation boundaries
+
+The recovered progress logs and terminal diagnostics are descriptive execution
+evidence. They do not establish GAN convergence, absence of mode collapse,
+semantic class fidelity, synthetic-data realism, benchmark-wide superiority or
+general resource optimality. The terminal diagnostics did not influence
+checkpoint selection. No scientific policy is changed by this entry.
+
+### Status and preserved boundaries
+
+`S3_O3_GAN_CONTROLLED_ACTIVATION=ACCEPTED_AND_CLOSED`
+
+`S3_O4_GAN_SYNTHESIS_RESOURCE_EVIDENCE=ACCEPTED_AND_CLOSED`
+
+`S3_O5_GAN_TRAINING_EXECUTION_IDENTITY=ACCEPTED_AND_CLOSED`
+
+`GAN_STAGE3_BOUNDED_REQUIREMENTS=ACCEPTED_AND_CLOSED`
+
+`GAN_ISOLATED_ACTIVATION_APPROACH=RETAINED`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=IN_PROGRESS`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Stage 3 overall remains IN_PROGRESS. The remaining original Stage 3 closure
+items are:
+
+- S3-O2 — RBM governed production entry and activation.
+- S3-O1 — Diffusion controlled activation and applicable operational evidence.
+
+Neither is begun, assessed or closed by this entry. No other family, dataset,
+seed, attempt or stage status is changed.
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
