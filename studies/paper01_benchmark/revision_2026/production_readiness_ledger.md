@@ -4413,3 +4413,360 @@ entry. No other family, dataset, seed, attempt or stage status is changed.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — RBM Stage 3 Operational Acceptance and Closure — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher accepted the
+bounded RBM operational verification and closed S3-O2 at its original Stage 3
+scope following ChatGPT review. The approved scientific policy, production
+sampler, governed execution entry, historical provenance limitations and
+successful operational evidence are preserved.
+
+This entry records the completed RBM Stage 3 work package. It does not close
+Stage 3 overall, authorize Stage 4 execution or authorize the full benchmark.
+No additional experimental execution is authorized.
+
+Evidence provenance: the Talon execution, scheduler, artifact and terminal
+hash records below were supplied by the researcher from preserved evidence.
+OpenCode did not access Talon, restore the checkpoint, rerun sampling or
+independently recompute these hashes during this documentation task.
+
+### Previously accepted RBM foundation
+
+- Scientific ten-transition sampling policy: approved 2026-11-24, unchanged.
+- Production sampler implementation:
+  `6acc68258bf189a350c67eac1c24fd6226558152`.
+- Governed production entry:
+  `22f43ca74b61433264ba0ff22f50017c079bf896`.
+- Historical provenance acceptance:
+  `b81ea28b642657dce58d16d3b47db2f8e91dbc89`.
+
+Historical checkpoint acceptance and its provenance limitations are preserved
+without reopening the historical investigation.
+
+### Attempt-01 operational failure
+
+| Item | Recorded value |
+| --- | --- |
+| Slurm job | 317176 |
+| Dataset / seed / attempt | MaleX / 42 / 01 |
+| Requested class | 0 — benign |
+| Requested sample indices | 0–15 |
+| Requested samples | 16 |
+| Activation source | `94af0348b84539886e8e62bc7e1c998f1b8b8d99` |
+| Node | talon16 |
+| Slurm version | 25.05.6 |
+| Scheduler state | FAILED |
+| Exit code | 1:0 |
+| Elapsed | 00:00:40 |
+| Allocated CPUs | 8 |
+| Allocated memory | 32 GB |
+| Walltime limit | 600 seconds |
+| Requeue | 0 |
+| Restarts | 0 |
+| Scheduler-reported batch MaxRSS | 768 KB |
+
+Exact failure:
+
+`RBMProductionAuthorizationError: Slurm allocation lacks TRES`
+
+The failure occurred during resource authorization, before checkpoint
+restoration or sampling. The actual controller record provided:
+
+`ReqTRES=cpu=8,mem=32G,node=1,billing=8`
+
+`AllocTRES=cpu=8,mem=32G,node=1,billing=8`
+
+No standalone `TRES` field was present. Actual allocation matched the
+authorized resource envelope. The fail-closed boundary prevented sampling
+under an unrecognized scheduler representation.
+
+`RBM_ATTEMPT_01=CLOSED_FAILED`
+
+The attempt-01 authorization was retired at 07:50:02 UTC on 2026-11-24. The
+failed activation revision remains preserved and unchanged.
+
+Evidence directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/rbm/operational_verification/malex_seed42_attempt01/`
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `slurm-317176.out` | `87b8fdec0897109a61ff81902e0bd3a005ac9f9537b1974b31d7baefdeec5ca7` |
+| `slurm-317176.err` | `de8085bf186065c9ebe842c38b7355ca45a35f730c533815709c28354421391d` |
+| `authorization.json` | `8784310abdd76c312c5f4b090b2fc35b92e6662472129e579a7e38b0c4068f11` |
+| `authorization_retirement.txt` | `046bf967f81ad55333c7bc09de04699890d6bd4775b17319b9450ea0629fe804` |
+| `scontrol_job.txt` | `7745295291db69cb390e0b631be2e5bd429f14f64ffbf044b03367240086e3ae` |
+| `sacct_resources.txt` | `4d84e3407b75721778f44e60b3e8906c65d4f823cbe44049e9475c58ba2c3ad5` |
+| `slurm_version.txt` | `c0654e25716a40eff478d8852c09f79af82bef30c69d811a9a6a9fc54037bafa` |
+
+Retired authorization:
+
+`~/trustforge_revision_2026_artifacts/paper01/rbm/authorizations/retired/malex_seed42_attempt01.317176.json`
+
+All seven historical evidence hashes were subsequently reverified by the
+researcher during attempt-02 preflight and terminal reconciliation.
+
+### Targeted compatibility correction
+
+Accepted corrective commit:
+
+`bfd9c68db58139a996aa85708069852a838e7992`
+
+Commit message:
+
+`fix(paper01): validate RBM allocated Slurm resources on Talon`
+
+Corrective scope:
+
+- Recognize actual `AllocTRES` allocation evidence.
+- Preserve applicable legacy `TRES` compatibility.
+- Exclude `ReqTRES` as allocation evidence.
+- Reject contradictory CPU, node and memory evidence.
+- Reject GPU evidence in either allocated representation.
+- Preserve authorization-before-checkpoint ordering.
+- Preserve the disabled development activation gate.
+
+Verification:
+
+- 79 focused integration tests passed in 3.14 seconds.
+- Python compilation PASS.
+- Git diff integrity PASS.
+- Two authorized files modified.
+- Scientific sampler, checkpoint implementation, CLI and launcher unchanged.
+
+| Corrected artifact | SHA-256 |
+| --- | --- |
+| Production entry | `95cebf0c92f69394ad51d31a6a3ca327d9828da88eef6f5316b460bb64b37d08` |
+| Integration tests | `f00c10865a303909e65ff380b4ce2b0dd6b9cd8884b9b42ead87943f870e2f2b` |
+
+The correction is accepted at fixture scope and was successfully verified
+through the subsequent actual Talon execution.
+
+### Successful attempt-02 operational verification
+
+| Item | Recorded value |
+| --- | --- |
+| Slurm job | 317232 |
+| Dataset / seed / attempt | MaleX / 42 / 02 |
+| Run identity | `commita3de7e8_attempt02` |
+| Authorization ID | `P1R2026-RBM-MALEX-S42-ATTEMPT02-A3DE7E8` |
+| Activation source | `a3de7e8074cf1eeb319f34b50d40dd815b634e71` |
+| Activation parent | `bfd9c68db58139a996aa85708069852a838e7992` |
+| Requested / resolved source commit | Exact match |
+| Bound Revision-2026 module paths | 6 |
+| Node | talon16 |
+| Slurm version | 25.05.6 |
+| Scheduler state | COMPLETED |
+| Exit code | 0:0 |
+| Elapsed | 00:00:22 |
+| Application status | SAMPLING_COMPLETE |
+| Requested class | 0 — benign |
+| Requested sample range | [0,16) |
+| Consumed sample indices | Exactly 0–15 |
+| Samples returned | 16 |
+| Gibbs transitions per sample | 10 |
+| Separate burn-in | 0 |
+| Chain semantics | `independent_chain_per_sample` |
+| Class conditioning | `fixed_requested_class` |
+| Initialization | `h0_zero_v0_bounded_exponential_p_v_given_h0` |
+| Internal dtype | float64 |
+| Canonical dtype | float32 |
+| Canonical shape | [40,40,3] |
+| Pool publication | NOT_PERFORMED |
+| Downstream evaluation | NOT_PERFORMED |
+
+Checkpoint and policy identities:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Checkpoint state | `18f8ddf4f1d13bd8a9c660c968019a22421f097a40068c7a7be31f29052231b8` |
+| Checkpoint metadata | `55721f7414b09de5720d1003ef5f29420aa06307079cb5a36c73b8043e3c4231` |
+| Consumed scientific policy digest | `676f1aca169fadf9dd30d734e33267395675ce18cc1978554dbe3939ea4d9ffa` |
+
+The checkpoint and policy identities match the approved execution
+specification. The corrected allocation validator accepted the observed Talon
+`AllocTRES` representation. The existing governed checkpoint was restored and
+the accepted sampling policy executed successfully.
+
+The 16-sample result is bounded operational verification, not a complete
+benchmark synthetic pool.
+
+### Operational resource evidence
+
+| Item | Recorded value |
+| --- | --- |
+| Partition | talon |
+| Nodes | 1 |
+| Tasks | 1 |
+| CPUs per task | 8 |
+| Total allocated CPUs | 8 |
+| Allocated memory | 32 GB |
+| Walltime limit | 600 seconds |
+| Elapsed execution | 22 seconds |
+| GPU allocation | None recorded |
+| Requeue | 0 |
+| Restarts | 0 |
+| Scheduler-reported batch MaxRSS | 512 KB |
+
+Observed controller allocation:
+
+`AllocTRES=cpu=8,mem=32G,node=1,billing=8`
+
+The resource envelope matched the execution authorization.
+
+The recorded individual-job maximum was 1.3333333333333333 authorized CPU
+core-hours, based on authorized CPUs multiplied by the walltime limit. This is
+not measured CPU consumption.
+
+The scheduler-reported `MaxRSS` values for both attempts appear implausibly
+low and are retained as reported, not accepted as reliable
+memory-consumption estimates.
+
+Preserved:
+
+`measured_resource_consumption=NOT_MEASURED`
+
+`cumulative_rbm_planning_core_hours=650`
+
+`cumulative_workload_enforcement=NOT_PERFORMED`
+
+No full-scale synthesis feasibility or cumulative resource compliance is
+claimed. The CUDA initialization diagnostic did not prevent successful
+CPU-only execution. Static launcher diagnostic strings are not authoritative
+runtime activation or allocation evidence.
+
+### Attempt-02 terminal evidence and retirement
+
+Evidence directory:
+
+`~/trustforge_revision_2026_artifacts/paper01/rbm/operational_verification/malex_seed42_attempt02/`
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `slurm-317232.out` | `3c6837b09400c8c84993381754f38cec267ab52b7ff35f7c8406ee58fff9a521` |
+| `slurm-317232.err` | `c0ca95ba52f5927e1c86b1abef363d48a9ff94971e4fd7b7c1121906a9a6a29c` |
+| `authorization.json` | `3a3d3d8c9221b1c4ef44028c8b2255f5de9a11aa9437849f3da42c82eb318e3f` |
+| `authorization_retirement.txt` | `e167c92ed16335c78822546544d15dbb7755f83167ed90e2b8607fd97fac1f39` |
+| `scontrol_job.txt` | `e1016ab30dc90b86b8d422fc29022197c28079343a11b27ca65305ae4628cd08` |
+| `sacct_resources.txt` | `770d6acf8594125fae66d458dc31b31dc4b1c2885517a94682195a59ea02640f` |
+| `slurm_version.txt` | `c0654e25716a40eff478d8852c09f79af82bef30c69d811a9a6a9fc54037bafa` |
+| `execution_result.json` | `55ada5beaa0231fdfae220490cad7bfa0c16ef230969273e1f34de703f8847fb` |
+
+Retired authorization:
+
+`~/trustforge_revision_2026_artifacts/paper01/rbm/authorizations/retired/malex_seed42_attempt02.317232.json`
+
+Retirement time: 2026-11-24, 15:11:19 UTC.
+
+Terminal reconciliation established:
+
+`EXECUTION_RECORD_EXTRACTION=PASS`
+
+`EXECUTION_IDENTITY_VERIFICATION=PASS`
+
+`SCIENTIFIC_POLICY_CONSUMPTION=PASS`
+
+`SAMPLE_COUNT=16`
+
+`TRANSITION_COUNT=10`
+
+`POOL_PUBLICATION=NOT_PERFORMED`
+
+`ATTEMPT_01_PRESERVED=YES`
+
+`ATTEMPT_02=CLOSED_COMPLETED`
+
+`AUTHORIZATION_RETIRED=YES`
+
+`RBM_OPERATIONAL_VERIFICATION=PASS`
+
+`ADDITIONAL_SUBMISSIONS_AUTHORIZED=NO`
+
+Both active authorization paths are absent. Both execution attempts and their
+respective source identities remain preserved.
+
+### Stage 3 closure rationale
+
+The original bounded RBM execution requirements have been satisfied through:
+
+- Accepted governed entry and launcher integration.
+- Verified execution-specific activation.
+- Exact requested/resolved source and import identities.
+- Successful resource authorization.
+- Existing checkpoint restoration.
+- Consumed scientific policy and sample identity verification.
+- Successful compute-node execution.
+- Recorded operational resource evidence.
+- Preserved failed-attempt evidence and demonstrated corrective execution.
+- Retired execution authorizations.
+
+The isolated activation approach is retained. The development RBM gate remains
+disabled. No further RBM execution is required for this bounded Stage 3
+milestone.
+
+The successful 16-sample execution is not a complete benchmark synthetic pool
+and does not establish Stage 4 coverage.
+
+### Scientific and evidence limitations
+
+Preserved:
+
+- Historical executed training source commits: UNKNOWN.
+- Historical consumed preprocessing fingerprints: UNKNOWN.
+- Historical provenance investigation: CLOSED_WITH_LIMITATIONS.
+- No benchmark-wide provenance waiver.
+- No reliable measured memory-consumption result.
+- No cumulative 650 CPU core-hour feasibility determination.
+- No synthetic pool publication.
+- No requested-label fidelity assessment.
+- No convergence or mixing certification.
+- No downstream utility result.
+
+The historical provenance limitations and Stage 4–8 obligations remain
+applicable. The researcher supplied the Talon evidence and terminal hashes;
+this entry does not claim independent Talon access or independent
+recomputation.
+
+### Consolidated statuses
+
+`RBM_ATTEMPT_01=CLOSED_FAILED`
+
+`RBM_ATTEMPT_01_AUTHORIZATION_RETIRED=YES`
+
+`RBM_SLURM_COMPATIBILITY_CORRECTION=ACCEPTED_AND_OPERATIONALLY_VERIFIED`
+
+`RBM_ATTEMPT_02=CLOSED_COMPLETED`
+
+`RBM_ATTEMPT_02_AUTHORIZATION_RETIRED=YES`
+
+`RBM_OPERATIONAL_VERIFICATION=ACCEPTED_BOUNDED_SCOPE`
+
+`RBM_STAGE3_BOUNDED_REQUIREMENTS=ACCEPTED_AND_CLOSED`
+
+`RBM_HISTORICAL_PROVENANCE_INVESTIGATION=CLOSED_WITH_LIMITATIONS`
+
+`RBM_HISTORICAL_TRAINING_SOURCE=UNKNOWN`
+
+`RBM_HISTORICAL_PREPROCESSING_FINGERPRINT=UNKNOWN`
+
+`RBM_PRODUCTION_SAMPLING_AUTHORIZED=NO`
+
+`S3_O2_RBM=ACCEPTED_AND_CLOSED`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`GAN_STAGE3_BOUNDED_REQUIREMENTS=ACCEPTED_AND_CLOSED`
+
+`STAGE_3_OVERALL=IN_PROGRESS`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+S3-O1 — Diffusion controlled activation and applicable operational
+verification — remains the outstanding item in the original Stage 3 closure
+register. Stage 3 overall is not closed.
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
