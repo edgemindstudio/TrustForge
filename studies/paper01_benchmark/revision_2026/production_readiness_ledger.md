@@ -4237,3 +4237,179 @@ seed, attempt or stage status is changed.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — RBM Stage 3 Implementation and Historical Provenance Acceptance — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher accepted the
+existing RBM production sampler and the governed RBM production entry at
+fixture-verification scope, accepted preservation of both historical RBM
+checkpoints, closed the historical provenance recovery with documented
+limitations, and accepted planning of a bounded operational verification.
+
+This entry does not authorize operational execution, an active authorization
+record, runtime activation, checkpoint access, dataset access, sampling,
+training, synthesis, evaluation or any Slurm submission. It does not close
+S3-O2 overall.
+
+Evidence provenance: the historical Talon execution, scheduler and artifact
+records below were recovered by the researcher through read-only inspection
+and provided for review. OpenCode did not access Talon, rerun historical
+execution or recompute the historical artifact hashes during this
+documentation task.
+
+### Accepted implementation milestones
+
+- Existing production sampler implementation commit:
+  `6acc68258bf189a350c67eac1c24fd6226558152`.
+- Governed production entry implementation commit:
+  `22f43ca74b61433264ba0ff22f50017c079bf896`.
+
+`RBM_STAGE3_SAMPLER_IMPLEMENTATION=ACCEPTED_FIXTURE_SCOPE`
+
+`RBM_STAGE3_ENTRY_IMPLEMENTATION=ACCEPTED_FIXTURE_SCOPE`
+
+The entry implementation was reviewed by ChatGPT and accepted by the
+researcher at fixture scope. Verification evidence:
+
+- 60 focused entry-integration tests passed in 3.11 seconds.
+- Python compilation PASS.
+- Slurm launcher shell syntax PASS.
+- Existing scientific sampler and checkpoint implementation unchanged.
+- Authorization precedes checkpoint artifact inspection, hashing, loading and
+  sampling.
+- Correct total allocated CPU arithmetic.
+- Explicit distinction between per-job resource limits and cumulative workload
+  planning.
+- Production activation remains disabled.
+
+The approved ten-transition sampling policy and the closed historical
+INDETERMINATE investigation remain unchanged. Implementation acceptance is not
+operational readiness.
+
+### Historical CICMalDroid2020 checkpoint
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed | CICMalDroid2020 / 42 |
+| Associated training job | 306843 |
+| Node | talon06 |
+| Scheduler state | FAILED |
+| Exit code | 1:0 |
+| Elapsed | 00:01:23 |
+| Allocated CPUs / requested memory | 8 / 32 GB |
+| Recorded training examples | 8,117 |
+| Class counts | 877, 1470, 2732, 1782, 1256 |
+| Maximum optimizer updates | 64 |
+| Selected checkpoint step | 64 |
+| Checkpoint selection | final governed update |
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Checkpoint state | `10f64703515290ea1493b731bb8e941f7b200c6ad18a61acfc8a1be8bd17cd72` |
+| Checkpoint metadata | `63b36cfe8f2d0dbc7838f3b6a7223ac2bfeb905e5211d50b1631925cccfc28a5` |
+| Training stdout | `d44d82f289495882e536213fd4ecd46f1f3bd99ef69cb0941eb877358db2faaf` |
+| Training stderr | `9b29ed942e71f8560fc9918476767637a39efef305bd42d1da367a5e0fc0e34e` |
+
+Preserved historical reporting exception:
+
+`AttributeError: 'RBMTrainingResult' object has no attribute 'completed_steps'`
+
+The previously accepted checkpoint-integrity disposition is preserved. The
+researcher does not reopen historical training because of this reporting
+exception. The scheduler outcome remains `FAILED`; it is not rewritten as
+`COMPLETED`. No exact executed training source commit is invented.
+
+### Historical MaleX checkpoint
+
+| Item | Recorded value |
+| --- | --- |
+| Dataset / seed | MaleX / 42 |
+| Training job | 307935 |
+| Node | talon16 |
+| Scheduler state | COMPLETED |
+| Exit code | 0:0 |
+| Elapsed | 01:30:31 |
+| Allocated CPUs / requested memory | 8 / 32 GB |
+| Recorded training examples | 731,049 |
+| Class counts | benign 125,794; malware 605,255 |
+| Maximum optimizer updates | 5,712 |
+| Completed optimizer updates | 5,712 |
+| Selected checkpoint step | 5,712 |
+| Checkpoint selection | final governed update |
+| MaleX staging | PASS |
+
+Training and launcher completion are recorded at the stated historical scope.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Checkpoint state | `18f8ddf4f1d13bd8a9c660c968019a22421f097a40068c7a7be31f29052231b8` |
+| Checkpoint metadata | `55721f7414b09de5720d1003ef5f29420aa06307079cb5a36c73b8043e3c4231` |
+| Training stdout | `6e1f62648e8a7bbff7a79667f55782249b6277170c99b9ba3b61e4d2fb43ae4a` |
+| Training stderr | `ffede51db22b54a3d24fa2eae50eb330f4bb73224f20affc167048b3b32ed66b` |
+
+### Recorded common training configuration
+
+Both historical checkpoints record:
+
+- Visible dimension: 4800.
+- Hidden units: 128.
+- Batch size: 256.
+- CD training depth: 1.
+- Learning rate: 0.0005.
+- Class-balance exponent: 0.85.
+- Optimizer: manual SGD.
+- Parameter dtype: float64.
+
+CD-1 is the historical training gradient-estimation depth only. It is not the
+approved production sampling policy. Production sampling remains exactly ten
+complete Gibbs transitions with zero separate burn-in.
+
+Recorded reconstruction diagnostics are descriptive execution evidence. They
+do not establish generative quality, convergence, mixing sufficiency or
+stationary-distribution equivalence.
+
+### Evidence limitations
+
+The historical checkpoint state digests are distinguished from metadata and
+log hashes computed during evidence recovery. For both historical checkpoints:
+
+- Exact executed training source commit: UNKNOWN.
+- Consumed preprocessing fingerprint: UNKNOWN.
+- Historical execution evidence is accepted only at its demonstrated scope.
+- The historical provenance investigation is closed with limitations.
+- No benchmark-wide provenance waiver is granted.
+- No additional historical training is authorized.
+
+These accepted limitations do not remove the original traceability
+requirements for future benchmark execution.
+
+`RBM_HISTORICAL_TRAINING_EVIDENCE=ACCEPTED_BOUNDED_SCOPE`
+
+`RBM_HISTORICAL_PROVENANCE_INVESTIGATION=CLOSED_WITH_LIMITATIONS`
+
+`RBM_HISTORICAL_TRAINING_SOURCE=UNKNOWN`
+
+`RBM_HISTORICAL_PREPROCESSING_FINGERPRINT=UNKNOWN`
+
+### Status and preserved boundaries
+
+`RBM_PRODUCTION_SAMPLING_AUTHORIZED=NO`
+
+`S3_O2_RBM=IN_PROGRESS`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`GAN_STAGE3_BOUNDED_REQUIREMENTS=ACCEPTED_AND_CLOSED`
+
+`STAGE_3_OVERALL=IN_PROGRESS`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Bounded operational verification remains planned but unauthorized. No runtime
+activation, active authorization record or Slurm submission is created by this
+entry. No other family, dataset, seed, attempt or stage status is changed.
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
