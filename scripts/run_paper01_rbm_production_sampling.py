@@ -6,9 +6,12 @@ an execution-specific authorization record, the exact source commit, the
 governed checkpoint pair and the actual Slurm allocation, then delegates once
 to the accepted fixed finite-step production sampler.
 
-Compute-node only. This entry point does not train, publish synthetic pools,
-select checkpoints or enable runtime execution. It performs no retry, resume
-or requeue logic.
+When ``--publish-pool-dir`` is supplied, the same authorized execution result
+is additionally published as one complete, independently verified class pool.
+Without that option the historical sampling-only behavior is unchanged.
+
+Compute-node only. This entry point does not train, select checkpoints or
+enable runtime execution. It performs no retry, resume or requeue logic.
 """
 
 from __future__ import annotations
@@ -81,13 +84,50 @@ def make_parser() -> argparse.ArgumentParser:
         "--expected-checkpoint-state-sha256",
         required=True,
     )
+    parser.add_argument(
+        "--publish-pool-dir",
+        default=None,
+        type=Path,
+        help="optional complete class-pool publication destination",
+    )
+    parser.add_argument(
+        "--expected-checkpoint-metadata-sha256",
+        default=None,
+        help="required with --publish-pool-dir",
+    )
+    parser.add_argument(
+        "--expected-policy-digest",
+        default=None,
+        help="required with --publish-pool-dir",
+    )
 
     return parser
 
 
 def main(argv=None) -> int:
-    args = make_parser().parse_args(argv)
+    parser = make_parser()
+    args = parser.parse_args(argv)
     entry = _load_entry_module()
+
+    if args.publish_pool_dir is not None:
+        missing = [
+            option
+            for option, value in (
+                (
+                    "--expected-checkpoint-metadata-sha256",
+                    args.expected_checkpoint_metadata_sha256,
+                ),
+                (
+                    "--expected-policy-digest",
+                    args.expected_policy_digest,
+                ),
+            )
+            if value is None
+        ]
+        if missing:
+            parser.error(
+                "--publish-pool-dir requires " + ", ".join(missing)
+            )
 
     request = entry.RBMProductionSamplingRequest(
         dataset_id=args.dataset_id,
@@ -115,6 +155,29 @@ def main(argv=None) -> int:
         ),
         flush=True,
     )
+
+    if args.publish_pool_dir is not None:
+        from trustforge.models.paper01_revision_2026 import (
+            restricted_boltzmann_class_pool as pool,
+        )
+
+        report = pool.publish_rbm_class_pool(
+            execution=execution,
+            destination=args.publish_pool_dir,
+            expected_checkpoint_metadata_sha256=(
+                args.expected_checkpoint_metadata_sha256
+            ),
+            expected_checkpoint_state_sha256=(
+                args.expected_checkpoint_state_sha256
+            ),
+            expected_policy_digest=args.expected_policy_digest,
+        )
+
+        print(
+            "RBM_CLASS_POOL_PUBLICATION_RESULT "
+            + json.dumps(report, sort_keys=True, allow_nan=False),
+            flush=True,
+        )
 
     return 0
 
