@@ -5214,3 +5214,203 @@ Stage 3 completion does not establish complete production readiness.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — S4-0 Completed Family Integrations and Finite Stage 4 Closure Register — 2026-11-24
+
+RESEARCHER ACCEPTANCE RECORD. On 2026-11-24 the researcher accepted the
+documentation-only closure of the previously accepted representative Stage 4
+integrations for GAN, VAE, Autoregressive and MAF, and accepted the finite
+Stage 4 closure register S4-0 through S4-A1.
+
+This entry is append-only and does not authorize implementation, training,
+checkpoint restoration, synthesis, evaluation or Slurm execution. The ordering
+of the remaining GMM, RBM and Diffusion work packages is provisional.
+
+Evidence provenance: the execution, artifact, scheduler and hash records below
+were retrieved from existing authoritative committed ledger entries. OpenCode
+did not access Talon, restore checkpoints, execute experiments or independently
+recompute remote artifact hashes during this documentation task.
+
+### Governing Stage 4 exit condition
+
+Research Continuity Charter §6:
+
+> **Checkpoint/synthesize:** Durable, integrity-checked publication; fresh
+> restoration; identity-safe, fully counted synthesis for each distinct family
+> integration.
+
+Ledger Stage 4 additionally retains:
+
+> Complete checkpoint and synthesis integration — Verify durable restoration
+> and correct labeled sampling for every distinct family path.
+
+and:
+
+> Stage 4 separately retains durable checkpoint publication, independent
+> checkpoint restoration, checkpoint-backed synthesis, complete class quotas and
+> pool publication.
+
+Representative integration scope is preserved. The 196-cell benchmark is not a
+precondition for Stage 4 closure.
+
+### S4-0 GAN representative integration — CICMalDroid2020 seed 42
+
+| Item | Accepted evidence |
+| --- | --- |
+| Training job | 314528 |
+| Training activation source | `42c40fce8b7f1005301408444fdcae7ff7f19db5` |
+| Checkpoint run identity | `commit42c40fc_attempt01` |
+| Checkpoint identity | `963b45ba5c467fe935e13a34bfb3abae52fe52636eebfd796787c04526de6530` |
+| Initial restoration | Job 314534 — FAILED, preserved |
+| Import diagnostic | Job 314535 — COMPLETED |
+| Restoration retry | Job 314537 — COMPLETED |
+| Production synthesis | Job 314574 — COMPLETED |
+| Synthesis source | `4324aeecb45a47a72ac0b479d8cd994fe79dc1e0` |
+| Synthesis recipe | `98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9` |
+| Pool manifest | `b4a640411b8120c412e51d2aa68b9e110ad2bfcc0215a1d8b20e6d7776dbceb1` |
+| Pool content | 10,000 images; 5 classes × 2,000; 625 batches |
+| Paired evaluation | Job 314607 |
+
+The historical failed restoration at 314534, its diagnostic at 314535 and the
+successful retry at 314537 are preserved. GAN restoration is accepted in its
+own evidence format; the absence of a VAE-style standalone restoration report
+is not a failure of the accepted requirement.
+
+Accepted pool verification: the evaluation driver authenticated the pool
+manifest, checkpoint identity, 625 ordered batches and pool consumption.
+`synthesis_record_authentication` remained `NOT_ARTIFACT_VERIFIED`, and
+semantic class fidelity remained `NOT_ESTABLISHED`.
+
+`S4_GAN=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+### S4-0 VAE representative integration — CICMalDroid2020 seed 42
+
+| Phase | Accepted evidence |
+| --- | --- |
+| Stage 3 training-only | Job 316716 — no production checkpoint created |
+| Stage 4 training + publication | Job 316796; source `1aec01c26fab51b87362a47e2cfa797bd428c359` |
+| BEST generation | `35ca3cd756a88d6b93dcc291f02c4747` |
+| BEST manifest | `f1fa66c2e689b7cfa66890b4b5273f9a6591da121ad22ff5dba9afab53bf812e` |
+| Independent restoration | Job 316811 |
+| Production synthesis | Job 316980; source `d4031a9b39565e5382d08e2b28236162498a08ca` |
+| Synthesis recipe | `98f9ef427e1b2a793636d448fe3f272893a24848e4b7257764964015e19987a9` |
+| Pool manifest | `08777645ccda4cb9659f8ebd9109b6b5b50d36e1189986df289537dda43fbcc6` |
+| Pool content | 10,000 images; 5 classes × 2,000; 315 batches |
+| Independent pool verification | PASS — 315 batches / 10,000 images |
+| Paired evaluation | Job 316983 |
+
+Job 316716 is preserved as a Stage 3 training-only execution. The Stage 4
+checkpoint lineage is job 316796 and the published BEST generation above.
+
+`S4_VAE=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+### S4-0 Autoregressive representative integration — CICMalDroid2020 seed 42
+
+| Item | Accepted evidence |
+| --- | --- |
+| Training source | `e4473abcdbc53f0de3a01ebe48858f2f3c7b841a` |
+| Checkpoint SHA-256 | `d58a64ad8cadc93e745945191e374a9c27b5668cf569f5bac4761a172b29a0f0` |
+| Synthesis source | `d7199228b19f9d67d747ca06a31c02230af00fb9` |
+| Dataset configuration SHA-256 | `ea1672eba0183b692ed29ffe7e8f4b9a707d487049c27623a38ddddff1a99f8b` |
+| Recipe SHA-256 | `202db292bb18d3e6f04f6f8cc36658884994c3bd9f4f48e2e93e181d348ea478` |
+| Worker array | 314793 — 50/50 tasks COMPLETED |
+| Finalizer | 314794 — COMPLETED |
+| Pool manifest | `ce2b6c6a332b578ad9f67091cf035f15a57e55e88eb22d9f98ade10ef94835e2` |
+| Pool content | 10,000 images; 5 classes × 2,000; 1,250 batches |
+
+Fresh best-checkpoint restoration was accepted in the AR/MAF synthesis chain
+(jobs 311064/311065) and the checkpoint-backed AR production synthesis chain
+above. Downstream evaluation remains a Stage 5 obligation and is not a Stage 4
+blocker.
+
+`S4_AR=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+### S4-0 MAF representative integration — CICMalDroid2020 seeds 42–44
+
+| Seed | Accepted evidence |
+| --- | --- |
+| 42 | Training/checkpoint path source `913d86f9c64e6a3a1a0d009f112bcfa889a02ec8`; synthesis source `8c58c4e8967da1764e6d7c66397e78befcbcadac`; array 313821; finalizer 313832; manifest `db884e298ea324597bad2d488d03e2c86c205e7a53bbef2a11bd72f06da5651e`; 10,000 / 2,000 per class / 1,250 batches |
+| 43 | Generator source `58f965c39aad103dc056f7ac690de90578ed2932`; checkpoint `57e378c44c870af58e4b8eff38cf1cc976516b0dade249194bb5962c28a724f7`; pool manifest `95b1d78e90cb8794573b88a195bb1e89fbbfcfcfc7d9562a5210a9971527354f`; 10,000 / 2,000 per class / 1,250 batches; evaluation job 314240 |
+| 44 | Generator source `8d4a281e04ed2232a134a6da10ff20c56d67316e`; checkpoint state `cc58fe65abaa0656e4f09d6d17d83e586f048f50a6a858d01e1f1d7b9191055a`; synthesis source `8198dc4d42fdb05bc3ebb6fd055b9951ab3d897f`; array 314349; finalizer 314354; manifest `c5fc5cb6aa7732b356b2bb57bfbd28d58f05b771ef50f278456111673fed0cb5`; 10,000 / 2,000 per class / 1,250 batches; evaluation 314355 |
+
+Seed 43 worker/finalizer identities were not recorded in the accepted
+evaluation entry and are marked UNKNOWN rather than inferred. Seed 44 and
+seed 42 full-pool verifications were accepted at their recorded scopes.
+
+Preserved limitations include generator-lineage authentication limits,
+`NOT_ESTABLISHED` semantic class fidelity where recorded, and unperformed
+feature-extraction/provenance/publication validation where the accepted
+entries state so. Seed 45 is not authorized.
+
+`S4_MAF=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+### S4-0 closure
+
+`S4_0_COMPLETED_FAMILY_INTEGRATIONS=ACCEPTED_AND_CLOSED`
+
+`S4_GAN=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_VAE=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_AR=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_MAF=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+### Finite outstanding Stage 4 register
+
+| ID | Requirement | Existing accepted evidence | Remaining gap | Minimum necessary action | Authorization |
+| --- | --- | --- | --- | --- | --- |
+| S4-G1 | GMM representative all-class checkpoint-backed pool | CIC class-0 seed-42 training, checkpoint, restoration, synthesis and pool; class-specific methodology and pool implementation | Class-general production pool integration; classes 1–4 checkpoint availability UNKNOWN; complete five-class accounting and verification | Reconcile class 1–4 checkpoint availability and reuse eligibility before any retraining; generalize class pool integration; produce and verify five class pools totalling 10,000 images | Separate implementation/training/synthesis authorization |
+| S4-R1 | RBM representative complete MaleX seed-42 pool | Historical checkpoint; bounded restoration and 16-sample production sampling; approved T=10 policy; production entry | Multi-class range orchestration; durable pool publication; 4,000-sample coverage; resource planning/accounting | Implement or reuse range and pool publication for both MaleX classes; execute one seed-42 pool; verify 2 × 2,000 | Separate implementation/execution authorization; 650 core-hour planning ceiling |
+| S4-D1 | Diffusion representative CIC seed-42 checkpoint-backed synthesis | Job 317249 training and durable publication; 92/92 tensor files; loader, sampler, recipe and linkage | Independent fresh-process restoration; production synthesis entry/launcher; 10,000-sample counted synthesis; independent pool verification | Reuse checkpoint; implement production synthesis/pool path; restore, synthesize five classes × 2,000, publish and verify | Separate implementation/execution authorization |
+| S4-A1 | Consolidated Stage 4 exit | S4-0 plus above | Final reconciliation of all seven families | Documentation-only after S4-G1, S4-R1, S4-D1 | Researcher documentation approval |
+
+S4-G1 checkpoint availability must be reconciled before training is proposed;
+classes 1–4 are not declared nonexistent. S4-R1 must not reopen Gibbs-depth,
+mixing or convergence questions. S4-D1 must not propose additional training and
+must preserve zero-based epoch indexing and accepted best/last equality.
+
+### Subsequent-stage boundaries
+
+Stage 5–9 obligations remain separate: downstream evaluation, production
+aggregation, scale-memory acceptance, clean-environment reproduction,
+integrated rejection-suite verification, source/environment/resource freeze,
+full benchmark authorization and manuscript release. They are not moved into
+Stage 4.
+
+### Status
+
+`STAGE_1_OVERALL=COMPLETE`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`S4_0_COMPLETED_FAMILY_INTEGRATIONS=ACCEPTED_AND_CLOSED`
+
+`S4_GAN=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_VAE=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_AR=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_MAF=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_G1_GMM=OUTSTANDING`
+
+`S4_R1_RBM=OUTSTANDING`
+
+`S4_D1_DIFFUSION=OUTSTANDING`
+
+`S4_A1_CONSOLIDATED_EXIT=PENDING`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`NEW_SCIENTIFIC_DECISIONS_REQUIRED_FOR_STAGE4=NONE_IDENTIFIED`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
