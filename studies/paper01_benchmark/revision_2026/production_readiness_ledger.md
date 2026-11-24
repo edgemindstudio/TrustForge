@@ -3898,3 +3898,134 @@ authorized by this entry.
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+
+## Paper 1 Revision-2026 — S2-01 Prospective Fixed Finite-Step RBM Sampling Policy — Researcher Approval — 2026-11-24
+
+**Authority:** Researcher decision recorded 2026-11-24.
+**Scope:** Scientific sampling policy only; implementation and execution remain unauthorized.
+
+### Approved sampling policy
+
+The revised continuous-visible, class-conditional RBM uses a fixed finite-step
+generator
+
+`Q_(theta,y,T) = mu_theta K_(theta,y)^T` with `T = 10`.
+
+- Exactly ten complete Gibbs transitions per synthetic sample.
+- One complete transition is a class-conditioned hidden-state draw followed by
+  a continuous-visible-state draw.
+- Each synthetic sample is produced from a separately initialized, independent
+  Gibbs chain.
+- Governed initialization is preserved: `h_0 = 0`; `v_0 ~ p(v|h=0)` under the
+  bounded-exponential visible distribution; internal float64 arithmetic; no
+  empirical training, validation or test example initialization.
+- The requested class is validated and clamped before the first transition and
+  remains fixed throughout sampling.
+- Zero separate burn-in; all ten transitions constitute the finite-step
+  generation procedure.
+- No thinning, continuation-chain sampling, adaptive stopping, or
+  dataset-specific Gibbs depth.
+- One common transition count applies across all four datasets, all classes and
+  seeds 42-48: 882,000 samples (63 classes x 2,000 samples x 7 seeds).
+
+### Computational planning basis
+
+- Internal RBM synthesis planning ceiling: 650 allocated CPU core-hours.
+- Researcher-accepted 1.5x planning allowance on the historical linear cost
+  estimate.
+- Historical linear estimate: 309-331 allocated core-hours; approximately
+  464-497 allocated core-hours with the allowance.
+- These resource estimates are explicitly unvalidated. Historical diagnostics
+  did not measure the complete production synthesis pipeline, and actual
+  production feasibility has not been demonstrated. Actual costs may differ
+  because of batching, initialization, checkpoint loading, I/O, hashing,
+  scheduler behavior and retries.
+- The internal ceiling is not a university-issued allocation or a guaranteed
+  Talon reservation. Exceeding it requires stopping and separate review rather
+  than silently changing the sampling policy or output coverage.
+
+### Scientific interpretation
+
+`T = 10` is a prospectively approved computational operating convention, not a
+convergence-certified, mixing-certified, stationary-equivalent, optimal or
+shortest-stable depth. This policy does not claim convergence to a stationary
+RBM distribution, adequate Gibbs mixing, stationarity or distributional
+equivalence, semantic class-label fidelity, image realism or diversity,
+beneficial downstream classification utility, or equal computational effort
+across generator families. It must not be optimized retrospectively using
+downstream classification performance or synthetic-image quality metrics.
+
+### Historical assessment preservation
+
+The original independent confirmatory Gibbs-chain investigation remains closed
+and unchanged:
+
+`CONFIRMATORY_ASSESSMENT=INDETERMINATE`
+
+`CONFIRMATORY_INVESTIGATION_CLOSED=YES`
+
+The historical investigation did not establish a shortest stable common Gibbs
+depth. This prospective policy does not revise, contradict or retroactively
+reinterpret that finding. The November 16 S2-01 archival decision remains part
+of the historical record.
+
+### S2-01 reconciliation
+
+The original S2-01 closure condition is satisfied: a separately governed
+prospective sampling decision that preserves the closed INDETERMINATE
+assessment.
+
+`S2_01_SCIENTIFIC_POLICY=APPROVED`
+
+`RBM_S2_01=CLOSED_SCIENTIFIC_POLICY`
+
+`RBM_PRODUCTION_TRANSITION_COUNT=10`
+
+`RBM_PRODUCTION_GIBBS_DEPTH_SELECTED=YES`
+
+`RBM_PRODUCTION_BURN_IN=0_BY_DESIGN`
+
+Selection is scientific-policy approval, not runtime activation. No sampler,
+configuration, checkpoint, synthesis job or experiment is authorized by this
+entry.
+
+### Stage 2 reconciliation
+
+The original five-item Stage 2 register is satisfied:
+
+- S2-01 - RBM production Gibbs depth: CLOSED_SCIENTIFIC_POLICY.
+- S2-02 - GAN/VAE/Diffusion synthesis recipes: ACCEPTED_AND_CLOSED.
+- S2-03 - CIC fitted preprocessing identity: ACCEPTED_AND_CLOSED.
+- S2-04 - Shared evaluator configuration: ACCEPTED_AND_CLOSED.
+- S2-05 - Complete benchmark configuration linkage: ACCEPTED_AND_CLOSED.
+
+`STAGE_2_ORIGINAL_REQUIREMENTS=ACCEPTED_AND_CLOSED`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+Stage 2 closure is limited to its original documented acceptance conditions. It
+does not establish Stage 3-8 readiness, executable configuration, implementation
+validation, checkpoint restoration, complete synthesis, paired evaluation,
+clean-environment reproduction, full benchmark resource/config/environment/retry
+freeze, or publication readiness. No additional Stage 2 requirement is
+introduced.
+
+### Preserved authorization boundaries
+
+`RBM_PRODUCTION_SAMPLING_AUTHORIZED=NO`
+
+`RBM_PRODUCTION_SYNTHESIS_AUTHORIZED=NO`
+
+`RBM_SAMPLER_IMPLEMENTATION_AUTHORIZED=NO`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Scientific-policy acceptance is separate from executable configuration,
+implementation validation, checkpoint restoration, complete synthesis, paired
+evaluation, clean reproduction, full benchmark freeze and publication.
+
+No source, configuration, test, recipe, experimental artifact or earlier ledger
+entry was modified. This reconciliation adds documentation only.
