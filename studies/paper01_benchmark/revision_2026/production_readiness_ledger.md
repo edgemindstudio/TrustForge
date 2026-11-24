@@ -3750,3 +3750,151 @@ aggregation remain future work under the accepted protocol.
 
 This entry closes one individual experimental cell. It does not authorize
 another seed, dataset, generator, retry or full benchmark execution.
+
+## Paper 1 Revision-2026 — Seven-Family Research Readiness Reconciliation — 2026-11-23
+
+Status: researcher-approved read-only reconciliation appended at source
+revision `49ed9a880ae912c6a9bdbf4659acd1dc73f1757d`. It reuses accepted
+records at their stated scope. It performed no training, synthesis,
+checkpoint publication, evaluation, Slurm job, source change or live Talon
+re-inspection. Earlier statuses remain preserved; later accepted evidence
+supersedes them only as stated below.
+
+### Evidence cutoff and closed milestones
+
+- Source revision: `49ed9a880ae912c6a9bdbf4659acd1dc73f1757d`.
+- Stage 5 authenticated aggregation linkage: accepted and preserved at
+  `49d01f802f53c8c8776e8cb05a671c65e365b282`. This closes the bounded
+  implementation and fixture-verification milestone, not aggregation of a
+  production seven-seed matrix.
+- Diffusion Stage 4 durable checkpoint bundle: accepted and preserved at
+  `2cbd30a0bc4f16ae4d121c33963a70316bbb9137`. This closes the durable bundle
+  implementation/loader and fixture verification, not production publication.
+- Diffusion Stage 4 production integration: accepted and preserved at
+  `49ed9a880ae912c6a9bdbf4659acd1dc73f1757d`; 137 focused/related fixture tests
+  reported. This closes the bounded training-to-publication and
+  published-checkpoint-to-restoration connections, not actual execution.
+- Earlier accepted cells retained: VAE CIC seed 42 (training 316716,
+  synthesis 316980, evaluation 316983, macro-F1 +0.0379212501); GAN CIC seed 42
+  evaluation 314607 (+0.0390784969); MAF CIC seeds 42–44
+  (+0.0545115091 / +0.0927756121 / +0.0610829155); AR CIC seed-42 complete
+  synthesis pool (jobs 314793/314794), evaluation not performed; GMM CIC
+  class-0 seed-42 training/synthesis (313922/313927).
+- The earlier ledger statement that Diffusion checkpoint state is only
+  in-memory is superseded for implementation scope by the accepted durable
+  bundle; it remains true that no production Diffusion checkpoint was
+  published.
+
+### Seven-family readiness register
+
+Statuses are scoped to committed evidence. Fixture tests are not production
+execution, and one accepted cell does not establish dataset- or
+benchmark-wide coverage.
+
+| Family | 1 Method | 2 Executable source | 3 Launcher/gate | 4 Real training | 5 Durable checkpoint | 6 Restoration | 7 Synthesis/pool | 8 Paired evaluation |
+|---|---|---|---|---|---|---|---|---|
+| GAN | ACCEPTED | ACCEPTED; activation lives on `42c40fc`; current branch gate disabled | ACCEPTED bounded | ACCEPTED within CIC-42 cell | ACCEPTED | ACCEPTED | ACCEPTED 10k/625 batches | ACCEPTED 314607 |
+| VAE | ACCEPTED | ACCEPTED; gate enabled | ACCEPTED | ACCEPTED 316716 | ACCEPTED attempt-02 | ACCEPTED | ACCEPTED 316980, 315 batches | ACCEPTED 316983 |
+| Diffusion | ACCEPTED | ACCEPTED implementation/integration; runtime disabled | PARTIAL/PROPOSED; launcher present, gate false | NOT_EXECUTED | NOT_EXECUTED (bundle implemented) | NOT_EXECUTED (fixture only) | NOT_EXECUTED | NOT_EXECUTED |
+| AR | ACCEPTED | ACCEPTED for CIC-42 synthesis | ACCEPTED bounded authorization | ACCEPTED within synthesis chain | VERIFIED | VERIFIED | ACCEPTED 10k/1,250 batches | NOT_EXECUTED |
+| MAF | ACCEPTED | ACCEPTED | ACCEPTED bounded | ACCEPTED seeds 42–44 | VERIFIED | ACCEPTED | ACCEPTED seeds 42–44 | ACCEPTED seeds 42–44 |
+| RBM | ACCEPTED training only | PARTIAL; no production sampling | BLOCKED by S2-01 | UNKNOWN/PARTIAL (Stage-1 integrity only) | PARTIAL | UNKNOWN | BLOCKED | NOT_EXECUTED |
+| GMM | ACCEPTED | ACCEPTED class-0 cell | PARTIAL | ACCEPTED class-0 seed 42 | VERIFIED | PASS | PARTIAL; one class only | NOT_EXECUTED |
+
+| Family | 9 Remaining original mandatory requirement | 10 Next authorization boundary |
+|---|---|---|
+| GAN | Dataset/seed coverage; deliberate activation integration; resource acceptance | Separate execution authorization |
+| VAE | Dataset/seed coverage | Separate execution authorization |
+| Diffusion | Real training, production publication, fresh-process restoration, synthesis, pool verification | Separate execution authorization after gate decision |
+| AR | Paired downstream evaluation; further coverage | Separate execution authorization |
+| MAF | Seeds 45–48 not authorized; other datasets | Separate execution authorization |
+| RBM | S2-01 prospective production sampling decision | Scientific decision, then execution |
+| GMM | All-class dataset pool and evaluation | Separate execution authorization |
+
+Preserved: `RBM_S2_01=BLOCKED`. The closed RBM `INDETERMINATE` assessment is
+not reopened and no Gibbs depth is selected.
+
+### Nine-stage readiness
+
+| Stage | Original exit condition | Accepted evidence | Remaining requirement | Status | Close at original scope? |
+|---|---|---|---|---|---|
+| 1 Preservation | Reconcile state, preserve source/artifacts | Baseline, snapshots, checkpoint inventory | Recheck before mutation | COMPLETE | Yes |
+| 2 Specification | Bind datasets, seeds, budgets, evaluator, analysis | Spec §14/15; S2-02–S2-05 accepted; aggregation linkage accepted | S2-01 RBM production sampling decision | IN_PROGRESS | No |
+| 3 Execution | Requested→executed identity, gates, failure behavior | Accepted source/entry paths for VAE, GAN, MAF, AR, GMM; Diffusion entry accepted | Diffusion activation; RBM production; remaining distinct paths | IN_PROGRESS | No |
+| 4 Checkpoint/synthesis | Durable publication, fresh restoration, counted synthesis per distinct family | VAE, GAN, MAF×3, AR full pools; Diffusion bundle/integration implemented; GMM class 0 | Diffusion production publication/restoration; RBM sampling/synthesis; GMM all classes | IN_PROGRESS | No |
+| 5 Evaluation/reporting | Matched paired evaluation, metrics, missing-run, aggregation | Evaluator accepted; VAE/GAN/MAF cells; aggregation + missing-run implementation | AR/GMM/RBM/Diffusion evaluations; production aggregation over real inventory; scale-memory acceptance | IN_PROGRESS | No |
+| 6 Reproduction | Clean-environment bounded workflow and traceability | None at required scope | Execute and accept reproduction workflow | PENDING | No |
+| 7 Bounded end-to-end | Governed integrated path plus rejection suite | VAE production path exists; Diffusion integration fixture-tested | Accepted missing-output/incomplete/identity-mismatch rejection suite across distinct integrations | PENDING | No |
+| 8 Freeze/launch | Frozen revision/config/environment/matrix/resources/retries + GO | None | Freeze and written evidence-based GO/NO-GO | BLOCKED | No |
+| 9 Results/release | Reconcile runs, regenerate tables, audit claims | None; no full matrix | Authorized execution then release acceptance | PENDING AFTER EXECUTION | No |
+
+The 196-cell benchmark remains incomplete. A completed bounded cell or a
+completed implementation milestone is not benchmark completion.
+
+### Distinct authorization boundaries
+
+- **Individual family training:** accepted methodology, governed data and
+  configuration, permitted runtime activation, and explicit researcher
+  approval. Training authority does not imply checkpoint publication or
+  synthesis. Diffusion additionally needs a gate-activation decision; GAN needs
+  a deliberate activation decision; RBM training is authorized but its
+  production sampling is not.
+- **Full benchmark execution:** S2-01 decision; each distinct family
+  integration executed and accepted; Stage 5 production aggregation and
+  completion accounting; Stage 6 reproduction; Stage 7 rejection acceptance;
+  Stage 8 freeze of revision, configuration, environment, 196-cell matrix,
+  resources, concurrency and retries, followed by a written GO/NO-GO.
+- **Manuscript release:** authorized run coverage (or an explicitly documented
+  partial design), reconciled expected/observed runs with explicit
+  PENDING/FAILED/INCOMPLETE statuses, seven-seed aggregation without fabricated
+  statistics, regenerated tables/figures, claim-level verification and a
+  preserved reproduction release.
+
+### Recommended smallest next action
+
+**Decide S2-01: adopt or decline a qualified fixed-finite-step RBM production
+policy.** Parent stage: Stage 2. Original requirement: a separately governed
+prospective sampling decision preserving the closed INDETERMINATE assessment.
+Existing evidence is insufficient because no independently justified common
+transition count or approved production resource ceiling exists, and the
+recorded numerical-selection exercise was NO-GO. Minimum acceptance: either
+(1) approve the qualified finite-step basis with a prospectively justified
+count, explicit initialization/burn-in semantics and credible workload
+feasibility, or (2) formally record RBM as incomplete for the current Paper 1
+matrix. This is a scientific decision, not implementation or execution, and
+requires separate researcher authorization. No new RBM diagnostic is
+authorized by this entry.
+
+### Unresolved or contradictory evidence
+
+- Early ledger matrix rows and recipe `status` fields are time-stamped
+  snapshots; later explicit researcher acceptance and source activations
+  supersede them within their recorded scope.
+- Declarative synthesis-recipe authorization flags remain false while separate
+  source activations and one-job releases enabled accepted VAE/GAN/MAF/AR
+  work; those flags are not a live inventory of executed cells.
+- No live Talon artifacts were re-inspected in this reconciliation; execution
+  evidence is reported at committed-record scope.
+
+### Preserved restrictions
+
+`DIFFUSION_STAGE4_DURABLE_BUNDLE=ACCEPTED_AND_CLOSED`
+
+`DIFFUSION_STAGE4_PRODUCTION_INTEGRATION=ACCEPTED_AND_CLOSED`
+
+`DIFFUSION_STAGE4_INTEGRATION_PRESERVATION=GIT_VERIFIED`
+
+`STAGE5_AGGREGATION_LINKAGE=ACCEPTED_AND_CLOSED`
+
+`RBM_S2_01=BLOCKED`
+
+`DIFFUSION_REAL_DATASET_TRAINING_ENABLED=False`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`FULL_BENCHMARK_GO=NO`
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
