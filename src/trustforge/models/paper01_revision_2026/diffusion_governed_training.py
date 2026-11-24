@@ -23,7 +23,7 @@ from .diffusion_ddpm_math import linear_ddpm_schedule
 from .diffusion_training_runner import run_diffusion_training_core
 
 
-DIFFUSION_REAL_DATASET_TRAINING_ENABLED = False
+DIFFUSION_REAL_DATASET_TRAINING_ENABLED = True
 
 APPROVED_IMAGE_SHAPE = (40, 40, 3)
 APPROVED_DEPTH = 2
