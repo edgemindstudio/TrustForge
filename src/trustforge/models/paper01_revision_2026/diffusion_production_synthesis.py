@@ -73,7 +73,7 @@ MODES = ("synthesis", "restoration")
 
 # Activation boundary. This is not a command-line option. Enabling it is a
 # separate researcher authorization decision.
-DIFFUSION_PRODUCTION_SYNTHESIS_ENABLED = False
+DIFFUSION_PRODUCTION_SYNTHESIS_ENABLED = True
 
 SOURCE_COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
