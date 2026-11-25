@@ -5764,3 +5764,450 @@ Remaining Stage 4 work:
 
 No source, configuration, test, recipe, experimental artifact or earlier
 ledger entry was modified. This reconciliation adds documentation only.
+
+## Paper 1 Revision-2026 — S4-R1 RBM Representative Complete-Pool Integration Closure
+
+RESEARCHER ACCEPTANCE RECORD. The researcher accepted the completed
+representative MaleX seed-42 RBM checkpoint-backed all-class synthetic pool and
+authorized terminal evidence preservation and retirement of both execution
+grants. Researcher acceptance was granted before terminal closure. Terminal
+closure completed on 2026-11-25 UTC, corresponding to 2026-11-24 local Talon
+time.
+
+The scope is one representative dataset/seed integration, not full RBM
+benchmark completion. No new scientific requirement is introduced, and the
+accepted Gibbs-depth decision is not reopened.
+
+Evidence provenance: the Talon execution, scheduler, artifact, terminal and
+retirement hash records below were supplied by the researcher from preserved
+results and reviewed by ChatGPT. OpenCode did not access Talon, restore
+checkpoints, execute sampling, verify artifact bytes or modify external
+artifacts during this documentation task.
+
+### Governing Stage 4 exit condition
+
+Research Continuity Charter §6:
+
+> **Checkpoint/synthesize:** Durable, integrity-checked publication; fresh
+> restoration; identity-safe, fully counted synthesis for each distinct family
+> integration.
+
+Ledger Stage 4 additionally retains durable checkpoint publication,
+independent checkpoint restoration, checkpoint-backed synthesis, complete class
+quotas and pool publication. Representative integration scope applies.
+
+### S4-R1 requirement and closure basis
+
+S4-R1 required one representative complete MaleX seed-42 checkpoint-backed
+pool covering both authoritative classes with exactly 2,000 samples per class.
+
+The completed work comprises:
+
+1. Accepted class-pool publication and independent-verification implementation.
+2. Isolated production activation of the governed RBM entry point.
+3. Reuse of the existing accepted shared MaleX seed-42 checkpoint.
+4. Sequential authorized synthesis for class 0 and class 1.
+5. Durable exclusive publication of two complete class pools.
+6. Separate-process independent dataset-pool verification.
+7. Researcher acceptance and terminal evidence preservation.
+8. Retirement of both execution grants.
+
+### Accepted implementation evidence
+
+Implementation commit:
+
+`23f64da71c2d8b3091c6e52e0ba7a2f6479a5dd1`
+
+Parent:
+
+`ccceb6074de3cefb8cc4d6bc749d8e780b43f420`
+
+Commit message:
+
+`feat(paper01): publish and verify governed RBM class pools`
+
+Changed files (3; 1,736 insertions, 4 deletions):
+
+- `src/trustforge/models/paper01_revision_2026/restricted_boltzmann_class_pool.py`
+- `scripts/run_paper01_rbm_production_sampling.py`
+- `tests/test_rbm_class_pool_revision_2026.py`
+
+Accepted test evidence: 39 focused tests passed and 276 combined RBM
+regression tests passed. Tests were not rerun for this documentation-only
+operation.
+
+Class-pool publication module SHA-256:
+
+`da6dc1efcb8ebaa722028bebf59ef90e820328f8ce44618c6d1549e360667412`
+
+Production CLI SHA-256:
+
+`6f5565cb3584ec42e8f466016bc54537c0cce2e504d2f878d939abbec9c955df`
+
+Fixture tests SHA-256:
+
+`ddf1a8df40481d083b25928abc048fadef30aa7fd6ad648c06eba4244f543e6e`
+
+The implementation provides exclusive durable publication, independent batch
+verification, authoritative class identity checks, sampling-policy identity
+reconstruction and complete dataset-pool coverage verification.
+
+### Isolated production activation
+
+Activation branch:
+
+`engineering/paper01-rbm-malex-seed42-stage4-activation`
+
+Activation commit:
+
+`34adec1306bff87f82c565c82b4594912cb8cca1`
+
+Parent: `23f64da71c2d8b3091c6e52e0ba7a2f6479a5dd1`.
+
+The activation changes only:
+
+`RBM_PRODUCTION_SAMPLING_ENABLED = False`
+
+to:
+
+`RBM_PRODUCTION_SAMPLING_ENABLED = True`
+
+Production activation remains isolated from the development branch.
+
+Activated entry SHA-256:
+
+`f736183649e81aec52b033ba69987f5e1a816f4c29ef4ade250b9c784efa2159`
+
+Talon checkout:
+
+`$HOME/TrustForge-paper01-rbm-malex-seed42-stage4`
+
+Corrected external launcher SHA-256:
+
+`8218e2e5a3960358c49030d3c68a482add53721910e4283568a5c283a94b91ca`
+
+The external launcher correction repaired two malformed checksum-line newline
+escapes and did not change the accepted sampling methodology. The external
+launcher remains operational evidence, not a committed source artifact.
+
+### Checkpoint and scientific policy
+
+- Dataset: `malex`
+- Experimental seed: 42
+- Class mapping: class 0 `benign`; class 1 `malware`
+
+Existing checkpoint directory:
+
+`$HOME/trustforge_revision_2026_artifacts/paper01/rbm/malex/seed42/`
+
+Checkpoint metadata SHA-256:
+
+`55721f7414b09de5720d1003ef5f29420aa06307079cb5a36c73b8043e3c4231`
+
+Checkpoint state SHA-256:
+
+`18f8ddf4f1d13bd8a9c660c968019a22421f097a40068c7a7be31f29052231b8`
+
+Accepted sampling-policy digest:
+
+`676f1aca169fadf9dd30d734e33267395675ce18cc1978554dbe3939ea4d9ffa`
+
+Policy:
+
+- Exactly ten complete Gibbs transitions per independent sample.
+- Separate burn-in: zero.
+- Fixed requested-class conditioning.
+- Independent chain per sample.
+- Governed initialization: `h0_zero_v0_bounded_exponential_p_v_given_h0`.
+- Internal arithmetic dtype: float64.
+- Published dtype: float32.
+- Canonical image shape: 40 × 40 × 3.
+- Finite canonical values in [0,1].
+- Exactly 2,000 samples per class.
+
+No retraining or additional checkpoint acquisition was performed. The
+accepted Gibbs-depth decision remains closed and is not reopened.
+
+### Production execution evidence
+
+Both jobs used the same accepted shared checkpoint, sampling policy and
+activation revision.
+
+| Parameter | Attempt 03 | Attempt 04 |
+|---|---|---|
+| Job | 317368 | 317371 |
+| Class | 0 benign | 1 malware |
+| State | COMPLETED | COMPLETED |
+| Exit code | 0:0 | 0:0 |
+| Elapsed seconds | 496 | 474 |
+| Allocated CPUs | 8 | 8 |
+| Allocated memory | 32 GiB | 32 GiB |
+| Walltime limit | 3,600 seconds | 3,600 seconds |
+| Node | talon07 | talon07 |
+| Total CPU seconds | 515.722 | 513.621 |
+| Reported batch MaxRSS | 532768K | 516428K |
+| Samples | 2,000 | 2,000 |
+| Batches | 250 | 250 |
+
+Attempt-03 run identity:
+
+`commit34adec1_attempt03`
+
+Attempt-04 run identity:
+
+`commit34adec1_attempt04`
+
+Authorizations:
+
+`P1R2026-RBM-MALEX-S42-STAGE4-C0-A03`
+
+`P1R2026-RBM-MALEX-S42-STAGE4-C1-A04`
+
+Each job used one node, one task, eight CPUs, CPU-only execution and a
+one-hour walltime limit. Jobs were submitted sequentially. Attempt 04 was
+released only after independent attempt-03 verification, researcher
+acceptance and retirement of the attempt-03 grant. No additional experimental
+job was submitted.
+
+### Durable pool publication and verification
+
+Artifact cell:
+
+`$HOME/trustforge_revision_2026_artifacts/paper01/rbm/malex/seed42`
+
+Class-0 pool:
+
+`pools/class0_seed42_stage4_attempt03/`
+
+Manifest SHA-256:
+
+`46ee31796db6714fcdd9de63198604c325ab908298d7ba7907dca0a46ff847fe`
+
+Class-1 pool:
+
+`pools/class1_seed42_stage4_attempt04/`
+
+Manifest SHA-256:
+
+`0d5801131ea2a48b5f9776dd9d05c741132b6428ec0246a33c1910cad3a4d00c`
+
+Manifest schema:
+
+`trustforge.paper01.rbm-class-pool.v1`
+
+Final independently verified evidence:
+
+- Two authoritative classes.
+- 2,000 samples per class.
+- 250 batches per class.
+- Eight samples per batch.
+- 4,000 total images.
+- 500 total batches.
+- Complete ordered sample-index coverage.
+- Shared checkpoint metadata/state identity.
+- Shared sampling-policy identity.
+- Both class execution lineages verified.
+- The previously accepted class-0 manifest unchanged.
+
+Returned terminal markers:
+
+`INDEPENDENT_DATASET_POOL_VERIFICATION=PASS`
+
+`BOTH_CLASS_EXECUTION_LINEAGES=PASS`
+
+`ACCEPTED_CLASS0_MANIFEST_UNCHANGED=PASS`
+
+`VERIFIED_CLASS_COUNT=2`
+
+`VERIFIED_SAMPLE_COUNT=4000`
+
+`VERIFIED_BATCH_COUNT=500`
+
+`ADDITIONAL_SAMPLING_PERFORMED=NO`
+
+The independent verifier was executed in a separate process on Talon.
+Verification establishes structural correctness and recorded-lineage
+consistency; it does not authenticate every historical execution claim or
+establish semantic class fidelity.
+
+### Resource accounting
+
+Attempt 03 allocated CPU core-hours:
+
+`1.1022222222222222`
+
+Attempt 04 allocated CPU core-hours:
+
+`1.0533333333333332`
+
+Combined allocated CPU core-hours:
+
+`2.1555555555555554`
+
+Combined authorized ceiling: 16 allocated CPU core-hours.
+
+Known historical production-sampling expenditure:
+
+- Job 317176: 40 seconds × 8 CPUs.
+- Job 317232: 22 seconds × 8 CPUs.
+- Combined historical allocation: 0.13777777777777778 core-hours.
+
+Known cumulative production expenditure:
+
+`2.2933333333333334`
+
+Accepted cumulative RBM planning ceiling: 650 allocated CPU core-hours.
+
+Historical accounting is not exhaustive, and the cumulative planning ceiling
+is not enforced by the runtime production entry. The combined representative
+execution provides resource-planning evidence, not a validated full-benchmark
+runtime guarantee.
+
+A linear projection to 882,000 samples is approximately 475.3 allocated CPU
+core-hours. This is an estimate based on observed representative throughput,
+not an established full-benchmark requirement.
+
+### Terminal evidence preservation
+
+Evidence root relative to the artifact cell:
+
+`operational_verification/stage4_complete_pool_attempt01/`
+
+Attempt-03 terminal evidence:
+
+`attempt03_class0/terminal_acceptance/`
+
+Attempt-04 terminal evidence:
+
+`attempt04_class1/terminal_acceptance/`
+
+Both retired grants are under:
+
+`$HOME/trustforge_revision_2026_artifacts/paper01/rbm/authorizations/retired/`
+
+Attempt-03 retired filename:
+
+`malex_seed42_attempt03.317368.json`
+
+SHA-256:
+
+`0bbe71e28d68cac8fadcad9fd5c468eac789ff4b4638f654f5e9892bd40ee25c`
+
+Attempt-04 retired filename:
+
+`malex_seed42_attempt04.317371.json`
+
+SHA-256:
+
+`184cda4165627ad0d46e44a56a62b0bde2cd1929a8ac9d3ea3f474fa81a96640`
+
+Attempt-03 retirement record SHA-256:
+
+`25eff83948b2f3c3a794793ae81e729ca9990fca5674aa027d36075dc412a00f`
+
+Attempt-04 retirement record SHA-256:
+
+`46812af11be453b0545a7ff1efcf2f65d289c82da602ee9dcff22ee6a08b6cfd`
+
+Attempt-04 terminal evidence checksum inventory SHA-256:
+
+`fe2f2dd87d3057f460b72bac02ac144ef411f870539b17b6927daa1c3ccf958d`
+
+Corrected closure driver SHA-256:
+
+`b82dd9b3a631b4b411f38ad8a88269af960e77539542a875e11cf0cae502c34c`
+
+The successful corrected closure preflight began at `2026-11-25T02:26:21Z`.
+
+The first closure driver stopped before retirement because a historical
+completed job was no longer available through the live job-specific queue
+query. A bounded correction replaced that query with a user-level queue check
+while preserving historical accounting validation. The corrected operation
+completed successfully; this administrative interruption was not an
+experimental failure.
+
+Final terminal markers:
+
+`ATTEMPT04_AUTHORIZATION_RETIRED=YES`
+
+`BOTH_ACTIVE_GRANTS_ABSENT=YES`
+
+`S4_R1_B=ACCEPTED_AND_CLOSED`
+
+`ADDITIONAL_SAMPLING_PERFORMED=NO`
+
+`SLURM_SUBMISSIONS=0`
+
+`REPOSITORY_MODIFIED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Both execution authorities are exhausted. No further RBM execution is
+authorized.
+
+### Preserved limitations
+
+- Representative MaleX seed-42 integration only, not full RBM benchmark
+  completion.
+- Historical dataset-source provenance
+  `NOT_ESTABLISHED_BY_RBM_CHECKPOINT_METADATA`.
+- Semantic class fidelity `NOT_ESTABLISHED`.
+- Gibbs-chain convergence and mixing `NOT_ESTABLISHED`.
+- Downstream evaluation `NOT_PERFORMED` for this complete RBM pool.
+- Historical accounting is not exhaustive.
+- Full-benchmark resource feasibility `NOT_ESTABLISHED`.
+- External artifact evidence is researcher-supplied and ChatGPT-reviewed.
+- Structural verification does not independently authenticate every
+  historical execution claim.
+- No new scientific policy or requirement introduced.
+- No additional seed, dataset, retraining or execution authorized.
+
+### Updated finite Stage 4 register
+
+These statuses are the proposed documentation closure state, effective upon
+researcher approval and Git preservation of this entry.
+
+`STAGE_1_OVERALL=COMPLETE`
+
+`STAGE_2_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`STAGE_3_OVERALL=COMPLETE_AT_ORIGINAL_SCOPE`
+
+`S4_0_COMPLETED_FAMILY_INTEGRATIONS=ACCEPTED_AND_CLOSED`
+
+`S4_GAN=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_VAE=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_AR=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_MAF=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_G1_GMM=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_R1_A=ACCEPTED_AND_PRESERVED`
+
+`S4_R1_B=ACCEPTED_AND_CLOSED`
+
+`S4_R1_C=PREPARED_PENDING_GIT_PRESERVATION`
+
+`S4_R1_RBM=ACCEPTED_AND_CLOSED_BOUNDED_SCOPE`
+
+`S4_D1_DIFFUSION=OUTSTANDING`
+
+`S4_A1_CONSOLIDATED_EXIT=PENDING`
+
+`STAGE_4_OVERALL=IN_PROGRESS`
+
+`NEW_SCIENTIFIC_DECISIONS_REQUIRED_FOR_STAGE4=NONE_IDENTIFIED`
+
+`ADDITIONAL_EXPERIMENTAL_EXECUTION_AUTHORIZED=NO`
+
+`FULL_BENCHMARK_GO=NO`
+
+Remaining Stage 4 work is exclusively the original S4-D1 Diffusion
+representative synthesis integration, followed by the S4-A1 consolidated
+documentation exit.
+
+No source, configuration, test, recipe, experimental artifact or earlier
+ledger entry was modified. This reconciliation adds documentation only.
